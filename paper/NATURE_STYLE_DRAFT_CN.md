@@ -72,6 +72,32 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_olfactory_perturbation_suite.py 
 
 ## 结果
 
+### 结果 0：公开可复现的 CyberFly 不是“纯连接组自动涌现”，而是连接组约束的分层闭环
+
+我们重新核查了 Eon/CyberFly 公开说明，并在 `/unify/ydchen/unidit/bio_fly/src/bio_fly/eon_multimodal_benchmark.py` 中实现公开可复现版本。该版本把系统拆成四层：FlyWire sensory seed 到全脑 signed propagation，目标神经元/readout family 聚合，DN 或行为代理读出，以及 FlyGym/NeuroMechFly 身体视频渲染。这个分层非常关键，因为 walking、grooming、feeding 和 steering 的可见运动并不是由连接组单独产生，而是依赖行为 readout 和低维/训练控制器。
+
+本轮多模态复现命令为：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+python /unify/ydchen/unidit/bio_fly/scripts/run_eon_multimodal_benchmark.py \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark \
+  --render-device 0 \
+  --propagation-device cuda:0
+```
+
+该命令本轮耗时约 `1 分 34 秒`，输出目录为 `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark`。连接组 readout 表位于 `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/connectome_multimodal_readout_summary.csv`。
+
+| condition | n_seed_neurons | active_response_neurons | absolute_mass | descending_abs_mass | memory_axis_abs_mass | visual_projection_abs_mass | gustatory_abs_mass | mechanosensory_abs_mass |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| olfactory_food_memory | 255 | 7376 | 2.664589 | 0.011488 | 0.245349 | 1.320785 | 0.000028 | 0.000000 |
+| visual_object_tracking | 255 | 11152 | 1.577666 | 0.203957 | 0.075750 | 0.885637 | 0.005476 | 0.005376 |
+| gustatory_feeding | 256 | 6895 | 1.645239 | 0.255412 | 0.004189 | 0.945583 | 0.225318 | 0.118458 |
+| mechanosensory_grooming | 256 | 7802 | 1.878642 | 0.463450 | 0.001634 | 1.111238 | 0.027579 | 0.146880 |
+
+这组结果的论文意义是：不同感觉通道在同一个 FlyWire 图上产生不同 readout profile，说明该框架不是只为嗅觉记忆任务定制的动画系统。与此同时，我们在文稿中明确限制：当前公开复现不能声称“连接组单独自动涌现完整果蝇行为”，只能声称“连接组约束的 sensory-to-readout profile 与身体代理行为可组成可检验闭环”。
+
 ### 结果 1：四卡传播把结构侧化候选连接到记忆轴
 
 四卡运行耗时 `11.089` 秒，生成 `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite/suite_empirical_significance.csv`。显著指标如下：
@@ -268,6 +294,33 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 
 谨慎表述：当前新增结果支持“左侧反馈稳定 / 右侧调制输出”的可检验假说，但仍需真实单侧 APL/DPM/DAN/MBON 操控和 CS+/CS- 行为学实验证明因果性。
 
+## 新增结果：Eon/CyberFly 多模态复现基准
+
+为回应“连接组是否能自动涌现果蝇生物现象”的问题，我们把 Eon/CyberFly 公开说明拆解为四层：连接组/LIF 响应、sensory input、descending-neuron readout、NeuroMechFly/FlyGym 身体控制器。这样可以避免把低维控制器输出误写成纯连接组自动涌现。
+
+新增脚本为 `/unify/ydchen/unidit/bio_fly/scripts/run_eon_multimodal_benchmark.py`，输出目录为 `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark`。本轮测试四种输入：
+
+- 气味/食物记忆：ORN 输入，行为为 CS+ 食物气味趋近。
+- 视觉：LC/LPLC visual projection 输入，行为为视觉目标跟踪或 looming readout。
+- 味觉/feeding：gustatory 输入，当前为 feeding/proboscis-extension 连接组代理。
+- 机械感觉/梳理：mechanosensory 输入，当前为前足梳理代理。
+
+关键连接组 readout 文件：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/connectome_multimodal_readout_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/figures/Fig_eon_connectome_multimodal_readout_heatmap.png`
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/figures/Fig_eon_top_target_classes.png`
+
+视频材料：
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_visual_object_tracking.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_front_leg_grooming_proxy.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`
+
+可写入论文的谨慎结论：本系统已经把结构连接组、感觉通道、descending readout 和 embodied proxy 统一到一个可复现基准中，能够比较气味、视觉、味觉和机械感觉输入是否进入不同下游 readout。它支持“连接组约束的多模态行为假说生成”，但还不是“完整行为自动涌现”的最终证明。
+
 ## 新增结果：食物气味记忆仿真
 
 我们进一步把连接组侧化模型放入 embodied 行为仿真。由于当前 FlyGym 环境没有真实可摄取糖滴对象，本实验将食物实现为糖奖励相关气味源 `CS+`，并设置一个中性或竞争性气味源 `CS-`。虚拟果蝇在两个气味源之间运动，模型记录最终选择、食物 approach margin、镜像校正后的终点方向和轨迹长度。
@@ -281,3 +334,24 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`
 
 仿真条件包括 balanced naive search、learned sugar memory、left KC-APL-DPM feedback、right DAN-MBON output 和 weak-sugar/strong-decoy conflict。当前小样本中二分类 food choice rate 饱和，因此论文主指标应使用连续轨迹变量。该实验的科学价值在于把“左侧反馈稳定 / 右侧输出调制”转化为真实行为学可检验预测：如果左侧 KC-APL-DPM 反馈模块参与食物记忆稳定，则在弱糖气味和强竞争气味冲突条件下，单侧操控应最明显地改变 food approach margin。
+
+## 新增结果：descending-neuron 行为接口把多模态连接组响应落到身体控制层
+
+为了更严谨地回答“连接组是否足以产生行为相关现象”，我们进一步分析了 sensory seed 传播后的 descending-neuron (`DN`) 读出。DN 是从脑部下行到腹神经索的神经元，是脑内感觉、记忆和决策计算进入走路、转向、逃逸、梳理、取食等身体动作的关键接口。这个分析保存于 `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout`，论文视频副本保存于 `/unify/ydchen/unidit/bio_fly/paper/video/dn_multimodal_mechanism_summary.mp4`。
+
+核心结果如下：
+
+| condition | recruited DN | DN abs mass | DN laterality index | top DN family | top-family fraction | interpretation |
+| --- | ---: | ---: | ---: | --- | ---: | --- |
+| `olfactory_food_memory` | 58 | 0.011488 | +0.049 | `DNge` | 0.282 | 气味食物记忆较弱进入下行接口，更偏脑内记忆轴 |
+| `visual_object_tracking` | 704 | 0.203957 | -0.098 | `DNg` | 0.299 | 视觉输入强烈进入转向/姿态/逃逸候选 DN |
+| `gustatory_feeding` | 638 | 0.255412 | -0.103 | `DNge` | 0.514 | 味觉输入强烈进入头部、腿部和进食动作候选接口 |
+| `mechanosensory_grooming` | 769 | 0.463450 | -0.033 | `DNg` | 0.510 | 接触/机械感觉最强进入梳理和运动程序候选接口 |
+
+这一结果支持一个更适合 Nature 叙事的分层模型：蘑菇体左右侧化主要解释记忆检索和抗干扰稳定性；视觉、机械感觉和味觉则更直接招募 DN 家族，构成身体动作输出接口。换言之，我们不是声称“连接组单独自动涌现完整行为”，而是证明了 FlyWire 结构约束可以把不同感觉模态映射到不同下游行为接口，并产生可实验验证的 DN 家族预测。
+
+建议写入论文主线的表述：
+
+> Connectome propagation did not merely diffuse through generic central-brain targets. Instead, sensory modality determined the descending-neuron interface: mechanosensory and gustatory inputs strongly recruited DNg/DNge families, visual inputs recruited DNg/DNge/DNp pathways, whereas olfactory food-memory inputs had weak descending mass and a larger memory-axis component. This separation supports a layered model in which mushroom-body lateralization shapes memory-state computation, while modality-specific descending readouts provide the bridge to embodied behaviour.
+
+谨慎边界：当前 DN 结果是基于 FlyWire v783 signed propagation 的功能预测。它可以指导真实实验选择 DN 靶点，但不能替代钙成像、电生理、遗传干预或真实行为学验证。

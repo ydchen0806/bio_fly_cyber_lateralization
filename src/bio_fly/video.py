@@ -27,6 +27,16 @@ CONDITION_LABELS = {
     "left_sensor_deprivation": "Left sensor deprivation",
     "right_sensor_deprivation": "Right sensor deprivation",
     "initial_state_mirror": "Initial-state mirror",
+    "balanced_connectome_control": "Balanced connectome control",
+    "left_kc_apl_dpm_loop_enriched": "Left KC-APL-DPM feedback",
+    "left_kc_intrinsic_recurrent_enriched": "Left KC recurrent loop",
+    "right_dan_mbon_output_enriched": "Right DAN-MBON output",
+    "left_feedback_right_output_conflict": "Feedback-output conflict",
+    "food_naive_balanced_search": "Naive food search",
+    "food_learned_sugar_memory": "Learned sugar memory",
+    "food_left_kc_apl_dpm_feedback": "Left KC-APL-DPM feedback",
+    "food_right_dan_mbon_output": "Right DAN-MBON output",
+    "food_weak_sugar_strong_decoy": "Weak sugar, strong decoy",
 }
 
 
@@ -46,10 +56,45 @@ def _read_video_frames(video_path: Path, target_size: tuple[int, int]) -> list[n
 def _draw_label(frame: np.ndarray, label: str, metric_text: str) -> np.ndarray:
     output = frame.copy()
     overlay = output.copy()
-    cv2.rectangle(overlay, (0, 0), (output.shape[1], 58), (0, 0, 0), -1)
+    cv2.rectangle(overlay, (0, 0), (output.shape[1], 86), (0, 0, 0), -1)
     cv2.addWeighted(overlay, 0.55, output, 0.45, 0, output)
     cv2.putText(output, label, (12, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (255, 255, 255), 2, cv2.LINE_AA)
     cv2.putText(output, metric_text, (12, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.47, (230, 230, 230), 1, cv2.LINE_AA)
+    cv2.circle(output, (22, 69), 8, (0, 150, 255), -1)
+    cv2.putText(output, "CS+ learned food/sugar cue", (38, 74), cv2.FONT_HERSHEY_SIMPLEX, 0.42, (245, 245, 245), 1, cv2.LINE_AA)
+    cv2.circle(output, (258, 69), 8, (220, 120, 30), -1)
+    cv2.putText(output, "CS- neutral/decoy odour", (274, 74), cv2.FONT_HERSHEY_SIMPLEX, 0.42, (245, 245, 245), 1, cv2.LINE_AA)
+    return output
+
+
+def _draw_food_scene_overlay(frame: np.ndarray, cs_plus_side: str, condition: str) -> np.ndarray:
+    output = frame.copy()
+    h, w = output.shape[:2]
+    plus_x = int(w * 0.72)
+    minus_x = int(w * 0.72)
+    top_y = int(h * 0.30)
+    bottom_y = int(h * 0.72)
+    plus_y, minus_y = (top_y, bottom_y) if cs_plus_side == "left" else (bottom_y, top_y)
+
+    plume = output.copy()
+    for radius, alpha in [(128, 0.10), (88, 0.16), (52, 0.22)]:
+        cv2.circle(plume, (plus_x, plus_y), radius, (0, 170, 255), -1)
+        cv2.circle(plume, (minus_x, minus_y), radius, (220, 125, 35), -1)
+        cv2.addWeighted(plume, alpha, output, 1 - alpha, 0, output)
+
+    cv2.circle(output, (plus_x, plus_y), 20, (0, 170, 255), -1)
+    cv2.circle(output, (plus_x, plus_y), 28, (255, 255, 255), 2)
+    cv2.circle(output, (minus_x, minus_y), 20, (220, 125, 35), -1)
+    cv2.circle(output, (minus_x, minus_y), 28, (255, 255, 255), 2)
+
+    cv2.putText(output, "CS+ sugar/food odour", (max(8, plus_x - 124), max(26, plus_y - 36)), cv2.FONT_HERSHEY_SIMPLEX, 0.46, (20, 20, 20), 2, cv2.LINE_AA)
+    cv2.putText(output, "CS- decoy odour", (max(8, minus_x - 104), max(26, minus_y - 36)), cv2.FONT_HERSHEY_SIMPLEX, 0.46, (20, 20, 20), 2, cv2.LINE_AA)
+
+    if "food" in condition or "cs_plus" in condition or "odor" in condition:
+        cv2.rectangle(output, (w - 214, h - 58), (w - 8, h - 10), (255, 255, 255), -1)
+        cv2.rectangle(output, (w - 214, h - 58), (w - 8, h - 10), (60, 60, 60), 1)
+        cv2.putText(output, "visible markers are post-render", (w - 205, h - 37), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (40, 40, 40), 1, cv2.LINE_AA)
+        cv2.putText(output, "for paper-readable annotation", (w - 205, h - 19), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (40, 40, 40), 1, cv2.LINE_AA)
     return output
 
 
@@ -100,7 +145,12 @@ def make_behavior_grid_video(
             f"y*={float(row['signed_final_y']):+.2f}  T={duration:.1f}s"
         )
         label = CONDITION_LABELS.get(str(row["condition"]), str(row["condition"]).replace("_", " "))
-        video_frames.append([_draw_label(frame, label, metric) for frame in frames])
+        annotated_frames = []
+        for frame in frames:
+            labelled = _draw_label(frame, label, metric)
+            labelled = _draw_food_scene_overlay(labelled, cs_plus_side, str(row["condition"]))
+            annotated_frames.append(labelled)
+        video_frames.append(annotated_frames)
 
     max_frames = max(len(frames) for frames in video_frames)
     for frames in video_frames:

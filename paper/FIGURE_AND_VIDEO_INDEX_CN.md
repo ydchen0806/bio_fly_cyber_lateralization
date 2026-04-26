@@ -102,3 +102,31 @@
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`：糖奖励相关食物气味 CS+ 位于右侧时的镜像仿真拼接视频。
 - `/unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/FOOD_MEMORY_SIMULATION_CN.md`：食物气味记忆仿真实验解释。
 - `/unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/food_memory_behavior_summary.csv`：食物气味记忆仿真统计表。
+
+2026-04-26 更新：
+
+- 上面两个 paper 视频已经重新生成，视频面板内叠加了 `CS+ sugar/food odour`、`CS- decoy odour` 和半透明气味羽流。
+- 标注含义：`CS+` 是训练时和糖奖励/食物意义配对的气味，`CS-` 是中性或竞争诱饵气味。
+- 严谨边界：这些彩色气味源标记是 post-render annotation，用于论文/汇报可读性；FlyGym 原始仿真输入是 OdorArena 气味源，不是可摄取糖滴力学对象。
+
+## 新增 Eon/CyberFly 多模态复现视频
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_visual_object_tracking.mp4`：视觉目标跟踪复现/代理视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_front_leg_grooming_proxy.mp4`：机械感觉触发前足梳理代理视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`：食物气味记忆、视觉目标跟踪、机械感觉梳理的四宫格总览视频。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/figures/Fig_eon_connectome_multimodal_readout_heatmap.png`：嗅觉、视觉、味觉、机械感觉到 readout family 的连接组传播热图。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/figures/Fig_eon_top_target_classes.png`：多模态传播 top target 类别图。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/connectome_multimodal_readout_summary.csv`：多模态连接组 readout 数值表。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/EON_MULTIMODAL_REPRODUCTION_CN.md`：Eon/CyberFly 复现边界和结果报告。
+
+## 新增 DN 行为接口图和视频
+
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/figures/Fig_dn_family_readout_heatmap.png`：四种感觉条件招募 `DNg`、`DNge`、`DNp`、`DNpe` 等 descending-neuron 家族的热图。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/figures/Fig_dn_laterality_index.png`：DN 响应左右偏侧指数，定义为 `(right-left)/(right+left)`。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/figures/Fig_dn_side_mass_stacked.png`：每个感觉条件的左右 DN 绝对响应量占比。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig16_dn_family_readout_heatmap.png`：主稿 LaTeX 使用的 DN 家族热图副本。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig17_dn_laterality_index.png`：主稿 LaTeX 使用的 DN 偏侧图副本。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig18_dn_side_mass_stacked.png`：主稿 LaTeX 使用的 DN 左右堆叠图副本。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/videos/dn_multimodal_mechanism_summary.mp4`：1280x720 机制动画，展示 sensory input、FlyWire graph、DN family 和 behaviour proxy 的分层关系。
+- `/unify/ydchen/unidit/bio_fly/paper/video/dn_multimodal_mechanism_summary.mp4`：论文补充视频副本。
+- `/unify/ydchen/unidit/bio_fly/docs/DN_BEHAVIOR_READOUT_REPORT_CN.md`：中文报告，解释所有 DN 变量和主要生物学含义。

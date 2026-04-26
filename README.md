@@ -12,6 +12,36 @@
 4. 最新嗅觉记忆仿真套件在 `/unify/ydchen/unidit/bio_fly/outputs/olfactory_perturbation_suite` 生成，按文件时间估计从 `2026-04-26 12:09:56` 到 `2026-04-26 12:21:51`，约 `11.9` 分钟，其中包含屏幕筛选、四卡渲染、统计图和两个长视频。
 5. 快速回归测试已通过：在 `/unify/ydchen/unidit/bio_fly` 下运行 `/unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q`，结果为 `25 passed, 1 warning in 14.93s`。
 
+## 2026-04-26 最新交付物入口
+
+面向非生物/AI 背景老师的统一中文汇报文档已整理到：
+
+- `/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md`
+
+本轮重新生成的 paper 级视频入口：
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`：CS+ 食物/糖奖励气味在左侧，CS- 诱饵气味在右侧。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`：CS+ 食物/糖奖励气味在右侧，CS- 诱饵气味在左侧。
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_visual_object_tracking.mp4`：视觉目标跟踪复现/代理视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_front_leg_grooming_proxy.mp4`：机械感觉触发前足梳理代理视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`：嗅觉食物记忆、视觉、梳理的四宫格总览视频。
+
+本轮重要代码改动：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py`：论文视频拼接增加 `CS+ sugar/food odour`、`CS- decoy odour` 和半透明气味羽流标注，解决“觅食视频里看不到食物/气味目标”的问题。
+
+本轮重新运行命令和耗时：
+
+- Eon/CyberFly 多模态复现：约 `1 分 34 秒`，输出到 `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark`。
+- 食物气味记忆套件：约 `5 分 15 秒`，输出到 `/unify/ydchen/unidit/bio_fly/outputs/food_memory_suite` 并覆盖 paper 视频。
+
+严谨边界：
+
+- 本项目已经下载并使用 FlyWire v783 公开连接组、突触表、连接表、neuropil 计数和注释，总量约 `10.6 GB`。
+- 公开数据可以支持真实连接组传播和结构-功能统计。
+- Eon 内部完整 DN-to-motor 权重、训练权重和所有闭环参数没有公开，因此不能把当前视频写成“连接组单独自动涌现完整果蝇行为”。
+- 当前视频中 `CS+`/`CS-` 可视化标记是论文可读性的 post-render annotation；真实仿真输入是 FlyGym OdorArena 的两个气味源，不是可摄取糖滴力学对象。
+
 ## 给非生物背景老师的背景解释
 
 ### 果蝇为什么适合做这个问题
@@ -339,6 +369,91 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_mb_connectome_discovery.py --output-dir /unify/ydchen/unidit/bio_fly/outputs/mb_connectome_discovery
 ```
 
+## Git、论文编译与 CS+/CS- 解释
+
+本地 git 作者信息已配置：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+git config user.name
+git config user.email
+git remote -v
+```
+
+当前值：
+
+- `user.name`：`ydchen0806`
+- `user.email`：`yindachen@mail.ustc.edu.cn`
+- `origin`：`https://github.com/ydchen0806/bio_fly_cyber_lateralization.git`
+
+安全边界：不要把 GitHub token 写入 `/unify/ydchen/unidit/bio_fly/.git/config`、README、脚本或 shell 历史。推送时建议使用 GitHub CLI、临时环境变量或交互式 credential helper。
+
+CS+/CS- 在本项目中的含义：
+
+- `CS+`：conditioned stimulus positive，即训练时和糖/食物奖励绑定的气味。在仿真视频里，橙色标记代表“学会了会预测食物的气味线索”，不是一个可吃掉的实体食物模型。
+- `CS-`：conditioned stimulus negative，即中性或竞争气味。在仿真视频里，蓝色标记代表不预测糖奖励的对照气味或诱饵气味。
+- 视频是记忆测试阶段，而不是训练阶段。真实训练阶段可以有糖、电击或其他强化物；测试阶段通常只呈现气味，看果蝇是否靠近预测奖励的气味。因此当前渲染没有实体食物是合理的，但新版视频已在画面上方明确标注 `CS+ learned food/sugar cue` 和 `CS- neutral/decoy odour`。
+
+论文编译器已在本地配置。编译命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly/paper
+latexmk -pdf -interaction=nonstopmode -halt-on-error main_merged.tex
+```
+
+主要论文文件：
+
+- `/unify/ydchen/unidit/bio_fly/paper/main_merged.tex`：英文 Nature 风格主稿。
+- `/unify/ydchen/unidit/bio_fly/paper/main_merged.pdf`：已编译 PDF。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`：带食物线索标注的 CS+ 左侧补充视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`：带食物线索标注的 CS+ 右侧补充视频。
+
+## Eon/CyberFly 多模态复现基准
+
+Eon/CyberFly 原文和公开说明不能被简化成“只输入连接组，完整果蝇行为自动涌现”。更严谨的分解是：
+
+1. FlyWire/Shiu 全脑 LIF 或 signed propagation 产生感觉扰动后的神经响应。
+2. 视觉、嗅觉、机械感觉、味觉输入通过特定 sensory neuron seed 进入连接组。
+3. descending neuron 或少数运动相关神经元作为身体接口 readout。
+4. NeuroMechFly/FlyGym 的身体和低维控制器把 readout 转成 walking、steering、feeding 或 grooming 的代理行为。
+
+本项目新增 `/unify/ydchen/unidit/bio_fly/scripts/run_eon_multimodal_benchmark.py`，按这个分层框架复现，而不是把低维控制器生成的视频夸大成完整自动涌现。
+
+复现命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_eon_multimodal_benchmark.py \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark \
+  --render-device 0 \
+  --propagation-device cuda:0
+```
+
+新增输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/connectome_multimodal_readout_summary.csv`：气味、视觉、味觉、机械感觉到下游 readout 的连接组传播摘要。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/figures/Fig_eon_connectome_multimodal_readout_heatmap.png`：多模态 readout 热图。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/figures/Fig_eon_top_target_classes.png`：每种 sensory input 的 top target 类别。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/food_memory/food_memory_behavior_summary.csv`：食物/气味记忆行为摘要。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/videos/eon_visual_object_tracking.mp4`：视觉目标跟踪代理视频。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/videos/eon_mechanosensory_front_leg_grooming_proxy.mp4`：机械感觉诱发前足梳理代理视频。
+- `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/videos/eon_multimodal_reproduction_summary.mp4`：四行为总览视频。
+- `/unify/ydchen/unidit/bio_fly/docs/EON_MULTIMODAL_REPRODUCTION_CN.md`：中文严谨报告，说明复现层级、结果和限制。
+
+当前多模态 readout 结果：
+
+- `olfactory_food_memory`：主要传播到 visual_projection 与 memory_axis，memory-axis absolute mass 为 `0.245349`，descending absolute mass 为 `0.011488`。
+- `visual_object_tracking`：descending absolute mass 为 `0.203957`，说明视觉输入比气味更强地进入 descending readout；视频层因当前 FlyGym `VisualTaxis` camera binding 问题采用可解释 proxy fallback。
+- `gustatory_feeding`：gustatory absolute mass 为 `0.225318`，descending absolute mass 为 `0.255412`，适合作为 feeding/proboscis-extension 的连接组 readout 候选，但尚未实现完整口器动力学。
+- `mechanosensory_grooming`：descending absolute mass 为 `0.463450`，mechanosensory absolute mass 为 `0.146880`，并生成前足梳理代理视频。
+
+严谨边界：
+
+- 已复现：公开连接组层、sensory seed 到 readout 的多模态传播、FlyGym 食物/气味行为、视觉和梳理代理视频、定量指标和报告。
+- 未完全复现：Eon 内部完整 DN-to-motor 参数、所有行为的真实 motor program、视觉 looming 到 escape 的闭环身体反应、feeding 的 proboscis mechanics。
+- 论文中应写“connectome-constrained multimodal behavioural proxies”，不要写“连接组单独自动涌现完整果蝇行为”。
+
 ## 食物气味记忆功能仿真与文章修改
 
 本轮已把 `/unify/ydchen/unidit/bio_fly/Subgraph__status5___Morphology_Topology_Connectivity_ (1).zip` 解压到 `/unify/ydchen/unidit/bio_fly/paper`，并修改主文 `/unify/ydchen/unidit/bio_fly/paper/main_merged.tex`。新增内容把原文“KC 输入 NT 侧化”扩展为“左侧 KC-APL-DPM 反馈稳定 / 右侧 DAN-MBON 输出调制”的功能环路模型。
@@ -366,3 +481,54 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 ```
 
 详细说明见 `/unify/ydchen/unidit/bio_fly/docs/ARTICLE_REVISION_AND_FUNCTIONAL_SIMULATION_CN.md`。
+
+## Descending-neuron 行为接口分析
+
+为了更接近 Eon/CyberFly 中“连接组响应如何进入身体控制”的核心问题，本项目新增 DN 行为接口分析：
+
+- 脚本：`/unify/ydchen/unidit/bio_fly/scripts/run_dn_behavior_readout_analysis.py`
+- 模块：`/unify/ydchen/unidit/bio_fly/src/bio_fly/dn_readout_analysis.py`
+- 输出目录：`/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout`
+- 中文报告：`/unify/ydchen/unidit/bio_fly/docs/DN_BEHAVIOR_READOUT_REPORT_CN.md`
+
+复现命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_dn_behavior_readout_analysis.py \
+  --multimodal-dir /unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout \
+  --top-n 80
+```
+
+这里的 `DN` 是 descending neuron，即从脑部下行到腹神经索、把脑内感觉/记忆计算传给身体运动系统的神经元。这个层级非常关键：如果只看到脑内神经元响应，不能说明行为会发生；如果能看到合理的 DN 家族被招募，就能形成“连接组约束的行为接口”证据。
+
+新增 DN 输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/dn_behavior_readout_summary.csv`：每个感觉条件的 DN 总响应、左右偏侧指数和最高 DN 家族。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/dn_family_readout_summary.csv`：`DNg`、`DNge`、`DNp`、`DNpe` 等 DN 家族的响应量。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/dn_side_laterality_summary.csv`：左右 DN 响应量。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/dn_top_targets_by_condition.csv`：每个条件 top DN 明细。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/figures/Fig_dn_family_readout_heatmap.png`：DN 家族热图。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/figures/Fig_dn_laterality_index.png`：DN 左右偏侧指数。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/figures/Fig_dn_side_mass_stacked.png`：DN 左右响应量堆叠图。
+- `/unify/ydchen/unidit/bio_fly/outputs/dn_behavior_readout/videos/dn_multimodal_mechanism_summary.mp4`：高清机制动画。
+- `/unify/ydchen/unidit/bio_fly/paper/video/dn_multimodal_mechanism_summary.mp4`：论文视频副本。
+
+本轮 DN 结果：
+
+- `olfactory_food_memory`：招募 `58` 个 DN，DN absolute mass 为 `0.011488`，远低于视觉、味觉和机械感觉；最高家族为 `DNge`，占 DN 绝对响应量 `0.282`。这支持“气味食物记忆主要先经过蘑菇体/脑内记忆轴，再较弱地进入下行接口”的解释。
+- `visual_object_tracking`：招募 `704` 个 DN，DN absolute mass 为 `0.203957`；最高家族为 `DNg`，占比 `0.299`，其次 `DNge` 与 `DNp`。这符合视觉目标/looming 输入更直接影响转向、姿态或逃逸候选 DN 的预期。
+- `gustatory_feeding`：招募 `638` 个 DN，DN absolute mass 为 `0.255412`；最高家族为 `DNge`，占比 `0.514`，提示味觉/进食相关输入强烈进入头部、腿部和动作触发接口，但当前尚未实现完整口器动力学。
+- `mechanosensory_grooming`：招募 `769` 个 DN，DN absolute mass 为 `0.463450`；最高家族为 `DNg`，占比 `0.510`，是四个条件中最强的下行读出，符合接触/灰尘触发梳理或运动程序的连接组预期。
+
+变量解释：
+
+- `dn_abs_mass`：所有 DN 响应分数绝对值之和，表示该感觉输入进入下行运动接口的总强度。
+- `dn_signed_mass`：DN 响应分数带符号求和，正负号来自 excitatory/inhibitory 加权传播；它表示净激活方向，但不能直接等同于真实膜电位。
+- `laterality_index_right_minus_left`：`(right_dn_abs_mass - left_dn_abs_mass) / (right_dn_abs_mass + left_dn_abs_mass)`。正值表示右侧 DN 响应更强，负值表示左侧 DN 响应更强。
+- `top_dn_family_abs_fraction`：最高 DN 家族占该条件全部 DN 绝对响应量的比例。
+- `DNg`、`DNge`、`DNp`、`DNpe`：DN 命名家族，不是单个神经元。它们是候选行为接口集合，需要后续用单细胞干预或真实行为数据校准。
+
+严谨结论：当前已经复现了“感觉输入经 FlyWire 连接组传播并汇聚到不同 DN 行为接口”的关键中间层；这比只生成行为视频更接近可发表机制。但它仍然不是完整证明“连接组单独自动涌现所有果蝇行为”。论文中应将其表述为 `connectome-constrained descending-neuron readout and embodied behavioural proxies`。
