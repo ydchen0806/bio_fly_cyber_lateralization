@@ -19,6 +19,14 @@ CONDITION_LABELS = {
     "amplified_right_axis": "Amplified right axis",
     "amplified_left_axis": "Amplified left axis",
     "native_composite_axis": "Native composite axis",
+    "acute_balanced_memory": "Acute balanced memory",
+    "long_term_memory_consolidated": "Long-term consolidated",
+    "long_term_memory_decay": "Long-term decay",
+    "weak_odor_high_memory": "Weak odor, high memory",
+    "cs_plus_weak_conflict": "Weak CS+ conflict",
+    "left_sensor_deprivation": "Left sensor deprivation",
+    "right_sensor_deprivation": "Right sensor deprivation",
+    "initial_state_mirror": "Initial-state mirror",
 }
 
 

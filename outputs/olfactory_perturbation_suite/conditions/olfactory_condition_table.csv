@@ -1,0 +1,11 @@
+name,memory_mode,attractive_gain,aversive_gain,lateral_memory_bias,attractive_left_weight,attractive_right_weight,aversive_left_weight,aversive_right_weight,odor_x,odor_y_offset,odor_height,cs_plus_intensity,cs_minus_intensity,diffuse_exponent,spawn_x,spawn_y,spawn_heading,biological_interpretation
+acute_balanced_memory,acute,-500.0,80.0,0.0,1.0,9.0,0.0,10.0,4.0,3.0,1.5,1.0,1.0,2.0,0.0,0.0,0.0,balanced acute odor-memory reference
+long_term_memory_consolidated,long_term,-680.0,45.0,0.18,1.0,9.0,0.0,10.0,4.0,3.0,1.5,1.0,1.0,2.2,0.0,0.0,0.0,stronger consolidated CS+ drive with reduced aversive interference
+long_term_memory_decay,long_term_decay,-220.0,25.0,0.05,1.0,9.0,0.0,10.0,4.0,3.0,1.5,1.0,1.0,1.8,0.0,0.0,0.0,forgetting or weak retrieval after memory decay
+weak_odor_high_memory,weak_cue_retrieval,-720.0,40.0,0.22,1.0,9.0,0.0,10.0,4.0,3.0,1.5,0.35,0.35,2.4,0.0,0.0,0.0,long-term memory compensates for low odor concentration
+cs_plus_weak_conflict,sensory_memory_conflict,-650.0,60.0,-0.18,1.0,9.0,0.0,10.0,4.0,3.0,1.5,0.28,1.0,2.1,0.0,0.0,0.0,weak CS+ cue competes with stronger CS- sensory plume
+left_sensor_deprivation,sensory_asymmetry,-500.0,80.0,0.18,0.2,9.8,0.0,10.0,4.0,3.0,1.5,1.0,1.0,2.0,0.0,0.0,0.0,left olfactory channel deprivation with intact right channel
+right_sensor_deprivation,sensory_asymmetry,-500.0,80.0,-0.18,9.8,0.2,10.0,0.0,4.0,3.0,1.5,1.0,1.0,2.0,0.0,0.0,0.0,right olfactory channel deprivation with intact left channel
+initial_state_mirror,initial_state_control,-500.0,80.0,0.0,1.0,9.0,0.0,10.0,4.0,3.0,1.5,1.0,1.0,2.0,0.0,-1.5,0.25,same memory with biased initial position and heading
+wide_plume_low_gradient,plume_geometry,-500.0,80.0,0.0,1.0,9.0,0.0,10.0,4.0,4.2,1.5,1.0,1.0,1.45,0.0,0.0,0.0,broad shallow odor gradient tests navigational sensitivity
+narrow_plume_high_gradient,plume_geometry,-500.0,80.0,0.0,1.0,9.0,0.0,10.0,4.0,2.4,1.5,1.0,1.0,2.8,0.0,0.0,0.0,narrow steep plume emphasizes sensory input precision

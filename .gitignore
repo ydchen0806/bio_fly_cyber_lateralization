@@ -70,3 +70,16 @@ outputs/target_prioritization/*
 !outputs/target_prioritization/Fig_memory_axis_target_priorities.png
 !outputs/target_prioritization/memory_axis_candidate_targets.csv
 !outputs/target_prioritization/memory_axis_target_family_summary.csv
+!outputs/olfactory_perturbation_suite/
+outputs/olfactory_perturbation_suite/*
+!outputs/olfactory_perturbation_suite/conditions/
+outputs/olfactory_perturbation_suite/conditions/*
+!outputs/olfactory_perturbation_suite/conditions/olfactory_condition_table.csv
+!outputs/olfactory_perturbation_suite/figures/
+outputs/olfactory_perturbation_suite/figures/*
+!outputs/olfactory_perturbation_suite/figures/Fig_olfactory_perturbation_summary.png
+!outputs/olfactory_perturbation_suite/videos/
+outputs/olfactory_perturbation_suite/videos/*
+!outputs/olfactory_perturbation_suite/videos/olfactory_perturbation_cs_plus_left_long.mp4
+!outputs/olfactory_perturbation_suite/videos/olfactory_perturbation_cs_plus_right_long.mp4
+!outputs/olfactory_perturbation_suite/olfactory_behavior_summary.csv

@@ -182,6 +182,16 @@ def run_memory_choice_trial(
     camera_window_size: tuple[int, int] = (640, 480),
     render_device: str | None = None,
     plot_trajectory: bool = True,
+    odor_x: float = 4.0,
+    odor_y_offset: float = 3.0,
+    odor_height: float = 1.5,
+    cs_plus_intensity: float = 1.0,
+    cs_minus_intensity: float = 1.0,
+    diffuse_exponent: float = 2.0,
+    spawn_x: float = 0.0,
+    spawn_y: float = 0.0,
+    spawn_z: float = 0.2,
+    spawn_heading: float = 0.0,
 ) -> BehaviorTrialSummary:
     if render_device is not None:
         os.environ["MUJOCO_EGL_DEVICE_ID"] = str(render_device)
@@ -190,16 +200,16 @@ def run_memory_choice_trial(
     output_dir.mkdir(parents=True, exist_ok=True)
     if cs_plus_side not in {"left", "right"}:
         raise ValueError("cs_plus_side must be 'left' or 'right'")
-    plus_y = 3.0 if cs_plus_side == "left" else -3.0
+    plus_y = odor_y_offset if cs_plus_side == "left" else -odor_y_offset
     minus_y = -plus_y
-    odor_source = np.array([[4.0, plus_y, 1.5], [4.0, minus_y, 1.5]])
-    peak_odor_intensity = np.eye(2)
+    odor_source = np.array([[odor_x, plus_y, odor_height], [odor_x, minus_y, odor_height]])
+    peak_odor_intensity = np.array([[cs_plus_intensity, 0.0], [0.0, cs_minus_intensity]], dtype=float)
     marker_colors = np.array([[255, 127, 14, 255], [31, 119, 180, 255]], dtype=float) / 255.0
 
     arena = OdorArena(
         odor_source=odor_source,
         peak_odor_intensity=peak_odor_intensity,
-        diffuse_func=lambda value: value**-2,
+        diffuse_func=lambda value: value ** (-diffuse_exponent),
         marker_colors=marker_colors,
         marker_size=0.3,
     )
@@ -210,8 +220,8 @@ def run_memory_choice_trial(
         for segment in ["Tibia", "Tarsus1", "Tarsus2", "Tarsus3", "Tarsus4", "Tarsus5"]
     ]
     fly = Fly(
-        spawn_pos=(0, 0, 0.2),
-        spawn_orientation=(0, 0, 0),
+        spawn_pos=(spawn_x, spawn_y, spawn_z),
+        spawn_orientation=(0, 0, spawn_heading),
         contact_sensor_placements=contact_sensor_placements,
         enable_olfaction=True,
         enable_adhesion=True,
