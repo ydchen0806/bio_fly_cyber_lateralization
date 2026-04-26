@@ -1,0 +1,11 @@
+{
+  "glomerulus_map": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_glomerulus_map.csv",
+  "seed_neurons": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_seed_neurons.csv",
+  "kc_readout": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_kc_readout.csv",
+  "summary": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_encoder_summary.csv",
+  "report": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/OCT_MCH_SENSORY_ENCODER_CN.md",
+  "device": "cuda:0",
+  "steps": 2,
+  "max_active": 5000,
+  "propagate_to_kc": true
+}

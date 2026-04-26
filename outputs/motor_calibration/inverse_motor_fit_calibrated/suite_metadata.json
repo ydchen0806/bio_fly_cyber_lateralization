@@ -1,0 +1,31 @@
+{
+  "connectome_summary_path": "/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/connectome_multimodal_readout_summary.csv",
+  "target_table_path": "/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/motor_calibration_targets_from_simulation.csv",
+  "alpha": 0.2,
+  "n_conditions": 4,
+  "features": [
+    "descending_abs_mass",
+    "descending_signed_mass",
+    "memory_axis_abs_mass",
+    "memory_axis_signed_mass",
+    "visual_projection_abs_mass",
+    "visual_projection_signed_mass",
+    "gustatory_abs_mass",
+    "gustatory_signed_mass",
+    "mechanosensory_abs_mass",
+    "mechanosensory_signed_mass"
+  ],
+  "targets": [
+    "forward_drive",
+    "turning_drive",
+    "feeding_drive",
+    "grooming_drive",
+    "visual_steering_drive"
+  ],
+  "training_table": "/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/inverse_motor_training_table.csv",
+  "coefficients": "/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/inverse_motor_interface_coefficients.csv",
+  "predictions": "/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/inverse_motor_interface_predictions.csv",
+  "cross_validation": "/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/inverse_motor_interface_leave_one_out_cv.csv",
+  "figure": "/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/figures/Fig_inverse_motor_interface.png",
+  "report": "/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/INVERSE_MOTOR_INTERFACE_CN.md"
+}

@@ -1,0 +1,100 @@
+- name: oct_sucrose_appetitive_wt
+  cs_plus_odor: OCT_3-octanol
+  cs_minus_odor: MCH_4-methylcyclohexanol
+  unconditioned_stimulus: sucrose_reward
+  cs_plus_side: left
+  cs_plus_intensity: 1.0
+  cs_minus_intensity: 1.0
+  training_epochs: 3
+  memory_phase: acute_memory
+  mb_perturbation: wild_type_connectome
+  expected_behavior: approach_CS_plus
+  biological_question: baseline appetitive odor memory with OCT as rewarded odor
+- name: mch_sucrose_appetitive_wt_counterbalanced
+  cs_plus_odor: MCH_4-methylcyclohexanol
+  cs_minus_odor: OCT_3-octanol
+  unconditioned_stimulus: sucrose_reward
+  cs_plus_side: right
+  cs_plus_intensity: 1.0
+  cs_minus_intensity: 1.0
+  training_epochs: 3
+  memory_phase: acute_memory
+  mb_perturbation: wild_type_connectome
+  expected_behavior: approach_CS_plus
+  biological_question: odor identity counterbalance to separate memory from odor-specific
+    bias
+- name: oct_shock_aversive_wt
+  cs_plus_odor: OCT_3-octanol
+  cs_minus_odor: MCH_4-methylcyclohexanol
+  unconditioned_stimulus: electric_shock
+  cs_plus_side: left
+  cs_plus_intensity: 1.0
+  cs_minus_intensity: 1.0
+  training_epochs: 3
+  memory_phase: acute_memory
+  mb_perturbation: wild_type_connectome
+  expected_behavior: avoid_CS_plus
+  biological_question: aversive memory should reverse the sign of CS+ approach
+- name: oct_sucrose_left_mb_silenced
+  cs_plus_odor: OCT_3-octanol
+  cs_minus_odor: MCH_4-methylcyclohexanol
+  unconditioned_stimulus: sucrose_reward
+  cs_plus_side: left
+  cs_plus_intensity: 1.0
+  cs_minus_intensity: 1.0
+  training_epochs: 3
+  memory_phase: acute_memory
+  mb_perturbation: left_MB_gain_0.25
+  expected_behavior: reduced_or_shifted_CS_plus_approach
+  biological_question: test whether left MB feedback contributes to appetitive memory
+    stability
+- name: oct_sucrose_right_mb_silenced
+  cs_plus_odor: OCT_3-octanol
+  cs_minus_odor: MCH_4-methylcyclohexanol
+  unconditioned_stimulus: sucrose_reward
+  cs_plus_side: right
+  cs_plus_intensity: 1.0
+  cs_minus_intensity: 1.0
+  training_epochs: 3
+  memory_phase: acute_memory
+  mb_perturbation: right_MB_gain_0.25
+  expected_behavior: altered_output_or_choice_bias
+  biological_question: test whether right DAN-MBON output axis controls expression
+    bias
+- name: oct_sucrose_mb_symmetrized
+  cs_plus_odor: OCT_3-octanol
+  cs_minus_odor: MCH_4-methylcyclohexanol
+  unconditioned_stimulus: sucrose_reward
+  cs_plus_side: left
+  cs_plus_intensity: 1.0
+  cs_minus_intensity: 1.0
+  training_epochs: 3
+  memory_phase: acute_memory
+  mb_perturbation: left_right_MB_weights_averaged
+  expected_behavior: reduced_lateralization_index
+  biological_question: causal control for structural asymmetry rather than total MB
+    strength
+- name: oct_sucrose_mb_swapped
+  cs_plus_odor: OCT_3-octanol
+  cs_minus_odor: MCH_4-methylcyclohexanol
+  unconditioned_stimulus: sucrose_reward
+  cs_plus_side: left
+  cs_plus_intensity: 1.0
+  cs_minus_intensity: 1.0
+  training_epochs: 3
+  memory_phase: acute_memory
+  mb_perturbation: left_right_MB_weights_swapped
+  expected_behavior: reversed_lateralization_prediction
+  biological_question: strongest in-silico causal test for MB lateralization mechanism
+- name: weak_oct_strong_mch_conflict
+  cs_plus_odor: OCT_3-octanol
+  cs_minus_odor: MCH_4-methylcyclohexanol
+  unconditioned_stimulus: sucrose_reward
+  cs_plus_side: left
+  cs_plus_intensity: 0.35
+  cs_minus_intensity: 1.0
+  training_epochs: 3
+  memory_phase: retrieval_under_sensory_conflict
+  mb_perturbation: wild_type_connectome
+  expected_behavior: memory_dependent_CS_plus_rescue
+  biological_question: test whether memory can overcome weaker immediate sensory plume

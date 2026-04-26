@@ -1,0 +1,5 @@
+condition,forward_drive,turning_drive,feeding_drive,grooming_drive,visual_steering_drive,label_source,evidence_level,calibration_notes
+olfactory_food_memory,0.7438841195690529,0.6036419788996379,0.9446023472415579,0.03,0.05,derived_from_food_memory_flygym_trajectories,embodied_trajectory_proxy,mean_margin=5.7841; mean_path_length=8.9266; choice_rate=1.0000
+visual_object_tracking,0.6882386123766041,0.012952680965945892,0.02,0.03,0.0,derived_from_visual_tracking_proxy_trajectory,visual_proxy_trajectory,distance_start=29.4600; distance_end=105.4670; mean_speed=2.0647
+gustatory_feeding,0.12,0.08,0.8030237972736358,0.1383118599653244,0.02,derived_from_gustatory_connectome_readout_no_proboscis_mechanics,connectome_proxy_only,gustatory_abs_mass=0.2253; descending_abs_mass=0.2554
+mechanosensory_grooming,0.08,0.18,0.03,0.8274277134741936,0.02,derived_from_grooming_proxy_time_series,embodied_motor_proxy,mean_grooming_drive=0.5069; peak_grooming_drive=1.0000

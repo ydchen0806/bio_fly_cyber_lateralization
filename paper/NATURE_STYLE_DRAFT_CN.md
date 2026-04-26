@@ -355,3 +355,83 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 > Connectome propagation did not merely diffuse through generic central-brain targets. Instead, sensory modality determined the descending-neuron interface: mechanosensory and gustatory inputs strongly recruited DNg/DNge families, visual inputs recruited DNg/DNge/DNp pathways, whereas olfactory food-memory inputs had weak descending mass and a larger memory-axis component. This separation supports a layered model in which mushroom-body lateralization shapes memory-state computation, while modality-specific descending readouts provide the bridge to embodied behaviour.
 
 谨慎边界：当前 DN 结果是基于 FlyWire v783 signed propagation 的功能预测。它可以指导真实实验选择 DN 靶点，但不能替代钙成像、电生理、遗传干预或真实行为学验证。
+
+## 新增结果：逆向拟合的 connectome-readout-to-motor 替代接口
+
+Eon/CyberFly 公开材料没有释放完整 DN-to-motor 权重、训练权重和闭环参数。因此，本文不应声称恢复了 Eon 内部模型。为建立可复现的替代接口，我们新增了一个 inverse motor fitting 层：以公开连接组传播得到的 readout 特征为输入，拟合低维 motor motif，包括前进、转向、进食、梳理和视觉转向。
+
+新增代码和结果：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/inverse_motor_fit.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/run_inverse_motor_fit.py`
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/inverse_motor_interface_coefficients.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/inverse_motor_interface_predictions.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/inverse_motor_interface_leave_one_out_cv.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/figures/Fig_inverse_motor_interface.png`
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/INVERSE_MOTOR_INTERFACE_CN.md`
+
+当前模型使用四个多模态条件训练：`olfactory_food_memory`、`visual_object_tracking`、`gustatory_feeding` 和 `mechanosensory_grooming`。输入变量包括 `descending_abs_mass`、`memory_axis_abs_mass`、`visual_projection_abs_mass`、`gustatory_abs_mass` 和 `mechanosensory_abs_mass` 及其 signed 版本。输出变量是 `forward_drive`、`turning_drive`、`feeding_drive`、`grooming_drive` 和 `visual_steering_drive`。
+
+训练集上，五个 motor motif 的平均绝对误差均低于 `0.011`，说明 readout 特征可以被透明地映射到预设行为 motif。然而留一法误差较大，尤其 `feeding_drive` 和 `visual_steering_drive` 接近 `0.65`，反映当前样本数和标签来源仍不足。这个结果对论文的价值不是“证明已复刻 Eon 权重”，而是明确指出缺失接口问题可以被工程化、审计化，并提供一个可替换的校准接口。
+
+建议写入论文主线的表述：
+
+> To avoid conflating connectomic propagation with proprietary motor policies, we implemented an auditable surrogate motor interface. The interface maps modality-specific connectome readouts onto low-dimensional motor motifs and exposes all coefficients, cross-validation errors and failure modes. This layer makes the missing DN-to-motor interface explicit and experimentally replaceable, rather than hidden in an unreported controller.
+
+谨慎边界：该接口当前使用行为 motif 默认标签，不是真实果蝇逐帧标注，也不是 Eon 内部权重。它可以作为连接组-身体闭环的公开替代层和假说生成工具；Nature 级最终证据仍需要更大样本行为轨迹、独立测试集和真实生物实验。
+
+## 新增结果：从仿真轨迹校准替代 motor interface
+
+为进一步减少手工 motif 标签的主观性，我们新增了 motor calibration 表：从现有食物气味轨迹、视觉目标跟踪代理轨迹、梳理代理时间序列和 gustatory connectome readout 中量化 `forward_drive`、`turning_drive`、`feeding_drive`、`grooming_drive` 和 `visual_steering_drive`。该结果保存于 `/unify/ydchen/unidit/bio_fly/outputs/motor_calibration`。
+
+校准结果显示：`olfactory_food_memory` 在食物趋近轨迹中具有较高 `forward_drive`、`turning_drive` 和 `feeding_drive`；`mechanosensory_grooming` 具有最高 `grooming_drive`；`gustatory_feeding` 仍主要来自 connectome proxy，因为当前没有完整 proboscis mechanics。值得注意的是，当前 `visual_object_tracking` 代理轨迹的目标距离随时间增加，因此 `visual_steering_drive` 被量化为 `0.0`。这不是要掩盖的异常，而是一个明确的失败模式：视觉任务需要修复 FlyGym 原生 visual taxis 或引入更可靠的校准数据。
+
+建议写入论文方法学边界：
+
+> Motor targets were not treated as ground truth Eon parameters. Instead, each target was assigned an evidence level: embodied trajectory proxy, visual proxy trajectory, embodied motor proxy, or connectome proxy only. This annotation prevents proxy behaviours from being mistaken for fully validated biological readouts and highlights which claims require additional behavioural calibration.
+
+## 新增结果：OCT/MCH 经典嗅觉条件化实验表
+
+为让嗅觉记忆实验更接近经典果蝇行为学范式，我们新增 OCT/MCH 条件化实验表，保存于 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_conditioning`。该表明确区分：
+
+- `CS+`：训练时与奖励或惩罚配对的气味。
+- `CS-`：未配对的对照气味。
+- `US`：unconditioned stimulus，包括 `sucrose_reward` 和 `electric_shock`。
+- `OCT_3-octanol` 与 `MCH_4-methylcyclohexanol`：经典气味身份。
+- `mb_perturbation`：左侧 MB 抑制、右侧 MB 抑制、左右 MB 平均化、左右 MB 互换。
+
+该表的科学用途是把文章的侧化假说转成可直接测试的行为设计：如果左侧 KC-APL-DPM 反馈主要支持记忆稳定性，那么 `left_MB_gain_0.25` 应在弱 CS+ / 强 CS- 冲突条件下最明显降低 `approach_CS_plus`；如果右侧 DAN-MBON 输出轴主要影响表达偏置，那么 `right_MB_gain_0.25` 应更强地改变选择方向或转向侧化，而不一定完全消除记忆。
+
+谨慎边界：当前 FlyGym 行为层已经能放置两个气味源，但 `OCT` 与 `MCH` 还只是实验标签，尚未映射到真实 ORN/PN/KC 气味身份通道。下一步需要建立 OCT/MCH sensory encoder，才能声称仿真输入具有气味身份特异性。
+
+## 新增结果：OCT/MCH glomerulus-level sensory encoder
+
+为避免把 `OCT` 和 `MCH` 仅作为视频标签，我们进一步实现了一个 FlyWire 注释驱动的 glomerulus-level sensory encoder。该编码器把 `OCT_3-octanol` 和 `MCH_4-methylcyclohexanol` 映射到候选 antennal-lobe glomeruli，然后自动选择对应的 ORN 与 ALPN root ids，并通过 signed propagation 得到 KC readout。
+
+输出目录为 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder`。当前摘要如下：
+
+| odor identity | configured glomeruli | ORN seeds | PN seeds | KC readout | KC abs mass | KC laterality index |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `MCH_4-methylcyclohexanol` | 3 | 158 | 10 | 2203 | 0.526523 | -0.115850 |
+| `OCT_3-octanol` | 9 | 426 | 44 | 2757 | 0.461211 | -0.062238 |
+
+这一结果提供了一个新的可检验预测：在当前 glomerulus-level encoder 下，MCH 和 OCT 都产生左偏 KC readout，但 MCH 的 KC lateralization index 更负。这可以转化为真实实验问题：OCT/MCH 反平衡条件下，左侧蘑菇体扰动是否对 MCH-paired memory 更敏感，或者这种预测是否会被真实 ORN/PN 响应矩阵推翻。
+
+谨慎边界：该编码器是 `literature_constrained_glomerular_encoder`，不是实测 odor-response matrix。默认 glomerulus 权重应在后续用 calcium imaging、电生理或公开 odor-response 数据校准。
+
+## 新增结果：calibrated connectome motor bridge 驱动 OCT/MCH 行为 screen
+
+我们进一步把 motor calibration 表接入 OCT/MCH 行为仿真参数，生成 `/unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv`。该表把 `forward_drive`、`turning_drive`、`feeding_drive` 等校准 motor targets 映射为 `MemoryCondition` 的 `attractive_gain`、`aversive_gain` 和 `lateral_memory_bias`。
+
+轻量 sanity screen 每条件 1 个 seed、0.2 s，无渲染。结果显示：
+
+- appetitive OCT 条件选择 `CS+`；
+- aversive OCT shock 条件选择 `CS-`；
+- weak OCT / strong MCH conflict 条件仍选择 `CS+`，提示记忆项能在代理模型中部分覆盖感觉强度差异；
+- MCH counterbalanced 和 right-MB-silenced 条件在短 screen 中选择 `CS-`，提示这些条件需要长时程、多 seed 和更真实 sensory encoder 验证。
+
+建议写入论文方法：
+
+> Calibrated motor targets were translated into explicit memory-choice parameters rather than hidden controller weights. This made the connectome-to-behaviour bridge executable while preserving a clear distinction between public surrogate parameters and unavailable proprietary Eon motor weights.
+
+谨慎边界：该 screen 只证明流程可执行，不能作为显著性证据。正式图表必须使用至少每条件 50 个 seeds、镜像摆放、OCT/MCH 反平衡和 MB 消融对照。

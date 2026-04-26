@@ -532,3 +532,232 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 - `DNg`、`DNge`、`DNp`、`DNpe`：DN 命名家族，不是单个神经元。它们是候选行为接口集合，需要后续用单细胞干预或真实行为数据校准。
 
 严谨结论：当前已经复现了“感觉输入经 FlyWire 连接组传播并汇聚到不同 DN 行为接口”的关键中间层；这比只生成行为视频更接近可发表机制。但它仍然不是完整证明“连接组单独自动涌现所有果蝇行为”。论文中应将其表述为 `connectome-constrained descending-neuron readout and embodied behavioural proxies`。
+
+## 逆向拟合 DN-to-motor 替代接口层
+
+为了进一步接近 Eon/CyberFly 的闭环问题，本项目新增了一个可运行的“逆向拟合接口层”。它的目标是回答：在拿不到 Eon 私有 DN-to-motor 权重的情况下，能否用公开连接组 readout 特征拟合一个透明、可审计、可替换的 motor interface。
+
+新增文件：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/inverse_motor_fit.py`：逆向拟合核心模块。
+- `/unify/ydchen/unidit/bio_fly/scripts/run_inverse_motor_fit.py`：命令行入口。
+- `/unify/ydchen/unidit/bio_fly/tests/test_inverse_motor_fit.py`：回归测试。
+- `/unify/ydchen/unidit/bio_fly/docs/PROJECT_IMPLEMENTATION_STATUS_CN.md`：九项任务整理和本轮实现状态。
+
+复现命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_inverse_motor_fit.py \
+  --connectome-summary /unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/connectome_multimodal_readout_summary.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit
+```
+
+新增输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/inverse_motor_training_table.csv`：训练表，把 connectome readout 特征和行为 motif 标签合并。
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/inverse_motor_interface_coefficients.csv`：岭回归得到的 readout-to-motor 系数。
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/inverse_motor_interface_predictions.csv`：训练集预测与残差。
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/inverse_motor_interface_leave_one_out_cv.csv`：留一法交叉验证误差。
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/figures/Fig_inverse_motor_interface.png`：预测散点图和主要系数图。
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/INVERSE_MOTOR_INTERFACE_CN.md`：中文可行性报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/suite_metadata.json`：本轮运行元数据。
+
+输入变量解释：
+
+- `descending_abs_mass`：感觉扰动经连接组传播到 descending neuron 的总绝对响应量，表示脑到身体接口被招募的强度。
+- `descending_signed_mass`：descending neuron 响应的带符号总和，表示净兴奋/抑制方向。
+- `memory_axis_abs_mass`：KC、MBON、DAN、APL、DPM 等蘑菇体记忆轴的总响应量。
+- `memory_axis_signed_mass`：记忆轴带符号响应。
+- `visual_projection_abs_mass` / `visual_projection_signed_mass`：视觉投射通路响应。
+- `gustatory_abs_mass` / `gustatory_signed_mass`：味觉/糖接触通路响应。
+- `mechanosensory_abs_mass` / `mechanosensory_signed_mass`：机械感觉/接触通路响应。
+
+输出变量解释：
+
+- `forward_drive`：前进或趋近驱动，越高表示越倾向持续行走。
+- `turning_drive`：转向驱动，越高表示越需要方向修正或侧向选择。
+- `feeding_drive`：进食或口器伸展代理驱动。
+- `grooming_drive`：梳理动作驱动。
+- `visual_steering_drive`：视觉目标跟踪或视觉诱导转向驱动。
+
+本轮逆向拟合结果：
+
+- 训练条件数为 `4`：`olfactory_food_memory`、`visual_object_tracking`、`gustatory_feeding`、`mechanosensory_grooming`。
+- 训练集平均绝对误差较小：`forward_drive` 约 `0.0031`，`turning_drive` 约 `0.0064`，`feeding_drive` 约 `0.0091`，`grooming_drive` 约 `0.0066`，`visual_steering_drive` 约 `0.0100`。
+- 留一法误差明显更大：`forward_drive` 约 `0.2199`，`turning_drive` 约 `0.4090`，`feeding_drive` 约 `0.6449`，`grooming_drive` 约 `0.4113`，`visual_steering_drive` 约 `0.6500`。
+
+这个结果的解释是：逆向拟合接口层技术上可以实现，训练集能把四种 sensory readout 映射到不同 motor motif；但当前样本数只有四个，默认标签来自可解释行为 motif，而不是真实果蝇逐帧行为标注，所以它还不能作为最终功能显著性证据。Nature 级写法应是：`connectome-readout-constrained surrogate motor interface`。不能写成“恢复了 Eon 真实 DN-to-motor 权重”。
+
+完整整理文档见：
+
+- `/unify/ydchen/unidit/bio_fly/docs/PROJECT_IMPLEMENTATION_STATUS_CN.md`
+- `/unify/ydchen/unidit/bio_fly/outputs/inverse_motor_fit/INVERSE_MOTOR_INTERFACE_CN.md`
+
+## 从仿真轨迹校准 motor interface
+
+为避免逆向拟合接口层只依赖手工 motif 标签，本项目新增从已有仿真输出生成 motor calibration table 的流程。它读取食物气味轨迹、视觉目标跟踪轨迹、梳理代理时间序列和 gustatory connectome readout，生成可被 `run_inverse_motor_fit.py` 使用的目标表。
+
+新增文件：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/motor_calibration.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/build_motor_calibration.py`
+- `/unify/ydchen/unidit/bio_fly/tests/test_motor_calibration.py`
+
+复现命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/build_motor_calibration.py \
+  --eon-output-dir /unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/motor_calibration
+```
+
+新增输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/motor_calibration_targets_from_simulation.csv`：从仿真和代理指标生成的 motor target 表。
+- `/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/MOTOR_CALIBRATION_FROM_SIMULATION_CN.md`：中文报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/inverse_motor_interface_coefficients.csv`：校准标签版本的接口系数。
+- `/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/inverse_motor_interface_leave_one_out_cv.csv`：校准标签版本的留一法误差。
+- `/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/inverse_motor_fit_calibrated/figures/Fig_inverse_motor_interface.png`：校准标签版本拟合图。
+
+当前 motor calibration 结果：
+
+| condition | forward_drive | turning_drive | feeding_drive | grooming_drive | visual_steering_drive | evidence_level |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `olfactory_food_memory` | 0.743884 | 0.603642 | 0.944602 | 0.030000 | 0.050000 | `embodied_trajectory_proxy` |
+| `visual_object_tracking` | 0.688239 | 0.012953 | 0.020000 | 0.030000 | 0.000000 | `visual_proxy_trajectory` |
+| `gustatory_feeding` | 0.120000 | 0.080000 | 0.803024 | 0.138312 | 0.020000 | `connectome_proxy_only` |
+| `mechanosensory_grooming` | 0.080000 | 0.180000 | 0.030000 | 0.827428 | 0.020000 | `embodied_motor_proxy` |
+
+解释：
+
+- `olfactory_food_memory` 的标签来自 FlyGym 食物气味轨迹，已经比纯手工标签更接近行为数据。
+- `visual_object_tracking` 当前目标距离在代理轨迹中变大，因此 `visual_steering_drive` 被量化为 `0.0`。这是失败模式，不应在论文中隐藏；后续需要修复 FlyGym 原生视觉接口或替换为更可靠的 visual taxis rollout。
+- `gustatory_feeding` 仍是 `connectome_proxy_only`，因为当前没有完整 proboscis mechanics。
+- `mechanosensory_grooming` 来自前足梳理代理时间序列。
+
+## OCT/MCH 经典嗅觉条件化计划
+
+为了让“闻到了什么”更符合果蝇记忆实验标准，本项目新增 OCT/MCH 条件化实验表。这里 `OCT` 表示 `3-octanol`，`MCH` 表示 `4-methylcyclohexanol`，二者是经典果蝇嗅觉条件化实验中常用的气味对。
+
+新增文件：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/oct_mch_conditioning.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/write_oct_mch_conditioning_plan.py`
+- `/unify/ydchen/unidit/bio_fly/tests/test_oct_mch_conditioning.py`
+
+复现命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/write_oct_mch_conditioning_plan.py \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_conditioning
+```
+
+输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_conditioning/oct_mch_condition_table.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_conditioning/oct_mch_condition_table.yaml`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_conditioning/OCT_MCH_CONDITIONING_PLAN_CN.md`
+
+该条件表已经包含：
+
+- `OCT` 奖励条件：`OCT_3-octanol` 作为 `CS+`，`MCH_4-methylcyclohexanol` 作为 `CS-`，`US=sucrose_reward`。
+- `MCH` 反平衡条件：交换 `CS+` 和 `CS-`，排除气味身份本身造成的偏差。
+- 电击惩罚条件：`US=electric_shock`，预期行为从趋近 `CS+` 变成回避 `CS+`。
+- 左侧 MB 抑制、右侧 MB 抑制、左右 MB 平均化、左右 MB 互换。
+- 弱 OCT / 强 MCH 感觉冲突条件，用于测试记忆能否覆盖即时气味强度。
+
+下一步需要把 `cs_plus_odor` 和 `cs_minus_odor` 从标签升级成具体 ORN/PN/KC sensory encoder 输入。当前行为层可以放置两个气味源，但还没有区分 OCT 与 MCH 的受体通道差异。
+
+## OCT/MCH sensory encoder 与 connectome-motor 行为桥接
+
+本轮已经把上一节的“下一步”落成代码和输出。新增两个闭环：
+
+1. `OCT/MCH sensory encoder`：把 `OCT_3-octanol` 与 `MCH_4-methylcyclohexanol` 映射到候选 antennal-lobe glomeruli，再从 FlyWire 注释表自动选择 ORN/ALPN root ids，并用 FlyWire signed propagation 得到 KC readout。
+2. `connectome-motor bridge`：把 `/unify/ydchen/unidit/bio_fly/outputs/motor_calibration/motor_calibration_targets_from_simulation.csv` 中的 calibrated motor targets 转成现有 FlyGym 记忆行为仿真的 `MemoryCondition` 参数，并运行轻量 OCT/MCH screen。
+
+新增文件：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/odor_sensory_encoder.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/build_oct_mch_sensory_encoder.py`
+- `/unify/ydchen/unidit/bio_fly/tests/test_odor_sensory_encoder.py`
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/connectome_motor_bridge.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/build_connectome_motor_bridge.py`
+- `/unify/ydchen/unidit/bio_fly/tests/test_connectome_motor_bridge.py`
+- `/unify/ydchen/unidit/bio_fly/docs/MOTOR_AND_ODOR_BRIDGE_CN.md`
+- `/unify/ydchen/unidit/bio_fly/docs/INDEX_CN.md`
+
+复现 OCT/MCH sensory encoder：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/build_oct_mch_sensory_encoder.py \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder \
+  --device cuda:0 \
+  --steps 2 \
+  --max-active 5000
+```
+
+核心输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_glomerulus_map.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_seed_neurons.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_kc_readout.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_encoder_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/OCT_MCH_SENSORY_ENCODER_CN.md`
+
+当前 encoder 摘要：
+
+| odor_identity | n_configured_glomeruli | n_orn_seeds | n_pn_seeds | n_kc_readout | kc_abs_mass | kc_laterality_index |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `MCH_4-methylcyclohexanol` | 3 | 158 | 10 | 2203 | 0.526523 | -0.115850 |
+| `OCT_3-octanol` | 9 | 426 | 44 | 2757 | 0.461211 | -0.062238 |
+
+复现 connectome-motor bridge 和轻量 screen：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/build_connectome_motor_bridge.py \
+  --motor-target-table /unify/ydchen/unidit/bio_fly/outputs/motor_calibration/motor_calibration_targets_from_simulation.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge \
+  --run-screen \
+  --n-trials 1 \
+  --run-time 0.2 \
+  --render-device 0
+```
+
+核心输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/CONNECTOME_MOTOR_BRIDGE_CN.md`
+- `/unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/screen_trials/oct_mch_calibrated_screen_summary.csv`
+
+轻量 screen 结论：
+
+- `oct_sucrose_appetitive_wt` 选择 `CS+`，approach margin 为 `0.539841`。
+- `oct_shock_aversive_wt` 选择 `CS-`，approach margin 为 `-0.677602`，符合惩罚记忆方向。
+- `weak_oct_strong_mch_conflict` 选择 `CS+`，approach margin 为 `0.607921`，符合“记忆可部分覆盖弱 CS+ 感觉强度”的代理预测。
+- `mch_sucrose_appetitive_wt_counterbalanced` 和 `oct_sucrose_right_mb_silenced` 在当前 0.2 s screen 中选择 `CS-`，不能直接作为负结论，需要更长仿真和更多 seeds。
+
+严谨边界：
+
+- OCT/MCH encoder 是 `literature_constrained_glomerular_encoder`，不是实测气味响应矩阵。
+- connectome-motor bridge 的 `attractive_gain`、`aversive_gain` 和 `lateral_memory_bias` 是公开替代接口推导出的行为参数，不是 Eon 私有 DN-to-motor 权重。
+- 当前 screen 每条件只有 1 次、0.2 秒，只是 sanity check；正式统计至少需要每条件 50 个 seeds，最好四卡并行。
+
+## docs 目录整理
+
+文档入口已整理到：
+
+- `/unify/ydchen/unidit/bio_fly/docs/INDEX_CN.md`
+
+早期计划、旧运行报告和临时说明已经归档到：
+
+- `/unify/ydchen/unidit/bio_fly/docs/archive`

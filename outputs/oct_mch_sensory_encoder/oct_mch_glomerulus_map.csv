@@ -1,0 +1,13 @@
+odor_identity,glomerulus,relative_weight,evidence_note
+OCT_3-octanol,DM6,1.0,high-priority OCT-responsive candidate
+OCT_3-octanol,DC2,0.9,reported OCT-responsive candidate
+OCT_3-octanol,DP1m,0.85,DP1-family OCT-responsive candidate
+OCT_3-octanol,DP1l,0.65,DP1-family OCT-responsive candidate
+OCT_3-octanol,DM2,0.65,broad alcohol/odor candidate
+OCT_3-octanol,DM3,0.55,broad odor candidate
+OCT_3-octanol,DL3,0.5,OCT memory assay candidate
+OCT_3-octanol,VA2,0.45,auxiliary OCT candidate
+OCT_3-octanol,VM2,0.4,auxiliary OCT candidate
+MCH_4-methylcyclohexanol,VM2,1.0,high-priority MCH-responsive candidate
+MCH_4-methylcyclohexanol,DM2,0.85,MCH-responsive candidate
+MCH_4-methylcyclohexanol,VA2,0.55,third MCH candidate glomerulus
