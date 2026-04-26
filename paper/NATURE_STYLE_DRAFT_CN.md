@@ -452,3 +452,29 @@ Eon/CyberFly 公开材料没有释放完整 DN-to-motor 权重、训练权重和
 该结果支持三个方向性判断：第一，calibrated motor bridge 能表达奖励趋近和惩罚回避的符号反转；第二，OCT/MCH 反平衡条件在 pilot 中均能表达 CS+ 趋近；第三，弱 CS+ / 强 CS- 冲突条件下，记忆项仍能驱动 CS+ approach，这为真实行为实验提供优先条件。
 
 严谨边界：`n=4` 下 expected choice 的二项检验 FDR 为 `0.125`，不能作为显著性主结果。正式论文图需要每条件至少 `n=50`，并结合镜像摆放、OCT/MCH 反平衡、MB symmetrized、MB swapped 和 degree-preserving random graph 对照。
+
+## 新增结果：n=50 OCT/MCH 代理行为正式仿真
+
+我们随后运行了每条件 `n=50` 的 OCT/MCH 代理行为仿真，包括 late/terminal assay (`0.8 s`) 和 early-decision assay (`0.2 s`)。late assay 输出保存于 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50`，early assay 输出保存于 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_early_suite_n50`。
+
+late assay 显示，奖励条件稳定趋近 CS+，电击条件稳定回避 CS+，弱 OCT / 强 MCH 冲突条件仍趋近 CS+：
+
+| condition | expected choice rate | mean approach margin | FDR q |
+| --- | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 1.0 | 5.747301 | 1.776e-15 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 1.0 | 5.732041 | 1.776e-15 |
+| `oct_shock_aversive_wt` | 1.0 | -5.351253 | 1.776e-15 |
+| `weak_oct_strong_mch_conflict` | 1.0 | 5.770910 | 1.776e-15 |
+
+early-decision assay 在更短时间窗内仍然保留同向效应：
+
+| condition | expected choice rate | mean approach margin | FDR q |
+| --- | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 0.80 | 0.252239 | 2.386e-05 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 0.86 | 0.265210 | 2.798e-07 |
+| `oct_shock_aversive_wt` | 0.92 | -0.226482 | 1.785e-09 |
+| `weak_oct_strong_mch_conflict` | 0.86 | 0.244648 | 2.798e-07 |
+
+这支持一个较强但明确限定的结论：calibrated connectome-motor bridge 能稳定表达 OCT/MCH valence memory，包括奖励趋近、惩罚回避和弱 CS+ 冲突下的记忆驱动方向。
+
+同样重要的是负结果：MB perturbation 相对 wild-type 的 approach margin 差异没有通过 FDR 校正，late assay 中 `welch_fdr_q >= 0.984`，early assay 中 `welch_fdr_q = 1.0`。因此当前系统不能声称已经通过行为仿真证明 MB 侧化扰动具有显著因果效应。更合适的写法是：当前 bridge 验证了 valence/readout 层的可执行性，但侧化结构发现仍需要更灵敏的 readout，例如 early-turning kinematics、真实 OCT/MCH ORN response weights、或 MBON/DAN-to-DN 的直接映射。

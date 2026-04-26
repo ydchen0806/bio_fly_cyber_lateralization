@@ -252,6 +252,16 @@ def _safe_binom_p(successes: int, n: int, expected: float = 0.5) -> float:
         return np.nan
 
 
+def _reference_condition(row: pd.Series) -> str:
+    us = str(row.get("unconditioned_stimulus", ""))
+    cs_plus = str(row.get("cs_plus_odor", ""))
+    if us == "electric_shock":
+        return "oct_shock_aversive_wt"
+    if cs_plus == "MCH_4-methylcyclohexanol":
+        return "mch_sucrose_appetitive_wt_counterbalanced"
+    return "oct_sucrose_appetitive_wt"
+
+
 def _bh_fdr(p_values: pd.Series) -> pd.Series:
     p = p_values.astype(float).to_numpy()
     q = np.full_like(p, np.nan, dtype=float)
@@ -300,23 +310,23 @@ def summarize_oct_mch_formal_trials(trials: pd.DataFrame) -> tuple[pd.DataFrame,
     if not aggregate.empty:
         aggregate["expected_choice_fdr_q"] = _bh_fdr(aggregate["expected_choice_binom_p"])
 
-    wt = trials[trials["mb_perturbation"].astype(str).eq("wild_type_connectome")].copy()
     comparison_records = []
     for condition, frame in trials.groupby("condition", sort=False):
-        comparable_wt = wt[
-            wt["unconditioned_stimulus"].astype(str).eq(str(frame["unconditioned_stimulus"].iloc[0]))
-            & wt["cs_plus_odor"].astype(str).eq(str(frame["cs_plus_odor"].iloc[0]))
-        ]
-        if comparable_wt.empty or condition in set(comparable_wt["condition"]):
-            comparable_wt = wt[wt["unconditioned_stimulus"].astype(str).eq(str(frame["unconditioned_stimulus"].iloc[0]))]
-        t_stat, p_value = _safe_ttest(frame["approach_margin"], comparable_wt["approach_margin"])
+        reference_condition = _reference_condition(frame.iloc[0])
+        comparable_wt = trials[trials["condition"].astype(str).eq(reference_condition)].copy()
+        if condition == reference_condition:
+            t_stat, p_value = 0.0, 1.0
+            delta = 0.0
+        else:
+            t_stat, p_value = _safe_ttest(frame["approach_margin"], comparable_wt["approach_margin"])
+            delta = float(frame["approach_margin"].mean() - comparable_wt["approach_margin"].mean()) if not comparable_wt.empty else np.nan
         comparison_records.append(
             {
                 "condition": condition,
-                "reference": "matched_wild_type",
+                "reference": reference_condition,
                 "n_condition": int(len(frame)),
                 "n_reference": int(len(comparable_wt)),
-                "delta_mean_approach_margin": float(frame["approach_margin"].mean() - comparable_wt["approach_margin"].mean()) if not comparable_wt.empty else np.nan,
+                "delta_mean_approach_margin": delta,
                 "welch_t": t_stat,
                 "welch_p": p_value,
             }
@@ -378,6 +388,13 @@ def write_oct_mch_formal_report(
 ) -> Path:
     report_path = output_dir / "OCT_MCH_FORMAL_SUITE_CN.md"
     top = aggregate.sort_values("mean_approach_margin", ascending=False)
+    comparisons = pd.read_csv(comparisons_path)
+    mode_label = "正式仿真" if int(run_metadata["n_trials"]) >= 50 else "pilot"
+    evidence_note = (
+        "本轮达到每条件 n>=50，可作为代理仿真的正式统计结果；但它仍然不是真实果蝇行为学证据。"
+        if int(run_metadata["n_trials"]) >= 50
+        else "本轮样本量较小，只能作为 pilot 方向验证，不能作为论文主图显著性证据。"
+    )
     report_path.write_text(
         f"""# OCT/MCH 多 seed 行为套件报告
 
@@ -385,7 +402,7 @@ def write_oct_mch_formal_report(
 
 ## 目的
 
-本套件把上一轮 0.2 秒单 seed sanity check 升级为多 seed、可统计的 OCT/MCH 行为 screen。它仍然是具身代理仿真，不是最终真实行为学实验；但它已经把 OCT/MCH 条件表、calibrated motor bridge 和 FlyGym memory choice trial 连接成可重复统计流程。
+本套件把上一轮 0.2 秒单 seed sanity check 升级为多 seed、可统计的 OCT/MCH 行为 screen。本次运行类型：`{mode_label}`。它仍然是具身代理仿真，不是最终真实行为学实验；但它已经把 OCT/MCH 条件表、calibrated motor bridge 和 FlyGym memory choice trial 连接成可重复统计流程。
 
 ## 运行参数
 
@@ -403,6 +420,10 @@ def write_oct_mch_formal_report(
 
 {top[['condition', 'n_trials', 'cs_plus_choice_rate', 'expected_choice_rate', 'mean_approach_margin', 'expected_choice_fdr_q', 'cs_plus_odor', 'unconditioned_stimulus', 'mb_perturbation']].to_string(index=False)}
 
+## WT 对照比较
+
+{comparisons[['condition', 'reference', 'delta_mean_approach_margin', 'welch_p', 'welch_fdr_q']].to_string(index=False)}
+
 ## 解释
 
 - `mean_approach_margin = d(CS-) - d(CS+)`，正值表示更接近 CS+，负值表示更接近 CS-。
@@ -411,18 +432,20 @@ def write_oct_mch_formal_report(
 
 ## 当前边界
 
-当前默认运行可作为 pilot 统计。若要作为论文主图证据，建议使用：
+{evidence_note}
+
+如果需要重新运行正式代理仿真，建议使用：
 
 ```bash
 /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \\
   --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \\
-  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite \\
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50 \\
   --n-trials 50 \\
   --run-time 0.8 \\
   --max-workers 4
 ```
 
-不能把本代理 screen 写成真实果蝇行为学显著性证据；它用于决定真实实验和更大规模仿真的优先条件。
+不能把本代理 screen 写成真实果蝇行为学显著性证据；它用于决定真实实验和更大规模仿真的优先条件。MB 扰动相对 WT 的差异需要优先查看 `{comparisons_path}`，不能只看 expected choice 是否显著。
 """,
         encoding="utf-8",
     )

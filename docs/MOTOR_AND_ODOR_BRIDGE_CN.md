@@ -154,3 +154,36 @@ pilot 结果：
   --run-time 0.8 \
   --max-workers 4
 ```
+
+## n=50 正式代理仿真
+
+已经完成两套 `n=50` 代理仿真：
+
+- late/terminal assay：`/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50`
+- early-decision assay：`/unify/ydchen/unidit/bio_fly/outputs/oct_mch_early_suite_n50`
+
+late assay 的关键结果：
+
+| condition | expected_choice_rate | mean_approach_margin | expected_choice_fdr_q |
+| --- | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 1.0 | 5.747301 | 1.776e-15 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 1.0 | 5.732041 | 1.776e-15 |
+| `oct_shock_aversive_wt` | 1.0 | -5.351253 | 1.776e-15 |
+| `weak_oct_strong_mch_conflict` | 1.0 | 5.770910 | 1.776e-15 |
+
+early-decision assay 的关键结果：
+
+| condition | expected_choice_rate | mean_approach_margin | expected_choice_fdr_q |
+| --- | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 0.80 | 0.252239 | 2.386e-05 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 0.86 | 0.265210 | 2.798e-07 |
+| `oct_shock_aversive_wt` | 0.92 | -0.226482 | 1.785e-09 |
+| `weak_oct_strong_mch_conflict` | 0.86 | 0.244648 | 2.798e-07 |
+
+关键负结果：
+
+- late assay 中 MB perturbation 相对 WT 的 `welch_fdr_q >= 0.984`。
+- early-decision assay 中 MB perturbation 相对 WT 的 `welch_fdr_q = 1.0`。
+- 因此当前 motor bridge 能稳定表达 valence 和 CS+/CS- 方向，但还不能支持“MB 侧化扰动产生显著行为差异”的强声明。
+
+这不是失败，而是一个明确的下一步工程目标：需要引入更灵敏的 early-turning metric、真实 OCT/MCH response weights，或把 MBON/DAN/APL/DPM readout 更直接地接到 DN/motor 层。

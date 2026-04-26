@@ -23,6 +23,8 @@
 - `/unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/CONNECTOME_MOTOR_BRIDGE_CN.md`：calibrated connectome motor bridge 报告。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH 多 seed pilot 行为套件报告。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/figures/Fig_oct_mch_formal_suite.png`：OCT/MCH pilot 行为图。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH `n=50` late/terminal 正式代理仿真报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_early_suite_n50/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH `n=50` early-decision 正式代理仿真报告。
 
 ## 论文目录
 

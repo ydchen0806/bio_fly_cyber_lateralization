@@ -232,6 +232,19 @@ pilot 结论：
   --max-workers 4
 ```
 
+实际已完成两套 `n=50`：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50`：late/terminal assay，`run_time = 0.8 s`。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_early_suite_n50`：early-decision assay，`run_time = 0.2 s`。
+
+正式代理仿真结论：
+
+- late assay：奖励条件和弱冲突条件 `expected_choice_rate = 1.0`，电击条件按预期回避 CS+，所有 expected choice 的 FDR 为 `1.776e-15`。
+- early-decision assay：奖励条件 expected choice rate 为 `0.80-0.86`，电击条件为 `0.92`，FDR 范围 `1.785e-09` 到 `2.386e-05`。
+- MB perturbation 相对 WT 的 approach margin 差异没有 FDR 显著：late assay `welch_fdr_q >= 0.984`，early assay `welch_fdr_q = 1.0`。
+
+当前应写成：calibrated bridge 已经稳定表达 OCT/MCH valence memory 和 CS+/CS- 行为方向，但还没有证明蘑菇体侧化扰动会导致显著行为差异。下一步需要更灵敏的侧化 readout。
+
 ## docs 整理
 
 当前主线文档入口是 `/unify/ydchen/unidit/bio_fly/docs/INDEX_CN.md`。早期计划、旧运行报告和临时说明已归档到 `/unify/ydchen/unidit/bio_fly/docs/archive`，没有直接删除，便于追溯。

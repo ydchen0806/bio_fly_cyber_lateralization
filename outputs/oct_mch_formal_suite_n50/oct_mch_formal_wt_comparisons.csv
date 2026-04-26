@@ -1,0 +1,9 @@
+condition,reference,n_condition,n_reference,delta_mean_approach_margin,welch_t,welch_p,welch_fdr_q
+mch_sucrose_appetitive_wt_counterbalanced,mch_sucrose_appetitive_wt_counterbalanced,50,50,0.0,0.0,1.0,1.0
+oct_shock_aversive_wt,oct_shock_aversive_wt,50,50,0.0,0.0,1.0,1.0
+oct_sucrose_appetitive_wt,oct_sucrose_appetitive_wt,50,50,0.0,0.0,1.0,1.0
+oct_sucrose_left_mb_silenced,oct_sucrose_appetitive_wt,50,50,-0.01045410768636934,-0.3182742239858116,0.7509621905162498,1.0
+oct_sucrose_mb_swapped,oct_sucrose_appetitive_wt,50,50,-0.004880375431194572,-0.1622227135248086,0.871465785593095,1.0
+oct_sucrose_mb_symmetrized,oct_sucrose_appetitive_wt,50,50,-0.055683574889804355,-1.5564154152268157,0.12303208447503163,0.984256675800253
+oct_sucrose_right_mb_silenced,oct_sucrose_appetitive_wt,50,50,0.02067284842356365,0.7489854512083007,0.45578304714103424,1.0
+weak_oct_strong_mch_conflict,oct_sucrose_appetitive_wt,50,50,0.02360864595049783,0.778020556873779,0.4384348984761146,1.0

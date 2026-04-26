@@ -4,7 +4,7 @@
 
 ## 目的
 
-本套件把上一轮 0.2 秒单 seed sanity check 升级为多 seed、可统计的 OCT/MCH 行为 screen。它仍然是具身代理仿真，不是最终真实行为学实验；但它已经把 OCT/MCH 条件表、calibrated motor bridge 和 FlyGym memory choice trial 连接成可重复统计流程。
+本套件把上一轮 0.2 秒单 seed sanity check 升级为多 seed、可统计的 OCT/MCH 行为 screen。本次运行类型：`pilot`。它仍然是具身代理仿真，不是最终真实行为学实验；但它已经把 OCT/MCH 条件表、calibrated motor bridge 和 FlyGym memory choice trial 连接成可重复统计流程。
 
 ## 运行参数
 
@@ -30,6 +30,18 @@ mch_sucrose_appetitive_wt_counterbalanced         4                  1.0        
              weak_oct_strong_mch_conflict         4                  1.0                   1.0              0.672881                  0.125            OCT_3-octanol         sucrose_reward           wild_type_connectome
                     oct_shock_aversive_wt         4                  0.0                   1.0             -0.673866                  0.125            OCT_3-octanol         electric_shock           wild_type_connectome
 
+## WT 对照比较
+
+                                condition         reference  delta_mean_approach_margin  welch_p  welch_fdr_q
+mch_sucrose_appetitive_wt_counterbalanced matched_wild_type                    0.202627 0.234451     0.941985
+                    oct_shock_aversive_wt matched_wild_type                    0.000000 1.000000     1.000000
+                oct_sucrose_appetitive_wt matched_wild_type                    0.043451 0.795265     1.000000
+             oct_sucrose_left_mb_silenced matched_wild_type                    0.044087 0.841882     1.000000
+                   oct_sucrose_mb_swapped matched_wild_type                    0.033971 0.876187     1.000000
+               oct_sucrose_mb_symmetrized matched_wild_type                   -0.105683 0.660213     1.000000
+            oct_sucrose_right_mb_silenced matched_wild_type                    0.242168 0.235496     0.941985
+             weak_oct_strong_mch_conflict matched_wild_type                   -0.246079 0.376269     1.000000
+
 ## 解释
 
 - `mean_approach_margin = d(CS-) - d(CS+)`，正值表示更接近 CS+，负值表示更接近 CS-。
@@ -38,15 +50,17 @@ mch_sucrose_appetitive_wt_counterbalanced         4                  1.0        
 
 ## 当前边界
 
-当前默认运行可作为 pilot 统计。若要作为论文主图证据，建议使用：
+本轮样本量较小，只能作为 pilot 方向验证，不能作为论文主图显著性证据。
+
+如果需要重新运行正式代理仿真，建议使用：
 
 ```bash
 /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
   --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
-  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50 \
   --n-trials 50 \
   --run-time 0.8 \
   --max-workers 4
 ```
 
-不能把本代理 screen 写成真实果蝇行为学显著性证据；它用于决定真实实验和更大规模仿真的优先条件。
+不能把本代理 screen 写成真实果蝇行为学显著性证据；它用于决定真实实验和更大规模仿真的优先条件。MB 扰动相对 WT 的差异需要优先查看 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_wt_comparisons.csv`，不能只看 expected choice 是否显著。

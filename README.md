@@ -804,6 +804,38 @@ pilot 结果，每条件 `n=4`：
 
 当前 `n=4` pilot 的二项检验 FDR 仍为 `0.125`，不能写成显著性行为学证据。可以写成：多 seed pilot 复现了奖励趋近、惩罚回避和弱 CS+ 冲突下的记忆驱动方向，支持继续扩大到 `n>=50` 的正式仿真和真实果蝇行为实验。
 
+### n=50 正式代理仿真结果
+
+本轮已经实际运行两套每条件 `n=50` 的 OCT/MCH 代理行为仿真：
+
+1. late/terminal assay：`run_time = 0.8 s`，输出目录 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50`。
+2. early-decision assay：`run_time = 0.2 s`，输出目录 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_early_suite_n50`。
+
+late assay 结果：
+
+| condition | expected_choice_rate | mean_approach_margin | expected_choice_fdr_q |
+| --- | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 1.0 | 5.747301 | 1.776e-15 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 1.0 | 5.732041 | 1.776e-15 |
+| `oct_shock_aversive_wt` | 1.0 | -5.351253 | 1.776e-15 |
+| `weak_oct_strong_mch_conflict` | 1.0 | 5.770910 | 1.776e-15 |
+
+early-decision assay 结果：
+
+| condition | expected_choice_rate | mean_approach_margin | expected_choice_fdr_q |
+| --- | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 0.80 | 0.252239 | 2.386e-05 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 0.86 | 0.265210 | 2.798e-07 |
+| `oct_shock_aversive_wt` | 0.92 | -0.226482 | 1.785e-09 |
+| `weak_oct_strong_mch_conflict` | 0.86 | 0.244648 | 2.798e-07 |
+
+严谨解释：
+
+- 两个时间窗都稳定支持奖励趋近、惩罚回避和弱 CS+ / 强 CS- 冲突下的记忆方向。
+- 但 MB perturbation 相对 WT 的 approach margin 差异没有通过 FDR 校正：late assay 中 `welch_fdr_q >= 0.984`，early assay 中 `welch_fdr_q = 1.0`。
+- 因此当前可以把 calibrated motor bridge 写成“可靠表达 valence 和 CS+/CS- 方向的代理行为系统”，但不能写成“已经证明 MB 侧化扰动产生显著行为差异”。
+- 侧化行为差异需要下一步引入更灵敏的 early-turning metric、真实 OCT/MCH sensory response 权重，或更直接的 MBON/DAN-to-DN motor readout 映射。
+
 ## docs 目录整理
 
 文档入口已整理到：
