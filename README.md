@@ -11,6 +11,7 @@
 - 已形成：`/unify/ydchen/unidit/bio_fly/docs/POST_RUN_REPORT_CN.md` 记录最近一次四卡正式运行的耗时、结论、结果文件和改进项。
 - 已新增：`/unify/ydchen/unidit/bio_fly/docs/LATERALIZATION_BEHAVIOR_SIMULATION_CN.md` 记录侧化增强、对称救援、镜像翻转和长视频行为仿真实验。
 - 已探索：`/unify/ydchen/unidit/bio_fly/docs/STRUCTURE_BEHAVIOR_LINKAGE_CN.md` 把结构侧化、四卡功能传播和 FlyGym 轨迹读出统一到同一张证据链。
+- 已筛选：`/unify/ydchen/unidit/bio_fly/docs/TARGET_PRIORITIZATION_CN.md` 从四卡 top targets 中提取 MBON/DAN/APL/DPM/MBIN/OAN 记忆轴遗传操控候选。
 - 已实现：结构不对称候选可转成 signed propagation 功能验证和可选 Brian2/LIF 扰动清单。
 
 ## 快速开始
@@ -32,6 +33,7 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_behavior_memory_experiment.py --
 python /unify/ydchen/unidit/bio_fly/scripts/run_behavior_memory_experiment.py --condition-table /unify/ydchen/unidit/bio_fly/outputs/model_linkage/derived_behavior_conditions.csv --n-trials 1 --run-time 0.5 --output-dir /unify/ydchen/unidit/bio_fly/outputs/behavior_data_driven
 python /unify/ydchen/unidit/bio_fly/scripts/run_lateralization_behavior_suite.py --stats /unify/ydchen/unidit/bio_fly/outputs/kc_nt_lateralization/kc_nt_fraction_stats.csv --output-dir /unify/ydchen/unidit/bio_fly/outputs/lateralization_behavior_suite --render-devices 0 1 2 3 --dose-trials 2 --dose-run-time 0.8 --render-run-time 1.6 --camera-play-speed 0.12
 python /unify/ydchen/unidit/bio_fly/scripts/analyze_structure_behavior_linkage.py
+python /unify/ydchen/unidit/bio_fly/scripts/prioritize_memory_axis_targets.py
 python /unify/ydchen/unidit/bio_fly/scripts/summarize_behavior_results.py
 python /unify/ydchen/unidit/bio_fly/scripts/make_behavior_comparison_video.py --cs-plus-side left
 python /unify/ydchen/unidit/bio_fly/scripts/write_full_project_guide.py
@@ -58,6 +60,7 @@ python /unify/ydchen/unidit/bio_fly/scripts/analyze_mushroom_body_asymmetry.py \
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/behavior.py`：FlyGym/MuJoCo 左右记忆偏置行为实验和视频渲染。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/lateralization_behavior.py`：侧化操控、剂量扫描、四卡 EGL 长视频和中文报告生成。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/structure_behavior_linkage.py`：结构侧化、功能传播、行为轨迹的联动分析和候选假说筛选。
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/target_prioritization.py`：从四卡 top targets 中筛选可转遗传/药理操控的记忆轴候选。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/model_linkage.py`：真实 KC-NT 侧化候选 → 功能传播扰动 → 数据驱动行为参数。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/experiment_suite.py`：四卡系统仿真、matched random controls、统计显著性、图表和动态机制视频。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/behavior_summary.py`：行为结果汇总表和论文草图。
@@ -71,6 +74,7 @@ python /unify/ydchen/unidit/bio_fly/scripts/analyze_mushroom_body_asymmetry.py \
 - `/unify/ydchen/unidit/bio_fly/docs/behavior_experiment.md`：FlyGym 行为学实验、视频渲染和论文级扩展路线。
 - `/unify/ydchen/unidit/bio_fly/docs/LATERALIZATION_BEHAVIOR_SIMULATION_CN.md`：侧化行为操控、剂量扫描、长视频和 paper 增强说明。
 - `/unify/ydchen/unidit/bio_fly/docs/STRUCTURE_BEHAVIOR_LINKAGE_CN.md`：结构-功能-行为联动探索报告。
+- `/unify/ydchen/unidit/bio_fly/docs/TARGET_PRIORITIZATION_CN.md`：记忆轴遗传操控候选靶点报告。
 
 ## 最新探索发现
 
@@ -78,6 +82,7 @@ python /unify/ydchen/unidit/bio_fly/scripts/analyze_mushroom_body_asymmetry.py \
 - 四卡 propagation 显示 `right_serotonin_kc_activate` 和 `left_glutamate_kc_activate` 均进入 memory-axis readout，关键指标 FDR q 约 `0.038`。
 - FlyGym 行为读出中，二分类 CS+ choice rate 容易饱和；`mean_approach_margin`、`signed_final_y`、`path_length` 更适合连接结构组学和行为学。
 - 当前最强结构-功能-行为候选是 `left_mb_glutamate_enriched`，对应 `left_glutamate_kc_activate`，在行为 approach margin 上最强，并保持 memory-axis propagation。
+- 靶点优先级分析把 `DPM`、`APL`、`MBON03/09/12/13`、`PPL103` 等候选从全脑 top targets 中筛出；当前最高优先级是左侧 `DPM` 和左侧 `APL`，对应 `left_glutamate_kc_activate` 与 `left_mb_glutamate_enriched`。
 - `mirror_reversal`、`bilateral_memory_blunted` 和强侧化条件是下一轮真实行为学与 spike-level validation 的优先反事实对照。
 
 ## GitHub 发布边界

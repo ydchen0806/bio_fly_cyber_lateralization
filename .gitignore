@@ -65,3 +65,8 @@ outputs/structure_behavior_linkage/*
 !outputs/structure_behavior_linkage/behavior_condition_summary.csv
 !outputs/structure_behavior_linkage/dose_response_correlations.csv
 !outputs/structure_behavior_linkage/functional_behavior_linkage.csv
+!outputs/target_prioritization/
+outputs/target_prioritization/*
+!outputs/target_prioritization/Fig_memory_axis_target_priorities.png
+!outputs/target_prioritization/memory_axis_candidate_targets.csv
+!outputs/target_prioritization/memory_axis_target_family_summary.csv
