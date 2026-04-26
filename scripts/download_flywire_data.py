@@ -25,8 +25,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--skip-git", action="store_true", help="Do not clone/update flywire_annotations")
     parser.add_argument("--prepare-annotations", action="store_true", help="Convert annotation TSV to parquet summaries")
     parser.add_argument("--download-small", action="store_true", help="Download small Zenodo support files")
+    parser.add_argument("--download-neuropil-post", action="store_true", help="Download per_neuron_neuropil_count_post_783.feather (~234 MB)")
     parser.add_argument("--download-connections", action="store_true", help="Download proofread_connections_783.feather (~852 MB)")
     parser.add_argument("--download-synapses", action="store_true", help="Download flywire_synapses_783.feather (~9.5 GB)")
+    parser.add_argument("--download-all", action="store_true", help="Download every FlyWire v783 Zenodo table used by this project")
     parser.add_argument("--manifest-only", action="store_true", help="Only refresh the Zenodo manifest")
     return parser.parse_args()
 
@@ -44,12 +46,25 @@ def main() -> None:
     ]
 
     keys = []
+    if args.download_all:
+        keys.extend(
+            [
+                "proofread_root_ids_783.npy",
+                "per_neuron_neuropil_count_pre_783.feather",
+                "per_neuron_neuropil_count_post_783.feather",
+                "proofread_connections_783.feather",
+                "flywire_synapses_783.feather",
+            ]
+        )
     if args.download_small:
         keys.extend(DEFAULT_SMALL_KEYS)
+    if args.download_neuropil_post:
+        keys.append("per_neuron_neuropil_count_post_783.feather")
     if args.download_connections:
         keys.append("proofread_connections_783.feather")
     if args.download_synapses:
         keys.append("flywire_synapses_783.feather")
+    keys = list(dict.fromkeys(keys))
     if keys and not args.manifest_only:
         downloaded = download_zenodo_files(keys)
         downloads_path = summarize_downloads(downloaded, RAW_DATA_ROOT / "zenodo_10676866_downloads.csv")
