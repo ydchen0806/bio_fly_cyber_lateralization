@@ -62,6 +62,128 @@ def _perturbation_lateral_bias(perturbation: str, turning_drive: float) -> float
     return float(mapping.get(perturbation, base))
 
 
+def _opposite_side(side: str) -> str:
+    if side == "left":
+        return "right"
+    if side == "right":
+        return "left"
+    raise ValueError(f"cs_plus_side must be 'left' or 'right', got {side!r}")
+
+
+KINEMATIC_METRICS = [
+    "early_time_s",
+    "physical_lateral_displacement",
+    "signed_early_lateral_displacement",
+    "expected_early_lateral_displacement",
+    "early_signed_lateral_velocity_to_cs_plus",
+    "early_expected_lateral_velocity",
+    "signed_lateral_velocity_to_cs_plus",
+    "expected_lateral_velocity",
+    "physical_laterality_index",
+    "cs_plus_laterality_index",
+    "expected_laterality_index",
+    "net_heading_rad",
+    "signed_net_heading_to_cs_plus_rad",
+    "early_heading_rad",
+    "signed_early_heading_to_cs_plus_rad",
+    "physical_curvature_rad_per_mm",
+    "signed_curvature_to_cs_plus_rad_per_mm",
+    "expected_curvature_rad_per_mm",
+    "time_to_expected_zone_s",
+]
+
+
+COMPARISON_METRICS = [
+    "approach_margin",
+    "signed_final_y",
+    "path_length",
+    "expected_early_lateral_displacement",
+    "early_expected_lateral_velocity",
+    "expected_laterality_index",
+    "expected_curvature_rad_per_mm",
+    "physical_laterality_index",
+    "time_to_expected_zone_s",
+]
+
+
+def quantify_trajectory_kinematics(
+    trajectory_path: Path,
+    cs_plus_side: str,
+    expected_behavior: str,
+    simulated_time_s: float,
+    early_fraction: float = 0.25,
+    commit_y_threshold: float = 0.75,
+) -> dict[str, float]:
+    """Compute side-balanced trajectory metrics before temporary trajectories are deleted."""
+    defaults = {metric: np.nan for metric in KINEMATIC_METRICS}
+    if not trajectory_path.exists():
+        return defaults
+    trajectory = pd.read_csv(trajectory_path)
+    if len(trajectory) < 2 or not {"x", "y"}.issubset(trajectory.columns):
+        return defaults
+
+    x = trajectory["x"].astype(float).to_numpy()
+    y = trajectory["y"].astype(float).to_numpy()
+    if "path_length" in trajectory.columns:
+        path = trajectory["path_length"].astype(float).to_numpy()
+    else:
+        segment = np.sqrt(np.diff(x) ** 2 + np.diff(y) ** 2)
+        path = np.concatenate([[0.0], np.cumsum(segment)])
+
+    total_time = float(simulated_time_s) if np.isfinite(simulated_time_s) and simulated_time_s > 0 else float(len(trajectory))
+    dt = total_time / max(len(trajectory) - 1, 1)
+    early_fraction = float(np.clip(early_fraction, 0.02, 1.0))
+    early_idx = int(np.clip(np.ceil((len(trajectory) - 1) * early_fraction), 1, len(trajectory) - 1))
+    early_time = max(early_idx * dt, 1e-12)
+    total_path = max(float(path[-1] - path[0]), 1e-12)
+
+    sign_to_cs_plus = 1.0 if cs_plus_side == "left" else -1.0
+    expected_direction = -1.0 if expected_behavior == "avoid_CS_plus" else 1.0
+
+    dx_net = float(x[-1] - x[0])
+    dy_net = float(y[-1] - y[0])
+    dx_early = float(x[early_idx] - x[0])
+    dy_early = float(y[early_idx] - y[0])
+
+    velocity_dx = np.diff(x)
+    velocity_dy = np.diff(y)
+    segment = np.sqrt(velocity_dx**2 + velocity_dy**2)
+    valid = segment > 1e-12
+    if valid.sum() >= 2:
+        angles = np.unwrap(np.arctan2(velocity_dy[valid], velocity_dx[valid]))
+        total_turn = float(np.diff(angles).sum())
+    else:
+        total_turn = 0.0
+    physical_curvature = total_turn / total_path
+
+    signed_progress = sign_to_cs_plus * (y - y[0])
+    expected_progress = expected_direction * signed_progress
+    committed = np.flatnonzero(expected_progress >= float(commit_y_threshold))
+    time_to_expected_zone = float(committed[0] * dt) if committed.size else np.nan
+
+    return {
+        "early_time_s": float(early_time),
+        "physical_lateral_displacement": dy_net,
+        "signed_early_lateral_displacement": float(sign_to_cs_plus * dy_early),
+        "expected_early_lateral_displacement": float(expected_direction * sign_to_cs_plus * dy_early),
+        "early_signed_lateral_velocity_to_cs_plus": float(sign_to_cs_plus * dy_early / early_time),
+        "early_expected_lateral_velocity": float(expected_direction * sign_to_cs_plus * dy_early / early_time),
+        "signed_lateral_velocity_to_cs_plus": float(sign_to_cs_plus * dy_net / max(total_time, 1e-12)),
+        "expected_lateral_velocity": float(expected_direction * sign_to_cs_plus * dy_net / max(total_time, 1e-12)),
+        "physical_laterality_index": float(dy_net / total_path),
+        "cs_plus_laterality_index": float(sign_to_cs_plus * dy_net / total_path),
+        "expected_laterality_index": float(expected_direction * sign_to_cs_plus * dy_net / total_path),
+        "net_heading_rad": float(np.arctan2(dy_net, dx_net)),
+        "signed_net_heading_to_cs_plus_rad": float(np.arctan2(sign_to_cs_plus * dy_net, dx_net)),
+        "early_heading_rad": float(np.arctan2(dy_early, dx_early)),
+        "signed_early_heading_to_cs_plus_rad": float(np.arctan2(sign_to_cs_plus * dy_early, dx_early)),
+        "physical_curvature_rad_per_mm": float(physical_curvature),
+        "signed_curvature_to_cs_plus_rad_per_mm": float(sign_to_cs_plus * physical_curvature),
+        "expected_curvature_rad_per_mm": float(expected_direction * sign_to_cs_plus * physical_curvature),
+        "time_to_expected_zone_s": time_to_expected_zone,
+    }
+
+
 def build_oct_mch_behavior_condition_table(
     motor_target_table: Path = DEFAULT_OUTPUT_ROOT / "motor_calibration" / "motor_calibration_targets_from_simulation.csv",
     output_dir: Path = DEFAULT_OUTPUT_ROOT / "connectome_motor_bridge",
@@ -209,6 +331,17 @@ def _run_oct_mch_formal_task(payload: dict) -> dict:
         (row.get("expected_behavior") == "avoid_CS_plus" and record["choice"] == "CS-")
         or (row.get("expected_behavior") != "avoid_CS_plus" and record["choice"] == "CS+")
     )
+    record["assay_side_role"] = str(payload.get("assay_side_role", "nominal"))
+    record.update(
+        quantify_trajectory_kinematics(
+            trajectory_path=Path(record["trajectory_path"]),
+            cs_plus_side=str(row["cs_plus_side"]),
+            expected_behavior=str(row.get("expected_behavior", "")),
+            simulated_time_s=float(record["simulated_time_s"]),
+            early_fraction=float(payload.get("early_fraction", 0.25)),
+            commit_y_threshold=float(payload.get("commit_y_threshold", 0.75)),
+        )
+    )
     if not payload["keep_trajectories"]:
         for key in ["trajectory_path", "plot_path"]:
             path_value = record.get(key)
@@ -285,27 +418,34 @@ def summarize_oct_mch_formal_trials(trials: pd.DataFrame) -> tuple[pd.DataFrame,
         mean_signed_y, signed_low, signed_high = _mean_ci(frame["signed_final_y"])
         expected_successes = int(frame["expected_choice_met"].sum())
         n = int(len(frame))
-        records.append(
-            {
-                "condition": condition,
-                "n_trials": n,
-                "cs_plus_choice_rate": float(frame["choice_is_cs_plus"].mean()),
-                "expected_choice_rate": float(frame["expected_choice_met"].mean()),
-                "expected_choice_binom_p": _safe_binom_p(expected_successes, n),
-                "mean_approach_margin": mean_margin,
-                "approach_margin_ci_low": margin_low,
-                "approach_margin_ci_high": margin_high,
-                "mean_signed_final_y": mean_signed_y,
-                "signed_final_y_ci_low": signed_low,
-                "signed_final_y_ci_high": signed_high,
-                "mean_path_length": float(frame["path_length"].mean()),
-                "cs_plus_odor": frame["cs_plus_odor"].iloc[0],
-                "cs_minus_odor": frame["cs_minus_odor"].iloc[0],
-                "unconditioned_stimulus": frame["unconditioned_stimulus"].iloc[0],
-                "mb_perturbation": frame["mb_perturbation"].iloc[0],
-                "expected_behavior": frame["expected_behavior"].iloc[0],
-            }
-        )
+        record = {
+            "condition": condition,
+            "n_trials": n,
+            "n_nominal_side_trials": int(frame.get("assay_side_role", pd.Series(dtype=str)).astype(str).eq("nominal").sum())
+            if "assay_side_role" in frame.columns
+            else n,
+            "n_mirror_side_trials": int(frame.get("assay_side_role", pd.Series(dtype=str)).astype(str).eq("mirror").sum())
+            if "assay_side_role" in frame.columns
+            else 0,
+            "cs_plus_choice_rate": float(frame["choice_is_cs_plus"].mean()),
+            "expected_choice_rate": float(frame["expected_choice_met"].mean()),
+            "expected_choice_binom_p": _safe_binom_p(expected_successes, n),
+            "mean_approach_margin": mean_margin,
+            "approach_margin_ci_low": margin_low,
+            "approach_margin_ci_high": margin_high,
+            "mean_signed_final_y": mean_signed_y,
+            "signed_final_y_ci_low": signed_low,
+            "signed_final_y_ci_high": signed_high,
+            "mean_path_length": float(frame["path_length"].mean()),
+            "cs_plus_odor": frame["cs_plus_odor"].iloc[0],
+            "cs_minus_odor": frame["cs_minus_odor"].iloc[0],
+            "unconditioned_stimulus": frame["unconditioned_stimulus"].iloc[0],
+            "mb_perturbation": frame["mb_perturbation"].iloc[0],
+            "expected_behavior": frame["expected_behavior"].iloc[0],
+        }
+        for metric in KINEMATIC_METRICS:
+            record[f"mean_{metric}"] = float(frame[metric].dropna().astype(float).mean()) if metric in frame.columns else np.nan
+        records.append(record)
     aggregate = pd.DataFrame.from_records(records)
     if not aggregate.empty:
         aggregate["expected_choice_fdr_q"] = _bh_fdr(aggregate["expected_choice_binom_p"])
@@ -314,26 +454,37 @@ def summarize_oct_mch_formal_trials(trials: pd.DataFrame) -> tuple[pd.DataFrame,
     for condition, frame in trials.groupby("condition", sort=False):
         reference_condition = _reference_condition(frame.iloc[0])
         comparable_wt = trials[trials["condition"].astype(str).eq(reference_condition)].copy()
-        if condition == reference_condition:
-            t_stat, p_value = 0.0, 1.0
-            delta = 0.0
-        else:
-            t_stat, p_value = _safe_ttest(frame["approach_margin"], comparable_wt["approach_margin"])
-            delta = float(frame["approach_margin"].mean() - comparable_wt["approach_margin"].mean()) if not comparable_wt.empty else np.nan
-        comparison_records.append(
-            {
-                "condition": condition,
-                "reference": reference_condition,
-                "n_condition": int(len(frame)),
-                "n_reference": int(len(comparable_wt)),
-                "delta_mean_approach_margin": delta,
-                "welch_t": t_stat,
-                "welch_p": p_value,
-            }
-        )
+        record = {
+            "condition": condition,
+            "reference": reference_condition,
+            "n_condition": int(len(frame)),
+            "n_reference": int(len(comparable_wt)),
+        }
+        for metric in COMPARISON_METRICS:
+            if metric not in frame.columns or metric not in comparable_wt.columns:
+                delta = np.nan
+                t_stat = np.nan
+                p_value = np.nan
+            elif condition == reference_condition:
+                delta = 0.0
+                t_stat = 0.0
+                p_value = 1.0
+            else:
+                t_stat, p_value = _safe_ttest(frame[metric], comparable_wt[metric])
+                delta = float(frame[metric].dropna().astype(float).mean() - comparable_wt[metric].dropna().astype(float).mean()) if not comparable_wt.empty else np.nan
+            record[f"delta_mean_{metric}"] = delta
+            record[f"welch_t_{metric}"] = t_stat
+            record[f"welch_p_{metric}"] = p_value
+        record["welch_t"] = record["welch_t_approach_margin"]
+        record["welch_p"] = record["welch_p_approach_margin"]
+        comparison_records.append(record)
     comparisons = pd.DataFrame.from_records(comparison_records)
     if not comparisons.empty:
         comparisons["welch_fdr_q"] = _bh_fdr(comparisons["welch_p"])
+        for metric in COMPARISON_METRICS:
+            p_col = f"welch_p_{metric}"
+            if p_col in comparisons.columns:
+                comparisons[f"welch_fdr_q_{metric}"] = _bh_fdr(comparisons[p_col])
     return aggregate, comparisons
 
 
@@ -345,7 +496,8 @@ def plot_oct_mch_formal_summary(aggregate: pd.DataFrame, comparisons: pd.DataFra
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     ordered = aggregate.sort_values("mean_approach_margin", ascending=True)
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5.4))
+    fig, axes = plt.subplots(2, 3, figsize=(17, 9.5))
+    axes = axes.ravel()
     axes[0].barh(ordered["condition"], ordered["mean_approach_margin"], color="#4477aa")
     axes[0].axvline(0, color="0.25", lw=1)
     axes[0].set_title("OCT/MCH approach margin")
@@ -370,6 +522,27 @@ def plot_oct_mch_formal_summary(aggregate: pd.DataFrame, comparisons: pd.DataFra
     axes[2].set_title("Perturbation shift vs WT")
     axes[2].set_xlabel("mean approach margin")
     axes[2].set_ylabel("delta vs matched WT")
+
+    if "mean_expected_laterality_index" in ordered.columns:
+        axes[3].barh(ordered["condition"], ordered["mean_expected_laterality_index"], color="#aa7744")
+    axes[3].axvline(0, color="0.25", lw=1)
+    axes[3].set_title("Expected-direction lateral index")
+    axes[3].set_xlabel("expected signed dy / path")
+    axes[3].tick_params(axis="y", labelsize=7)
+
+    if "mean_early_expected_lateral_velocity" in ordered.columns:
+        axes[4].barh(ordered["condition"], ordered["mean_early_expected_lateral_velocity"], color="#aa4477")
+    axes[4].axvline(0, color="0.25", lw=1)
+    axes[4].set_title("Early expected lateral velocity")
+    axes[4].set_xlabel("mm/s, first window")
+    axes[4].tick_params(axis="y", labelsize=7)
+
+    if "mean_physical_laterality_index" in ordered.columns:
+        axes[5].barh(ordered["condition"], ordered["mean_physical_laterality_index"], color="#557755")
+    axes[5].axvline(0, color="0.25", lw=1)
+    axes[5].set_title("Physical left-right drift")
+    axes[5].set_xlabel("dy / path")
+    axes[5].tick_params(axis="y", labelsize=7)
     fig.tight_layout()
     fig.savefig(output_path, dpi=240)
     plt.close(fig)
@@ -395,6 +568,33 @@ def write_oct_mch_formal_report(
         if int(run_metadata["n_trials"]) >= 50
         else "本轮样本量较小，只能作为 pilot 方向验证，不能作为论文主图显著性证据。"
     )
+    kinetic_cols = [
+        "condition",
+        "n_trials",
+        "n_nominal_side_trials",
+        "n_mirror_side_trials",
+        "mean_expected_laterality_index",
+        "mean_early_expected_lateral_velocity",
+        "mean_expected_curvature_rad_per_mm",
+        "mean_physical_laterality_index",
+        "mean_time_to_expected_zone_s",
+    ]
+    kinetic_cols = [col for col in kinetic_cols if col in top.columns]
+    comparison_cols = [
+        "condition",
+        "reference",
+        "delta_mean_approach_margin",
+        "welch_fdr_q",
+        "delta_mean_early_expected_lateral_velocity",
+        "welch_fdr_q_early_expected_lateral_velocity",
+        "delta_mean_expected_laterality_index",
+        "welch_fdr_q_expected_laterality_index",
+        "delta_mean_physical_laterality_index",
+        "welch_fdr_q_physical_laterality_index",
+        "delta_mean_expected_curvature_rad_per_mm",
+        "welch_fdr_q_expected_curvature_rad_per_mm",
+    ]
+    comparison_cols = [col for col in comparison_cols if col in comparisons.columns]
     report_path.write_text(
         f"""# OCT/MCH 多 seed 行为套件报告
 
@@ -415,20 +615,31 @@ def write_oct_mch_formal_report(
 - run_time_s：`{run_metadata['run_time']}`
 - max_workers：`{run_metadata['max_workers']}`
 - render：`{run_metadata['render']}`
+- mirror_sides：`{run_metadata.get('mirror_sides', False)}`
+- early_fraction：`{run_metadata.get('early_fraction', 0.25)}`
+- commit_y_threshold_mm：`{run_metadata.get('commit_y_threshold', 0.75)}`
 
 ## 条件汇总
 
 {top[['condition', 'n_trials', 'cs_plus_choice_rate', 'expected_choice_rate', 'mean_approach_margin', 'expected_choice_fdr_q', 'cs_plus_odor', 'unconditioned_stimulus', 'mb_perturbation']].to_string(index=False)}
 
+## 侧化动力学汇总
+
+{top[kinetic_cols].to_string(index=False)}
+
 ## WT 对照比较
 
-{comparisons[['condition', 'reference', 'delta_mean_approach_margin', 'welch_p', 'welch_fdr_q']].to_string(index=False)}
+{comparisons[comparison_cols].to_string(index=False)}
 
 ## 解释
 
 - `mean_approach_margin = d(CS-) - d(CS+)`，正值表示更接近 CS+，负值表示更接近 CS-。
 - `expected_choice_rate` 根据条件预期计算：奖励条件预期选择 CS+，电击条件预期选择 CS-。
 - `expected_choice_fdr_q` 是 expected choice 对 0.5 随机选择的二项检验 FDR 校正值。
+- `mirror_sides=True` 时每个条件同时运行 CS+ 左侧与右侧，减少空间摆放对 MB 扰动比较的混杂。
+- `mean_expected_laterality_index` 是按预期行为方向校正的横向位移除以路径长度；奖励任务朝 CS+ 为正，电击任务远离 CS+ 为正。
+- `mean_early_expected_lateral_velocity` 是早期窗口内朝预期方向的横向速度，用于捕捉终点 choice rate 饱和前的转向差异。
+- `mean_physical_laterality_index` 不按 CS+ 方向校正，保留真实左/右漂移，可用于发现 motor-side bias。
 
 ## 当前边界
 
@@ -442,7 +653,8 @@ def write_oct_mch_formal_report(
   --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50 \\
   --n-trials 50 \\
   --run-time 0.8 \\
-  --max-workers 4
+  --max-workers 4 \\
+  --mirror-sides
 ```
 
 不能把本代理 screen 写成真实果蝇行为学显著性证据；它用于决定真实实验和更大规模仿真的优先条件。MB 扰动相对 WT 的差异需要优先查看 `{comparisons_path}`，不能只看 expected choice 是否显著。
@@ -466,6 +678,9 @@ def run_oct_mch_formal_suite(
     camera_fps: int = 30,
     camera_play_speed: float = 0.18,
     camera_window_size: tuple[int, int] = (640, 480),
+    mirror_sides: bool = False,
+    early_fraction: float = 0.25,
+    commit_y_threshold: float = 0.75,
 ) -> dict[str, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     table = pd.read_csv(condition_table)
@@ -474,24 +689,33 @@ def run_oct_mch_formal_suite(
     trial_output = output_dir / "trial_artifacts"
     trial_output.mkdir(parents=True, exist_ok=True)
     for _, row in table.iterrows():
-        row_dict = row.to_dict()
-        for trial in range(n_trials):
-            tasks.append(
-                {
-                    "row": row_dict,
-                    "trial": trial,
-                    "output_dir": str(trial_output),
-                    "run_time": run_time,
-                    "decision_interval": decision_interval,
-                    "render": render,
-                    "render_device": render_devices[len(tasks) % len(render_devices)] if render_devices else None,
-                    "keep_trajectories": keep_trajectories,
-                    "mujoco_gl": mujoco_gl,
-                    "camera_fps": camera_fps,
-                    "camera_play_speed": camera_play_speed,
-                    "camera_window_size": camera_window_size,
-                }
-            )
+        nominal_side = str(row["cs_plus_side"])
+        side_roles = [(nominal_side, "nominal")]
+        if mirror_sides:
+            side_roles.append((_opposite_side(nominal_side), "mirror"))
+        for cs_plus_side, assay_side_role in side_roles:
+            row_dict = row.to_dict()
+            row_dict["cs_plus_side"] = cs_plus_side
+            for trial in range(n_trials):
+                tasks.append(
+                    {
+                        "row": row_dict,
+                        "trial": trial,
+                        "output_dir": str(trial_output),
+                        "run_time": run_time,
+                        "decision_interval": decision_interval,
+                        "render": render,
+                        "render_device": render_devices[len(tasks) % len(render_devices)] if render_devices else None,
+                        "keep_trajectories": keep_trajectories,
+                        "mujoco_gl": mujoco_gl,
+                        "camera_fps": camera_fps,
+                        "camera_play_speed": camera_play_speed,
+                        "camera_window_size": camera_window_size,
+                        "assay_side_role": assay_side_role,
+                        "early_fraction": early_fraction,
+                        "commit_y_threshold": commit_y_threshold,
+                    }
+                )
     if max_workers <= 1:
         records = [_run_oct_mch_formal_task(task) for task in tasks]
     else:
@@ -518,6 +742,9 @@ def run_oct_mch_formal_suite(
         "max_workers": max_workers,
         "render": render,
         "keep_trajectories": keep_trajectories,
+        "mirror_sides": mirror_sides,
+        "early_fraction": early_fraction,
+        "commit_y_threshold": commit_y_threshold,
     }
     report_path = write_oct_mch_formal_report(
         output_dir=output_dir,

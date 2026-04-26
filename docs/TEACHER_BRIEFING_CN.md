@@ -2,7 +2,7 @@
 
 保存路径：`/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md`
 
-最后更新：`2026-04-26`
+最后更新：`2026-04-27`
 
 ## 1. 这个项目在研究什么
 
@@ -96,6 +96,16 @@ Eon 的公开说明是 `https://eon.systems/updates/embodied-brain-emulation`。
 
 `proxy` 是代理模型。意思是某些行为视频不是完整生物力学行为复刻，而是用可解释控制器把连接组 readout 映射成视觉可懂的动作。
 
+`OCT` 是 `3-octanol`，`MCH` 是 `4-methylcyclohexanol`，二者是经典果蝇嗅觉条件化实验中常用的一对气味。
+
+`mirror-side` 是镜像摆放。意思是同一个条件既跑 `CS+` 在左侧，也跑 `CS+` 在右侧，用来排除“只是气味放在左边/右边”造成的假侧化。
+
+`mean_expected_laterality_index` 是按实验预期方向校正后的横向位移除以路径长度。奖励任务中，朝 `CS+` 走为正；电击任务中，远离 `CS+` 走为正。
+
+`mean_early_expected_lateral_velocity` 是轨迹前 `25%` 时间里朝预期方向的横向速度，用来观察果蝇早期转向，而不是只看最终停在哪里。
+
+`mean_physical_laterality_index` 不做 `CS+` 方向校正，直接看身体真实向左还是向右漂移。这个变量用来检查是否存在纯粹的运动侧偏。
+
 ## 5. 当前代码结构
 
 核心包目录：
@@ -183,6 +193,22 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_food_memory_suite.py \
 - 新增半透明气味羽流，让老师一眼看出“食物相关气味”和“诱饵气味”的位置。
 - 在视频中明确标注这些 marker 是 post-render paper-readable annotation，避免误导为 FlyGym 原生食物物体。
 
+第四，新增 OCT/MCH mirror-side 早期动力学正式套件：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50 \
+  --n-trials 50 \
+  --run-time 0.2 \
+  --max-workers 4 \
+  --mirror-sides
+```
+
+该套件总共跑了 `800` 条短时程轨迹，输出在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50`，解释文档在 `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`。
+
 ## 7. 当前关键结果
 
 多模态连接组 readout 结果来自 `/unify/ydchen/unidit/bio_fly/outputs/eon_multimodal_benchmark/connectome_readout/connectome_multimodal_readout_summary.csv`。
@@ -222,6 +248,24 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_food_memory_suite.py \
 - 它还不能单独证明左右蘑菇体侧化造成显著行为差异，因为每个条件只有左右各 1 次 trial，且 choice rate 已经天花板化。
 - 更适合做统计结论的是 `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite`、`/unify/ydchen/unidit/bio_fly/outputs/olfactory_perturbation_suite` 和 `/unify/ydchen/unidit/bio_fly/outputs/lateralization_behavior_suite` 里的多条件对照结果。
 
+OCT/MCH mirror-side 正式结果来自 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_condition_summary.csv`。
+
+主要数值：
+
+| condition | n_trials | expected_choice_rate | mean_approach_margin | expected_choice_fdr_q |
+| --- | ---: | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 100 | 0.86 | 0.265371 | 9.468e-14 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 100 | 0.85 | 0.245904 | 4.825e-13 |
+| `oct_shock_aversive_wt` | 100 | 0.86 | -0.244407 | 9.468e-14 |
+| `weak_oct_strong_mch_conflict` | 100 | 0.88 | 0.264908 | 3.823e-15 |
+
+给非生物老师的解释：
+
+- 奖励任务中，果蝇代理应该靠近 `CS+`；电击任务中，果蝇代理应该远离 `CS+`。这个方向在 `800` 条短时程轨迹中显著成立。
+- mirror-side 后，`CS+` 左右摆放被平衡，所以这个结果不是单纯由左/右空间偏置造成。
+- 但是，左侧 MB 抑制、右侧 MB 抑制、左右 MB 平均化、左右 MB 互换相对 WT 的差异仍未通过 FDR。最强曲率趋势的 q 值为 `0.170533`，不足以作为显著发现。
+- 因此当前可以说“代理系统能表达 OCT/MCH 记忆方向”，但不能说“代理系统已经证明 MB 侧化扰动导致行为差异”。
+
 ## 8. 用四卡 GPU 的方法
 
 当前机器能看到 4 张 H20Z GPU。检查命令：
@@ -246,6 +290,8 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_four_card_experiment_suite.py \
 多模态连接组传播目前用 `--propagation-device cuda:0`。如果要扩展到四卡，需要把不同 sensory spec 或不同 random/null specs 分配到 `cuda:0` 到 `cuda:3`。四卡套件已经在 `/unify/ydchen/unidit/bio_fly/src/bio_fly/experiment_suite.py` 中实现了这种并行思路。
 
 渲染用的 GPU 由 `MUJOCO_EGL_DEVICE_ID` 或脚本参数 `--render-device` 控制。食物记忆这轮用了 `--render-device 1`，多模态复现用了 `--render-device 0`。
+
+需要注意：无渲染的 FlyGym/MuJoCo rollout 主要消耗 CPU 和 Python worker 时间，不会像 PyTorch sparse propagation 那样占满 H20Z/H200 GPU。GPU 最适合用于四卡连接组传播和带 EGL 的视频渲染。
 
 ## 9. 如何一键复现
 
@@ -311,6 +357,7 @@ python -m pytest -q
 - 视觉、味觉、机械感觉输入显示出不同 readout profile，说明系统不是只为一个嗅觉任务手工画图。
 - 左右蘑菇体结构侧化可以被映射到可解释行为参数，并通过 CS+/CS- 气味选择任务生成反事实视频。
 - 右侧 serotonin 相关 KC 输入和左侧 glutamate 相关 KC 输入在之前四卡套件中对 DAN/APL/DPM 和 response laterality 等指标显示了 FDR 校正后的显著差异。
+- OCT/MCH mirror-side `n=50` 行为代理稳定表达奖励趋近、惩罚回避和弱 CS+ 冲突下的记忆方向。
 
 不能写：
 
@@ -318,6 +365,7 @@ python -m pytest -q
 - 当前系统已经复刻 Eon 内部所有实验权重。
 - 当前视频中的“食物”是真实可摄取糖滴力学对象。
 - 当前 2 个 trial 的食物视频足以证明行为显著性。
+- 当前 calibrated motor bridge 已经证明 MB 侧化扰动产生显著行为差异。
 
 ## 11. Nature 级别还差什么
 

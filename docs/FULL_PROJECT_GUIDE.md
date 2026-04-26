@@ -63,6 +63,15 @@ python scripts/make_behavior_comparison_video.py \
   --summary outputs/behavior_data_driven/memory_choice_summary.csv \
   --cs-plus-side left \
   --output outputs/behavior_data_driven/paper_comparison_cs_plus_left.mp4
+
+# OCT/MCH 镜像摆放早期动力学正式套件
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50 \
+  --n-trials 50 \
+  --run-time 0.2 \
+  --max-workers 4 \
+  --mirror-sides
 ```
 
 ## 4. 四卡并行参数
@@ -73,6 +82,14 @@ python scripts/make_behavior_comparison_video.py \
 - `--n-random-per-family 32`：每个 null family 的随机对照数；论文级建议 128–1000。
 - `--top-fraction 0.2`：每个显著 subtype 取 NT fraction 最高的前 20% seed。
 - `--max-per-subtype 30`：限制单 subtype seed 数，避免大 subtype 主导。
+
+FlyGym/MuJoCo 行为套件的并行参数不同于 PyTorch sparse propagation：
+
+- `/unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py --max-workers 4`：启动 4 个 Python worker 并行跑 MuJoCo trial；无渲染时主要消耗 CPU，不会显著占满 H20Z/H200 GPU。
+- `--mirror-sides`：每个条件同时运行 `CS+` 左侧和右侧，适合正式比较 MB 左右侧化扰动。
+- `--early-fraction 0.25`：把每条轨迹前 25% 用作早期转向窗口，输出 `mean_early_expected_lateral_velocity`。
+- `--commit-y-threshold 0.75`：到达预期横向区域的阈值，单位为 mm。
+- `--render --render-devices 0 1 2 3`：仅在需要视频时启用，渲染使用 EGL 和 `MUJOCO_EGL_DEVICE_ID` 分配 GPU。正式统计不建议渲染全部 trial。
 
 ## 5. 目录与模块结构
 
@@ -90,10 +107,10 @@ data/processed/kc_subtype_hemisphere_summary.csv
 data/processed/mushroom_body_top_nt_by_side.csv
 data/raw/flywire_zenodo_10676866_manifest.json
 data/raw/zenodo_10676866_downloads.csv
-docs/behavior_experiment.md
-docs/reproduction_notes.md
-docs/research_plan.md
-docs/resource_estimate.md
+docs/archive/behavior_experiment.md
+docs/archive/reproduction_notes.md
+docs/archive/research_plan.md
+docs/archive/resource_estimate.md
 env/bin/Activate.ps1
 env/bin/activate
 env/bin/activate.csh
@@ -359,6 +376,8 @@ outputs/four_card_suite_smoke/suite_top_targets.csv
 - `outputs/four_card_suite/figures/*.png|*.pdf`：文章主图/扩展图候选。
 - `outputs/four_card_suite/videos/cyber_fly_lateralized_memory_axis.mp4`：结构到功能机制动态演示视频。
 - `outputs/behavior_data_driven/*.mp4`：FlyGym embodied behavior 补充视频候选。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/*`：OCT/MCH mirror-side `n=50` 早期动力学正式套件；总计 800 条短时程 trial，包含 side-balanced valence memory 和 MB 扰动 WT 比较。
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`：上述套件的中文解释、变量定义、结果和边界。
 
 ## 8. 二次开发建议
 

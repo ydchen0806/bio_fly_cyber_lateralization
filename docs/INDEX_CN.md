@@ -16,6 +16,7 @@
 - `/unify/ydchen/unidit/bio_fly/docs/STRUCTURE_BEHAVIOR_LINKAGE_CN.md`：结构-功能-行为联动统计。
 - `/unify/ydchen/unidit/bio_fly/docs/TARGET_PRIORITIZATION_CN.md`：可湿实验验证的 MBON/DAN/APL/DPM 靶点优先级。
 - `/unify/ydchen/unidit/bio_fly/docs/MOTOR_AND_ODOR_BRIDGE_CN.md`：本轮新增的 OCT/MCH sensory encoder、calibrated motor interface 和行为桥接总结。
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`：OCT/MCH 镜像摆放、早期转向动力学和 MB 扰动负结果正式报告。
 
 ## 当前关键输出
 
@@ -25,6 +26,8 @@
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/figures/Fig_oct_mch_formal_suite.png`：OCT/MCH pilot 行为图。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH `n=50` late/terminal 正式代理仿真报告。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_early_suite_n50/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH `n=50` early-decision 正式代理仿真报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH `n=50` mirror-side early-kinematics 正式代理仿真报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/figures/Fig_oct_mch_formal_suite.png`：镜像摆放后的 valence、早期转向和 physical laterality 汇总图。
 
 ## 论文目录
 
@@ -54,6 +57,7 @@
 - 项目已接入 FlyWire 公开连接组、注释和 FlyGym/NeuroMechFly 风格行为代理。
 - 项目已实现四卡连接组传播、蘑菇体侧化扰动、嗅觉记忆代理行为、多模态 DN readout、逆向拟合 motor interface、OCT/MCH 条件化实验表、OCT/MCH glomerulus-level sensory encoder 和 calibrated motor-to-behavior bridge。
 - 当前结果支持“蘑菇体左右结构侧化可能影响嗅觉记忆检索和行为偏置”的可检验假说。
+- OCT/MCH mirror-side `n=50` 早期动力学套件稳定复现奖励趋近和惩罚回避，但 MB 侧化扰动相对 WT 的行为差异仍未通过 FDR；这是需要写入论文边界的正式负结果。
 
 不能严谨声称：
 

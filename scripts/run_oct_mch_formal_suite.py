@@ -25,6 +25,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--render-devices", nargs="*", default=["0", "1", "2", "3"])
     parser.add_argument("--keep-trajectories", action="store_true")
     parser.add_argument("--mujoco-gl", default="egl", choices=["egl", "glfw", "osmesa"])
+    parser.add_argument("--mirror-sides", action="store_true", help="Run each condition with CS+ on both left and right sides.")
+    parser.add_argument("--early-fraction", type=float, default=0.25, help="Fraction of each trajectory used for early-turning metrics.")
+    parser.add_argument("--commit-y-threshold", type=float, default=0.75, help="Signed lateral displacement threshold for commitment latency.")
     return parser.parse_args()
 
 
@@ -41,10 +44,12 @@ def main() -> None:
         render_devices=args.render_devices,
         keep_trajectories=args.keep_trajectories,
         mujoco_gl=args.mujoco_gl,
+        mirror_sides=args.mirror_sides,
+        early_fraction=args.early_fraction,
+        commit_y_threshold=args.commit_y_threshold,
     )
     print(json.dumps({key: str(value) for key, value in paths.items()}, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
     main()
-

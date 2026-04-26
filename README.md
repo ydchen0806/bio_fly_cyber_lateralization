@@ -10,7 +10,8 @@
 2. 项目已接入 `/unify/ydchen/unidit/bio_fly/external/Drosophila_brain_model` 与 FlyWire v783/v630 连接矩阵，可运行 signed propagation 与 Brian2 smoke test。
 3. 四卡 GPU 功能传播正式套件已在 `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite` 生成结果，`534` 个扰动规格、`3` hop、每步最多 `5000` 个活跃节点，总耗时约 `11.089` 秒。
 4. 最新嗅觉记忆仿真套件在 `/unify/ydchen/unidit/bio_fly/outputs/olfactory_perturbation_suite` 生成，按文件时间估计从 `2026-04-26 12:09:56` 到 `2026-04-26 12:21:51`，约 `11.9` 分钟，其中包含屏幕筛选、四卡渲染、统计图和两个长视频。
-5. 快速回归测试已通过：在 `/unify/ydchen/unidit/bio_fly` 下运行 `/unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q`，结果为 `25 passed, 1 warning in 14.93s`。
+5. OCT/MCH mirror-side 早期动力学正式套件已在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 生成结果：8 个条件、每条件 nominal `50` + mirror `50` 条轨迹、总计 `800` 条短时程试验。
+6. 快速回归测试请在 `/unify/ydchen/unidit/bio_fly` 下运行 `/unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q`；最近一次完整测试结果见本文末尾。
 
 ## 2026-04-26 最新交付物入口
 
@@ -288,14 +289,15 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_olfactory_perturbation_suite.py 
 
 当前磁盘占用：
 
-- `/unify/ydchen/unidit/bio_fly`：`11G`
-- `/unify/ydchen/unidit/bio_fly/outputs`：`277M`
+- `/unify/ydchen/unidit/bio_fly`：`20G`
+- `/unify/ydchen/unidit/bio_fly/outputs`：`359M`
 - `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite`：`110M`
 - `/unify/ydchen/unidit/bio_fly/outputs/lateralization_behavior_suite`：`60M`
 - `/unify/ydchen/unidit/bio_fly/outputs/olfactory_perturbation_suite`：`83M`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50`：`1.1M`
 - `/unify/ydchen/unidit/bio_fly/env`：`9.0G`
 - `/unify/ydchen/unidit/bio_fly/external`：`421M`
-- `/unify/ydchen/unidit/bio_fly/data`：`839M`
+- `/unify/ydchen/unidit/bio_fly/data`：`9.9G`
 
 本机 GPU 状态已能使用四张卡。当前观测到 4 张 `NVIDIA H20Z`，每张约 `143771 MiB` 显存。四卡 propagation 对当前规模已经足够；更大规模瓶颈主要是 I/O、parquet 写入和视频渲染，不是矩阵传播本身。
 
@@ -314,11 +316,20 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/prioritize_memory_axis_targets.py
 ```
 
+最近一次完整测试结果：
+
+```text
+35 passed, 43 warnings in 14.81s
+```
+
+warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增 mirror-side 动力学测试通过。
+
 ## 论文与报告入口
 
 - `/unify/ydchen/unidit/bio_fly/paper/NATURE_STYLE_DRAFT_CN.md`：面向 Nature 子刊的中文论文草稿。
 - `/unify/ydchen/unidit/bio_fly/paper/FIGURE_AND_VIDEO_INDEX_CN.md`：图和视频材料索引。
-- `/unify/ydchen/unidit/bio_fly/docs/RUN_FINDINGS_AND_IMPROVEMENTS_CN.md`：本次整理的完整发现、改进和下一步计划。
+- `/unify/ydchen/unidit/bio_fly/docs/PROJECT_IMPLEMENTATION_STATUS_CN.md`：本次整理的完整发现、改进和下一步计划。
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`：OCT/MCH mirror-side 早期动力学正式报告。
 - `/unify/ydchen/unidit/bio_fly/docs/OLFACTORY_PERTURBATION_MEMORY_CN.md`：嗅觉记忆实验报告。
 - `/unify/ydchen/unidit/bio_fly/docs/LATERALIZATION_BEHAVIOR_SIMULATION_CN.md`：侧化行为仿真报告。
 - `/unify/ydchen/unidit/bio_fly/docs/STRUCTURE_BEHAVIOR_LINKAGE_CN.md`：结构-功能-行为联动报告。
@@ -834,7 +845,57 @@ early-decision assay 结果：
 - 两个时间窗都稳定支持奖励趋近、惩罚回避和弱 CS+ / 强 CS- 冲突下的记忆方向。
 - 但 MB perturbation 相对 WT 的 approach margin 差异没有通过 FDR 校正：late assay 中 `welch_fdr_q >= 0.984`，early assay 中 `welch_fdr_q = 1.0`。
 - 因此当前可以把 calibrated motor bridge 写成“可靠表达 valence 和 CS+/CS- 方向的代理行为系统”，但不能写成“已经证明 MB 侧化扰动产生显著行为差异”。
-- 侧化行为差异需要下一步引入更灵敏的 early-turning metric、真实 OCT/MCH sensory response 权重，或更直接的 MBON/DAN-to-DN motor readout 映射。
+- 侧化行为差异需要下一步引入更真实的 OCT/MCH sensory response 权重，或更直接的 MBON/DAN-to-DN motor readout 映射。
+
+### n=50 mirror-side 早期动力学结果
+
+为消除 `CS+` 左右摆放混杂，本轮新增 mirror-side 套件：每个条件都运行 `CS+` 左侧和右侧，输出目录为 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50`。详细中文解释见 `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`。
+
+运行命令：
+
+```bash
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50 \
+  --n-trials 50 \
+  --run-time 0.2 \
+  --max-workers 4 \
+  --mirror-sides
+```
+
+新增变量：
+
+- `n_nominal_side_trials`：原始条件表摆放的 trial 数。
+- `n_mirror_side_trials`：左右互换摆放的 trial 数。
+- `mean_expected_laterality_index`：按预期行为方向校正后的横向位移除以路径长度。
+- `mean_early_expected_lateral_velocity`：前 `25%` 时间窗内朝预期方向的横向速度。
+- `mean_expected_curvature_rad_per_mm`：按预期方向校正后的轨迹曲率。
+- `mean_physical_laterality_index`：不按 `CS+` 方向校正的真实左/右漂移。
+
+关键结果：
+
+| condition | n_trials | expected_choice_rate | mean_approach_margin | expected_choice_fdr_q | mean_expected_laterality_index |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 100 | 0.86 | 0.265371 | 9.468e-14 | 0.089150 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 100 | 0.85 | 0.245904 | 4.825e-13 | 0.084061 |
+| `oct_shock_aversive_wt` | 100 | 0.86 | -0.244407 | 9.468e-14 | 0.083488 |
+| `weak_oct_strong_mch_conflict` | 100 | 0.88 | 0.264908 | 3.823e-15 | 0.089230 |
+
+MB 扰动相对 WT 的结果：
+
+| comparison | q_approach | q_early_velocity | q_expected_laterality | q_physical_laterality | q_expected_curvature |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `oct_sucrose_left_mb_silenced` vs `oct_sucrose_appetitive_wt` | 1.0 | 1.0 | 1.0 | 1.0 | 0.170533 |
+| `oct_sucrose_right_mb_silenced` vs `oct_sucrose_appetitive_wt` | 1.0 | 1.0 | 1.0 | 1.0 | 0.314646 |
+| `oct_sucrose_mb_symmetrized` vs `oct_sucrose_appetitive_wt` | 1.0 | 1.0 | 1.0 | 1.0 | 0.693157 |
+| `oct_sucrose_mb_swapped` vs `oct_sucrose_appetitive_wt` | 1.0 | 1.0 | 1.0 | 1.0 | 0.170533 |
+
+严谨结论：
+
+- mirror-side 后，valence memory 仍显著：奖励趋近、惩罚回避、弱 `CS+` 冲突下记忆驱动方向都稳定存在。
+- `mean_physical_laterality_index` 接近 0，说明镜像摆放基本抵消了单纯空间偏置。
+- 但 MB 侧化扰动在当前 calibrated low-dimensional motor bridge 中仍没有显著行为效应。曲率有趋势但最小 FDR q 仍为 `0.170533`，不能写成显著发现。
+- 这不是“结构假说被否定”，而是说明当前 `MemoryCondition` 接口把 MBON/DAN/APL/DPM 信息压得太低维；下一步应实现 `OCT/MCH KC readout -> MBON/DAN/APL/DPM -> DN/motor` 的更直接映射。
 
 ## docs 目录整理
 

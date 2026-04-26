@@ -255,7 +255,7 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 /unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q
 ```
 
-当前测试结果：`25 passed, 1 warning in 14.93s`。
+当前测试结果：`35 passed, 43 warnings in 14.81s`。warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增测试通过。
 
 ## 新增结果：FlyWire v783 连接表直接支持侧化反馈模块
 
@@ -478,3 +478,30 @@ early-decision assay 在更短时间窗内仍然保留同向效应：
 这支持一个较强但明确限定的结论：calibrated connectome-motor bridge 能稳定表达 OCT/MCH valence memory，包括奖励趋近、惩罚回避和弱 CS+ 冲突下的记忆驱动方向。
 
 同样重要的是负结果：MB perturbation 相对 wild-type 的 approach margin 差异没有通过 FDR 校正，late assay 中 `welch_fdr_q >= 0.984`，early assay 中 `welch_fdr_q = 1.0`。因此当前系统不能声称已经通过行为仿真证明 MB 侧化扰动具有显著因果效应。更合适的写法是：当前 bridge 验证了 valence/readout 层的可执行性，但侧化结构发现仍需要更灵敏的 readout，例如 early-turning kinematics、真实 OCT/MCH ORN response weights、或 MBON/DAN-to-DN 的直接映射。
+
+## 新增结果：mirror-side early-kinematics 检验侧化扰动
+
+为避免把气味源左右摆放误判为蘑菇体侧化效应，我们进一步实现了 mirror-side 行为套件。每个 OCT/MCH 条件都同时运行 `CS+` 左侧和 `CS+` 右侧，每侧 `50` 个 seeds；因此每个条件共有 `100` 条轨迹，8 个条件总计 `800` 条短时程 trial。输出保存于 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50`，中文解释文档保存于 `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`。
+
+新增主图候选：
+
+![OCT/MCH mirror-side early kinematics](/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/figures/Fig_oct_mch_formal_suite.png)
+
+该套件在删除临时轨迹前计算多个连续动力学读数：`mean_expected_laterality_index`、`mean_early_expected_lateral_velocity`、`mean_expected_curvature_rad_per_mm` 和 `mean_physical_laterality_index`。其中 `expected` 表示按行为预期方向校正：奖励条件朝 `CS+` 为正，电击条件远离 `CS+` 为正；`physical` 则保留真实左/右漂移，不按 `CS+` 方向校正。
+
+镜像摆放后，valence memory 仍然稳定：
+
+| condition | expected choice rate | mean approach margin | FDR q | mean expected laterality index |
+| --- | ---: | ---: | ---: | ---: |
+| `oct_sucrose_appetitive_wt` | 0.86 | 0.265371 | 9.468e-14 | 0.089150 |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 0.85 | 0.245904 | 4.825e-13 | 0.084061 |
+| `oct_shock_aversive_wt` | 0.86 | -0.244407 | 9.468e-14 | 0.083488 |
+| `weak_oct_strong_mch_conflict` | 0.88 | 0.264908 | 3.823e-15 | 0.089230 |
+
+但是，MB perturbation 相对 wild-type 的差异仍未达到显著性。`left_MB_gain_0.25`、`right_MB_gain_0.25`、`left_right_MB_weights_averaged` 和 `left_right_MB_weights_swapped` 在 approach margin、early expected lateral velocity、expected laterality index 和 physical laterality index 上的 FDR q 均为 `1.0`。曲率读数给出最强趋势，`left_MB_gain_0.25` 与 `left_right_MB_weights_swapped` 的 `welch_fdr_q_expected_curvature_rad_per_mm = 0.170533`，仍不能写成显著发现。
+
+这是一条必须保留的负结果。它说明当前 calibrated `MemoryCondition` bridge 足以表达奖励/惩罚 valence，但会把 MBON/DAN/APL/DPM 的细粒度侧化结构压缩成过低维的 motor bias。因此，论文中不应把当前行为仿真写成“证明 MB 侧化导致行为差异”。更严谨、更有顶刊可信度的叙事是：
+
+> Side-balanced embodied simulations confirmed that the public connectome-to-motor bridge robustly expresses olfactory valence memory, but did not yield FDR-significant behavioural effects of unilateral MB perturbations. This negative result localizes the missing mechanism to the interface between MB compartmental readouts and descending motor pathways, motivating a direct MBON/DAN/APL/DPM-to-DN mapping rather than further tuning of a low-dimensional lateral bias term.
+
+下一步主实验应直接使用 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_kc_readout.csv` 的 OCT/MCH KC readout，构建 `KC -> MBON/DAN/APL/DPM -> DN` 的侧化 readout，并把曲率趋势作为候选连续指标，而不是继续扩大同一个低维 `MemoryCondition` 参数扫描。

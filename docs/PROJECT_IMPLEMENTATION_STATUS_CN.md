@@ -245,6 +245,57 @@ pilot 结论：
 
 当前应写成：calibrated bridge 已经稳定表达 OCT/MCH valence memory 和 CS+/CS- 行为方向，但还没有证明蘑菇体侧化扰动会导致显著行为差异。下一步需要更灵敏的侧化 readout。
 
+## 2026-04-27 mirror-side 早期动力学正式套件
+
+为解决“不同条件的 `CS+` 左右摆放不同，可能混杂 MB 侧化比较”的问题，本轮在 `/unify/ydchen/unidit/bio_fly/src/bio_fly/connectome_motor_bridge.py` 中新增：
+
+- `quantify_trajectory_kinematics`：在删除临时轨迹前计算早期转向、曲率、expected laterality 和 physical laterality。
+- `--mirror-sides`：每个条件同时运行 `CS+` 左侧和 `CS+` 右侧。
+- `--early-fraction`：定义早期转向窗口，默认取前 `25%` 轨迹。
+- `--commit-y-threshold`：定义到达预期横向区域的阈值，默认 `0.75 mm`。
+
+新增测试：
+
+- `/unify/ydchen/unidit/bio_fly/tests/test_connectome_motor_bridge.py::test_quantify_trajectory_kinematics_direction_convention`
+
+正式运行命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50 \
+  --n-trials 50 \
+  --run-time 0.2 \
+  --max-workers 4 \
+  --mirror-sides
+```
+
+新增输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_trials.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_condition_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_wt_comparisons.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/figures/Fig_oct_mch_formal_suite.png`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/OCT_MCH_FORMAL_SUITE_CN.md`
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`
+
+关键结果：
+
+- 每个条件 `n=100`，其中 nominal side `50`，mirror side `50`；总计 `800` 条短时程轨迹。
+- `oct_sucrose_appetitive_wt`：`expected_choice_rate = 0.86`，`mean_approach_margin = 0.265371`，`expected_choice_fdr_q = 9.468e-14`。
+- `mch_sucrose_appetitive_wt_counterbalanced`：`expected_choice_rate = 0.85`，`mean_approach_margin = 0.245904`，`expected_choice_fdr_q = 4.825e-13`。
+- `oct_shock_aversive_wt`：`expected_choice_rate = 0.86`，`mean_approach_margin = -0.244407`，`expected_choice_fdr_q = 9.468e-14`。
+- `weak_oct_strong_mch_conflict`：`expected_choice_rate = 0.88`，`mean_approach_margin = 0.264908`，`expected_choice_fdr_q = 3.823e-15`。
+- MB 扰动相对 WT 的 approach、early expected lateral velocity、expected laterality 和 physical laterality 均未通过 FDR；曲率趋势最强但最小 `q = 0.170533`。
+
+更新后的工程结论：
+
+- 当前代理系统已经严谨验证了 OCT/MCH valence memory 方向。
+- 当前代理系统没有严谨验证 MB 侧化扰动的显著行为效应。
+- 下一步不应继续只调 `MemoryCondition.lateral_memory_bias`，而应实现更直接的 `OCT/MCH KC readout -> MBON/DAN/APL/DPM -> DN/motor` 映射。
+
 ## docs 整理
 
 当前主线文档入口是 `/unify/ydchen/unidit/bio_fly/docs/INDEX_CN.md`。早期计划、旧运行报告和临时说明已归档到 `/unify/ydchen/unidit/bio_fly/docs/archive`，没有直接删除，便于追溯。

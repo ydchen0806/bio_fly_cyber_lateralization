@@ -2,7 +2,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from bio_fly.connectome_motor_bridge import build_oct_mch_behavior_condition_table, summarize_oct_mch_formal_trials
+from bio_fly.connectome_motor_bridge import (
+    build_oct_mch_behavior_condition_table,
+    quantify_trajectory_kinematics,
+    summarize_oct_mch_formal_trials,
+)
 
 
 def test_build_oct_mch_behavior_condition_table(tmp_path: Path) -> None:
@@ -74,3 +78,35 @@ def test_summarize_oct_mch_formal_trials() -> None:
     aggregate, comparisons = summarize_oct_mch_formal_trials(trials)
     assert {"condition", "mean_approach_margin", "expected_choice_rate"}.issubset(aggregate.columns)
     assert "delta_mean_approach_margin" in comparisons.columns
+
+
+def test_quantify_trajectory_kinematics_direction_convention(tmp_path: Path) -> None:
+    trajectory = tmp_path / "trajectory.csv"
+    pd.DataFrame(
+        {
+            "step": [0, 1, 2, 3],
+            "x": [0.0, 0.5, 1.0, 1.5],
+            "y": [0.0, 0.1, 0.3, 0.6],
+            "z": [0.2, 0.2, 0.2, 0.2],
+            "path_length": [0.0, 0.51, 1.05, 1.68],
+        }
+    ).to_csv(trajectory, index=False)
+
+    appetitive = quantify_trajectory_kinematics(
+        trajectory,
+        cs_plus_side="left",
+        expected_behavior="approach_CS_plus",
+        simulated_time_s=0.3,
+        early_fraction=0.5,
+    )
+    aversive = quantify_trajectory_kinematics(
+        trajectory,
+        cs_plus_side="left",
+        expected_behavior="avoid_CS_plus",
+        simulated_time_s=0.3,
+        early_fraction=0.5,
+    )
+    assert appetitive["expected_laterality_index"] > 0
+    assert aversive["expected_laterality_index"] < 0
+    assert appetitive["early_expected_lateral_velocity"] > 0
+    assert aversive["early_expected_lateral_velocity"] < 0

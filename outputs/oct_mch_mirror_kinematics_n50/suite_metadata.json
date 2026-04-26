@@ -1,0 +1,19 @@
+{
+  "condition_table": "/unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv",
+  "output_dir": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50",
+  "n_trials": 50,
+  "run_time": 0.2,
+  "decision_interval": 0.05,
+  "max_workers": 4,
+  "render": false,
+  "keep_trajectories": false,
+  "mirror_sides": true,
+  "early_fraction": 0.25,
+  "commit_y_threshold": 0.75,
+  "trials": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_trials.csv",
+  "aggregate": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_condition_summary.csv",
+  "comparisons": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_wt_comparisons.csv",
+  "figure": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/figures/Fig_oct_mch_formal_suite.png",
+  "report": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/OCT_MCH_FORMAL_SUITE_CN.md",
+  "metadata": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/suite_metadata.json"
+}
