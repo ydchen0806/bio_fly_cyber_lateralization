@@ -108,3 +108,49 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 3. 对 `oct_mch_calibrated_screen_summary.csv` 扩展到每条件至少 50 个 seeds，并用四卡并行跑统计。
 4. 修复或替换视觉 tracking proxy，使视觉 motor calibration 不再由失败代理决定。
 
+## OCT/MCH 多 seed pilot
+
+新增脚本：
+
+- `/unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py`
+
+运行命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite \
+  --n-trials 4 \
+  --run-time 0.35 \
+  --max-workers 4
+```
+
+输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_trials.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_condition_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_wt_comparisons.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/figures/Fig_oct_mch_formal_suite.png`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/OCT_MCH_FORMAL_SUITE_CN.md`
+
+pilot 结果：
+
+| condition | n | expected_choice_rate | mean_approach_margin | interpretation |
+| --- | ---: | ---: | ---: | --- |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 4 | 1.0 | 1.121587 | MCH 奖励记忆选择 CS+ |
+| `oct_sucrose_appetitive_wt` | 4 | 1.0 | 0.962411 | OCT 奖励记忆选择 CS+ |
+| `oct_shock_aversive_wt` | 4 | 1.0 | -0.673866 | 电击条件回避 CS+ |
+| `weak_oct_strong_mch_conflict` | 4 | 1.0 | 0.672881 | 弱 OCT / 强 MCH 冲突仍偏向 CS+ |
+
+统计边界：`n=4` 时 expected choice 的二项检验 FDR 为 `0.125`，因此只能作为 pilot 方向验证。正式结果需要每条件至少 `50` 个 seeds：
+
+```bash
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50 \
+  --n-trials 50 \
+  --run-time 0.8 \
+  --max-workers 4
+```

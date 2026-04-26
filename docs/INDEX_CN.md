@@ -17,6 +17,13 @@
 - `/unify/ydchen/unidit/bio_fly/docs/TARGET_PRIORITIZATION_CN.md`：可湿实验验证的 MBON/DAN/APL/DPM 靶点优先级。
 - `/unify/ydchen/unidit/bio_fly/docs/MOTOR_AND_ODOR_BRIDGE_CN.md`：本轮新增的 OCT/MCH sensory encoder、calibrated motor interface 和行为桥接总结。
 
+## 当前关键输出
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/OCT_MCH_SENSORY_ENCODER_CN.md`：OCT/MCH glomerulus-level sensory encoder 输出报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/CONNECTOME_MOTOR_BRIDGE_CN.md`：calibrated connectome motor bridge 报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH 多 seed pilot 行为套件报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/figures/Fig_oct_mch_formal_suite.png`：OCT/MCH pilot 行为图。
+
 ## 论文目录
 
 - `/unify/ydchen/unidit/bio_fly/paper/NATURE_STYLE_DRAFT_CN.md`：中文 Nature 风格结果叙事草稿。
@@ -52,4 +59,3 @@
 - 已恢复 Eon 内部 DN-to-motor 权重。
 - 连接组单独无接口、无训练、无参数校准地自动涌现完整果蝇行为。
 - 当前代理视频等同于真实果蝇行为学显著性证据。
-

@@ -1,0 +1,9 @@
+condition,reference,n_condition,n_reference,delta_mean_approach_margin,welch_t,welch_p,welch_fdr_q
+mch_sucrose_appetitive_wt_counterbalanced,matched_wild_type,4,12,0.20262744534588661,1.2870958419775589,0.23445134644180773,0.9419853108009313
+oct_shock_aversive_wt,matched_wild_type,4,4,0.0,0.0,1.0,1.0
+oct_sucrose_appetitive_wt,matched_wild_type,4,12,0.04345128133680087,0.26888189882802893,0.7952648363963077,1.0
+oct_sucrose_left_mb_silenced,matched_wild_type,4,8,0.044087440858402216,0.20726449340111372,0.8418823575700828,1.0
+oct_sucrose_mb_swapped,matched_wild_type,4,8,0.033970577683474557,0.16166541565663006,0.8761871949470228,1.0
+oct_sucrose_mb_symmetrized,matched_wild_type,4,8,-0.10568270334483398,-0.46188097990547644,0.6602131697460085,1.0
+oct_sucrose_right_mb_silenced,matched_wild_type,4,8,0.2421676104205166,1.280010480048907,0.23549632770023282,0.9419853108009313
+weak_oct_strong_mch_conflict,matched_wild_type,4,12,-0.24607872668268727,-0.9861095780077197,0.37626886715420155,1.0

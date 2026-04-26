@@ -191,6 +191,47 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 
 当前结论：项目已经具备 `OCT/MCH 条件表 -> ORN/ALPN seed -> KC readout -> calibrated motor target -> MemoryCondition -> FlyGym screen` 的可执行闭环。它仍然是公开替代系统，不是 Eon 私有闭环。
 
+## 2026-04-26 多 seed OCT/MCH pilot
+
+本轮新增 `/unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py`，用于把 OCT/MCH 行为 screen 扩展到多 seed pilot 和正式统计。
+
+本轮实际运行：
+
+```bash
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite \
+  --n-trials 4 \
+  --run-time 0.35 \
+  --max-workers 4
+```
+
+输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_trials.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_condition_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_wt_comparisons.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/figures/Fig_oct_mch_formal_suite.png`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/OCT_MCH_FORMAL_SUITE_CN.md`
+
+pilot 结论：
+
+- 奖励条件 `oct_sucrose_appetitive_wt` 和 `mch_sucrose_appetitive_wt_counterbalanced` 都选择 CS+。
+- 惩罚条件 `oct_shock_aversive_wt` 选择 CS-，说明行为参数方向可以表达奖励/惩罚反转。
+- `weak_oct_strong_mch_conflict` 在弱 OCT / 强 MCH 冲突下仍选择 CS+，支持“记忆项能覆盖部分即时感觉强度差”的代理预测。
+- `n=4` 的二项检验 FDR 为 `0.125`，不能写成显著性证据，只能写成 pilot 方向验证。
+
+正式 Nature 级仿真建议：
+
+```bash
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50 \
+  --n-trials 50 \
+  --run-time 0.8 \
+  --max-workers 4
+```
+
 ## docs 整理
 
 当前主线文档入口是 `/unify/ydchen/unidit/bio_fly/docs/INDEX_CN.md`。早期计划、旧运行报告和临时说明已归档到 `/unify/ydchen/unidit/bio_fly/docs/archive`，没有直接删除，便于追溯。

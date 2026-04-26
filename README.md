@@ -752,6 +752,58 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 - connectome-motor bridge 的 `attractive_gain`、`aversive_gain` 和 `lateral_memory_bias` 是公开替代接口推导出的行为参数，不是 Eon 私有 DN-to-motor 权重。
 - 当前 screen 每条件只有 1 次、0.2 秒，只是 sanity check；正式统计至少需要每条件 50 个 seeds，最好四卡并行。
 
+## OCT/MCH 多 seed 行为套件
+
+本轮进一步新增 OCT/MCH 多 seed 行为套件，把单 seed sanity check 升级为可统计的 pilot 流程。该套件默认不渲染视频，删除逐步轨迹，只保留 trial 汇总、条件汇总、WT 对照比较、图和报告，便于扩展到每条件 50-300 seeds。
+
+新增文件：
+
+- `/unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py`
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/connectome_motor_bridge.py` 中的 `run_oct_mch_formal_suite`
+
+本轮 pilot 命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite \
+  --n-trials 4 \
+  --run-time 0.35 \
+  --max-workers 4
+```
+
+输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_trials.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_condition_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/oct_mch_formal_wt_comparisons.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/figures/Fig_oct_mch_formal_suite.png`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite/OCT_MCH_FORMAL_SUITE_CN.md`
+
+pilot 结果，每条件 `n=4`：
+
+| condition | expected_choice_rate | mean_approach_margin | interpretation |
+| --- | ---: | ---: | --- |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 1.0 | 1.121587 | MCH 作为 CS+ 时趋近 CS+ |
+| `oct_sucrose_appetitive_wt` | 1.0 | 0.962411 | OCT 作为 CS+ 时趋近 CS+ |
+| `oct_shock_aversive_wt` | 1.0 | -0.673866 | 电击条件回避 CS+，方向正确 |
+| `weak_oct_strong_mch_conflict` | 1.0 | 0.672881 | 弱 OCT / 强 MCH 冲突中仍趋近 CS+，提示记忆项可覆盖部分感觉强度差 |
+
+正式论文主图建议命令：
+
+```bash
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite_n50 \
+  --n-trials 50 \
+  --run-time 0.8 \
+  --max-workers 4
+```
+
+当前 `n=4` pilot 的二项检验 FDR 仍为 `0.125`，不能写成显著性行为学证据。可以写成：多 seed pilot 复现了奖励趋近、惩罚回避和弱 CS+ 冲突下的记忆驱动方向，支持继续扩大到 `n>=50` 的正式仿真和真实果蝇行为实验。
+
 ## docs 目录整理
 
 文档入口已整理到：

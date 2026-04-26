@@ -435,3 +435,20 @@ Eon/CyberFly 公开材料没有释放完整 DN-to-motor 权重、训练权重和
 > Calibrated motor targets were translated into explicit memory-choice parameters rather than hidden controller weights. This made the connectome-to-behaviour bridge executable while preserving a clear distinction between public surrogate parameters and unavailable proprietary Eon motor weights.
 
 谨慎边界：该 screen 只证明流程可执行，不能作为显著性证据。正式图表必须使用至少每条件 50 个 seeds、镜像摆放、OCT/MCH 反平衡和 MB 消融对照。
+
+## 新增结果：OCT/MCH 多 seed pilot 行为套件
+
+为了把单 seed sanity check 推进到可统计流程，我们新增了 OCT/MCH 多 seed pilot 套件，输出目录为 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_formal_suite`。本轮运行每条件 `n=4`，每次 `0.35 s`，4 workers 并行。该规模仍是 pilot，不是最终显著性证据。
+
+核心结果如下：
+
+| condition | n | expected choice rate | mean approach margin | interpretation |
+| --- | ---: | ---: | ---: | --- |
+| `mch_sucrose_appetitive_wt_counterbalanced` | 4 | 1.0 | 1.121587 | MCH 作为 CS+ 时趋近 CS+ |
+| `oct_sucrose_appetitive_wt` | 4 | 1.0 | 0.962411 | OCT 作为 CS+ 时趋近 CS+ |
+| `oct_shock_aversive_wt` | 4 | 1.0 | -0.673866 | 电击条件回避 CS+ |
+| `weak_oct_strong_mch_conflict` | 4 | 1.0 | 0.672881 | 弱 OCT / 强 MCH 冲突中仍趋近 CS+ |
+
+该结果支持三个方向性判断：第一，calibrated motor bridge 能表达奖励趋近和惩罚回避的符号反转；第二，OCT/MCH 反平衡条件在 pilot 中均能表达 CS+ 趋近；第三，弱 CS+ / 强 CS- 冲突条件下，记忆项仍能驱动 CS+ approach，这为真实行为实验提供优先条件。
+
+严谨边界：`n=4` 下 expected choice 的二项检验 FDR 为 `0.125`，不能作为显著性主结果。正式论文图需要每条件至少 `n=50`，并结合镜像摆放、OCT/MCH 反平衡、MB symmetrized、MB swapped 和 degree-preserving random graph 对照。
