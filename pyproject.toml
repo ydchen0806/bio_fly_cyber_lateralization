@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bio-fly"
+version = "0.1.0"
+description = "Reproduction scaffold for fly whole-brain simulation and mushroom body asymmetry analysis"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+  "brian2>=2.8,<3",
+  "flygym[examples]>=1.2,<1.3",
+  "imageio>=2.37",
+  "imageio-ffmpeg>=0.6",
+  "joblib>=1.2",
+  "matplotlib>=3.10",
+  "networkx>=3.4",
+  "numpy>=2.0,<3.0",
+  "opencv-python-headless>=4.13",
+  "pandas>=2.0",
+  "psutil>=7.0",
+  "pyarrow>=11",
+  "pyyaml>=6.0",
+  "requests>=2.32",
+  "seaborn>=0.13",
+  "tqdm>=4.67",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

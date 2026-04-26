@@ -1,0 +1,67 @@
+# Python and local tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+*.egg-info/
+build/
+dist/
+
+# Local environments
+env/
+.venv/
+venv/
+
+# Secrets and machine-local config
+.env
+.env.*
+*.pem
+*.key
+*.token
+*.secret
+
+# Large scientific datasets and downloaded models
+data/
+external/
+*.feather
+*.parquet
+*.h5
+*.hdf5
+*.nwb
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Generated outputs: ignore all by default, then keep curated lightweight examples
+outputs/*
+!outputs/demo_metadata.csv
+!outputs/four_card_suite/
+outputs/four_card_suite/*
+!outputs/four_card_suite/figures/
+outputs/four_card_suite/figures/*
+!outputs/four_card_suite/figures/Fig1_cyber_fly_pipeline_mechanism.png
+!outputs/four_card_suite/figures/Fig2_functional_metric_heatmap.png
+!outputs/four_card_suite/figures/Fig3_empirical_null_significance.png
+!outputs/four_card_suite/videos/
+outputs/four_card_suite/videos/*
+!outputs/four_card_suite/videos/cyber_fly_lateralized_memory_axis.mp4
+!outputs/lateralization_behavior_suite/
+outputs/lateralization_behavior_suite/*
+!outputs/lateralization_behavior_suite/figures/
+outputs/lateralization_behavior_suite/figures/*
+!outputs/lateralization_behavior_suite/figures/Fig_lateralization_dose_response.png
+!outputs/lateralization_behavior_suite/videos/
+outputs/lateralization_behavior_suite/videos/*
+!outputs/lateralization_behavior_suite/videos/lateralization_comparison_cs_plus_left_long.mp4
+!outputs/lateralization_behavior_suite/videos/lateralization_comparison_cs_plus_right_long.mp4
+!outputs/structure_behavior_linkage/
+outputs/structure_behavior_linkage/*
+!outputs/structure_behavior_linkage/Fig_structure_behavior_linkage.png
+!outputs/structure_behavior_linkage/nt_structural_summary.csv
+!outputs/structure_behavior_linkage/behavior_condition_summary.csv
+!outputs/structure_behavior_linkage/dose_response_correlations.csv
+!outputs/structure_behavior_linkage/functional_behavior_linkage.csv

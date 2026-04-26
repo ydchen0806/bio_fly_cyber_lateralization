@@ -1,0 +1,7 @@
+nt,n_subtype_tests,n_fdr_significant,n_right_biased,n_left_biased,mean_right_laterality_index,max_abs_cohens_d,min_fdr_q,top_subtypes
+glut,11,7,4,7,-0.061489506490256834,1.467402744321362,1.5213695777198816e-50,KCa'b'-ap2;KCa'b'-m;KCab-s;KCab-m;KCa'b'-ap1
+ser,11,9,11,0,0.1739544870175518,1.445532775758044,9.193956315058272e-48,KCa'b'-ap2;KCa'b'-m;KCa'b'-ap1;KCab-p;KCg-d
+oct,11,8,6,5,0.0036885263457161806,0.5550026917663478,7.187568061530153e-27,KCab-p;KCg-d;KCab-m;KCa'b'-m;KCab-c
+da,11,7,6,5,0.003278803032941162,1.4233030870058183,1.2986908566344612e-22,KCa'b'-ap1;KCa'b'-ap2;KCa'b'-m;KCab-p;KCg-d
+gaba,11,7,5,6,-0.009871519056380057,1.260083757250191,1.1340923094355994e-20,KCa'b'-ap2;KCa'b'-ap1;KCa'b'-m;KCab-c;KCg-d
+ach,11,5,5,6,-0.002311020259788027,0.5529468011107239,7.992607175023114e-08,KCab-c;KCab-p;KCg-d;KCa'b'-ap1;KCab-m
