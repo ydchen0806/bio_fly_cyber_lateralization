@@ -168,12 +168,32 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_eon_multimodal_benchmark.py \
 - `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`
 - `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`
 - `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_full_both_sides.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4`
 
 代表性中帧：
 
 ![OCT/MCH mirror-side video frame](/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_mirror_assay_video_frame.png)
 
 该材料的论文作用是展示正式统计结论对应的行为几何：奖励条件中 `OCT` 或 `MCH` 作为 `CS+` 时趋近相应气味源，电击条件中 `OCT` 作为 `CS+` 时转向 `CS-`，弱 `OCT`/强 `MCH` 冲突条件仍显示记忆驱动的 `CS+` 选择倾向。与此同时，MB perturbation 视频应作为负结果展示：当前低维 calibrated bridge 稳定表达 valence memory，但 MB 左右扰动相对 WT 仍未通过 FDR，因此不能写成已证明侧化扰动产生显著行为效应。
+
+### 结果 3.6：直接 MBON/DAN/APL/DPM-to-DN 读出补上缺失的下行接口层
+
+Eon/CyberFly 公开说明把 embodied brain emulation 拆成感觉输入、连接组脑模型、descending-neuron 输出和身体控制器四层。公开资料没有释放完整 DN-to-body 权重，因此我们不把结果写成“恢复 Eon 私有闭环”。相反，我们新增一个可审计的公开替代接口：从 FlyWire 蘑菇体注释中选择 `MBON`、`DAN`、`APL` 和 `DPM`，按左侧、右侧和双侧作为 seed，在 FlyWire v783 signed graph 上做 3-hop propagation，只保留 `super_class=descending` 的 DN，然后把 DN family 映射到低维 motor primitive。
+
+输出目录为 `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout`，论文图和视频副本为：
+
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_family_heatmap.png`
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_motor_primitive_heatmap.png`
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_laterality_index.png`
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_motor_mechanism.png`
+- `/unify/ydchen/unidit/bio_fly/paper/video/mb_dn_motor_readout_summary.mp4`
+
+![MB-DN motor primitive heatmap](/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_motor_primitive_heatmap.png)
+
+四卡运行 `18` 个 seed 条件，耗时 `31.81` 秒。最强 DN readout 为 `left_MBON_to_DN`：`48` 个 MBON seed 招募 `202` 个 DN，`dn_abs_mass=0.064815`，top family 为 `DNa`。`right_MBON_to_DN` 的 DN laterality index 为 `+0.307`，`right_memory_axis_to_DN` 为 `+0.420`，提示右侧 MBON/memory-axis 更容易形成右偏的下行出口读出。相反，OCT/MCH KC odor-context 到 DN 的响应较弱，说明当前气味身份输入主要停留在 KC/MB 内部，直接下行输出需要 MBON/DAN 层进一步整合。
+
+该结果给论文提供了更清楚的机制链：结构侧化不应直接跳到“完整行为涌现”，而应先经过 `MB family -> DN family -> motor primitive` 这个可替换接口。可写成：FlyWire 公开连接组支持 MB 输出到下行运动出口的侧化读出，并给出可实验验证的 DN 靶点。不能写成：我们已经恢复 Eon 私有 DN-to-motor 权重，或已经证明真实果蝇行为因果。
 
 ### 结果 4：候选实验靶点集中在 APL、DPM、MBON 和 DAN
 
@@ -242,15 +262,21 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_eon_multimodal_benchmark.py \
 
 ### Supplementary Video 4
 
-使用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`。
+使用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4`。
 
-[Supplementary Video 4：OCT/MCH mirror-side 核心条件](/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4)
+[Supplementary Video 4：OCT/MCH mirror-side 核心条件 v2](/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4)
 
 ### Supplementary Video 5
 
-使用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`。
+使用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4`。
 
-[Supplementary Video 5：OCT/MCH MB perturbation mirror-side 对照](/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4)
+[Supplementary Video 5：OCT/MCH MB perturbation mirror-side 对照 v2](/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4)
+
+### Supplementary Video 6
+
+使用 `/unify/ydchen/unidit/bio_fly/paper/video/mb_dn_motor_readout_summary.mp4`。
+
+[Supplementary Video 6：MB-DN-motor 直接读出机制动画](/unify/ydchen/unidit/bio_fly/paper/video/mb_dn_motor_readout_summary.mp4)
 
 ## 讨论
 
@@ -283,7 +309,7 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 /unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q
 ```
 
-当前测试结果：`36 passed, 43 warnings in 13.38s`。warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增测试通过。
+当前测试结果：`40 passed, 43 warnings in 7.05s`。warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增 v2 视频和 MB-DN-motor 测试通过。
 
 ## 新增结果：FlyWire v783 连接表直接支持侧化反馈模块
 

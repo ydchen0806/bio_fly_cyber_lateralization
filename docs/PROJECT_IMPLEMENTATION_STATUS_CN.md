@@ -22,6 +22,86 @@
 8. 更新 README、中文教学文档、实验报告和 LaTeX paper：持续完成。本轮新增逆向拟合接口层说明，并更新 `/unify/ydchen/unidit/bio_fly/README.md`。
 9. 在论文中区分“公开复现”“替代接口”“原创侧化发现”“待湿实验验证”：已写入 README、Eon 多模态报告和本轮逆向拟合报告。后续投稿版 `main_merged.tex` 还应继续压缩措辞，避免过度声称。
 
+## 2026-04-27 本轮新增：assay video v2 与 MB-DN-motor 直接读出
+
+本轮完成两个针对用户反馈的实装，而不是只写计划。
+
+### 1. OCT/MCH assay video v2
+
+新增模块和脚本：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/oct_mch_assay_v2.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/make_oct_mch_assay_v2_videos.py`
+- `/unify/ydchen/unidit/bio_fly/tests/test_oct_mch_assay_v2.py`
+
+v2 与旧版 `/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py` 的区别是：旧版主要是对 FlyGym raw video 加 assay-scene overlay；v2 完全由 trajectory CSV 驱动，直接重画实验场景，包括培养皿、滤纸、OCT/MCH 气味杯、气味羽流、糖滴、电击栅格、轨迹尾迹和果蝇朝向，因此视觉上不再只是“果蝇 + 蓝黄示意标签”。
+
+输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_key_conditions.mp4`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_mb_perturbations.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_assay_v2_key_conditions_frame.png`
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/OCT_MCH_ASSAY_VIDEO_V2_CN.md`
+
+QC：
+
+- key conditions：`600` 帧，`30 fps`，`1920x1080`，`20.0 s`，非空检查通过。
+- MB perturbations：`750` 帧，`30 fps`，`1920x1080`，`25.0 s`，非空检查通过。
+
+### 2. MBON/DAN/APL/DPM -> DN -> motor primitive 直接读出
+
+新增模块和脚本：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/mb_dn_motor_readout.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/run_mb_dn_motor_readout.py`
+- `/unify/ydchen/unidit/bio_fly/tests/test_mb_dn_motor_readout.py`
+- `/unify/ydchen/unidit/bio_fly/docs/MB_DN_MOTOR_READOUT_CN.md`
+
+运行命令：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+source /unify/ydchen/unidit/bio_fly/env/bin/activate
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_mb_dn_motor_readout.py \
+  --devices cuda:0 cuda:1 cuda:2 cuda:3 \
+  --steps 3 \
+  --max-active 5000 \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout
+```
+
+实际运行：
+
+- GPU：`cuda:0`、`cuda:1`、`cuda:2`、`cuda:3`，本机检测为 4 张 `NVIDIA H20Z`，每张约 `139.7 GiB` 显存。
+- seed 条件数：`18`。
+- 总耗时：`31.81` 秒。
+- 输出目录：`/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout`。
+
+关键输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/mb_seed_table.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/mb_dn_condition_manifest.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/mb_dn_response_by_neuron.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/mb_dn_family_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/mb_dn_condition_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/mb_dn_motor_primitives.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/MB_DN_MOTOR_READOUT_CN.md`
+- `/unify/ydchen/unidit/bio_fly/paper/video/mb_dn_motor_readout_summary.mp4`
+
+主要发现：
+
+- `left_MBON_to_DN` 是最强 DN readout，`48` 个 seed 招募 `202` 个 DN，`dn_abs_mass=0.064815`，top family 为 `DNa`。
+- `right_MBON_to_DN` 的 laterality index 为 `+0.307`，`right_memory_axis_to_DN` 为 `+0.420`，提示右侧输出/记忆轴更容易形成右偏 DN 出口读出。
+- `DAN` 和 `APL/DPM` 直接 seed 到 DN 层的 mass 远小于 MBON，但会提高 `state_modulation_drive` 或反馈调控解释。
+- OCT/MCH KC odor-context 到 DN 的响应很弱，说明当前气味身份输入主要停留在 KC/MB 内部，直接下行运动输出需要 MBON/DAN 层进一步整合。
+
+严谨边界：
+
+- 这是公开可审计的替代接口层，不是 Eon 私有 DN-to-body 权重。
+- motor primitive 是低维行为假说，不是肌肉级控制命令。
+- 该结果可以支持“MB 输出到下行运动出口存在侧化读出”的 Nature 风格假说，但不能单独证明真实行为因果。
+
 ## 本轮新增：逆向拟合接口层
 
 新增模块：

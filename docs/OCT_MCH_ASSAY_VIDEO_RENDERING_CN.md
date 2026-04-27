@@ -6,6 +6,8 @@
 
 本轮把 OCT/MCH mirror-side 正式实验渲染成与食物气味记忆视频一致的 paper 风格视频。视频用于补充 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 中最重要的 OCT/MCH 结果：奖励条件接近 `CS+`，电击条件回避 `CS+`，并且每个条件都有 `CS+` 左侧和右侧两种摆放。
 
+2026-04-27 又新增 `assay_video_v2`，目标是解决旧版视频仍像 FlyGym 原始画面加蓝黄 CS+/CS- 标签的问题。v2 不再把 raw FlyGym video 作为背景，而是从 trajectory CSV 直接重画实验场景：培养皿、滤纸、OCT/MCH 气味杯、气味羽流、蔗糖滴、电击栅格、果蝇身体朝向、轨迹尾迹和正式统计 inset。
+
 需要特别区分两类证据：
 
 - 视频中的轨迹来自 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview`，每个条件每个 side 各 1 条渲染 trial，主要用于论文补充视频和汇报展示。
@@ -53,6 +55,20 @@ cd /unify/ydchen/unidit/bio_fly
   --fps 30
 ```
 
+生成 v2 视频：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/make_oct_mch_assay_v2_videos.py \
+  --summary-path /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/oct_mch_formal_trials.csv \
+  --aggregate-path /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_condition_summary.csv \
+  --comparisons-path /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_wt_comparisons.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2 \
+  --paper-video-dir /unify/ydchen/unidit/bio_fly/paper/video \
+  --fps 30 \
+  --seconds-per-condition 5
+```
+
 ## 输出文件
 
 渲染预览目录：
@@ -84,6 +100,16 @@ cd /unify/ydchen/unidit/bio_fly
 - `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`
 - `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_full_both_sides.mp4`
 
+v2 输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_key_conditions.mp4`：4 个核心条件，左右 mirror-side 成对展示，20 秒、600 帧、1920x1080。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_mb_perturbations.mp4`：WT 与 4 个 MB perturbation 条件，25 秒、750 帧、1920x1080。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_qc.json`：v2 视频 QC。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/OCT_MCH_ASSAY_VIDEO_V2_CN.md`：v2 变量解释和边界报告。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4`：v2 核心条件 paper 副本。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4`：v2 MB perturbation paper 副本。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_assay_v2_key_conditions_frame.png`：v2 代表性中帧缩略图。
+
 ## 视频画面变量解释
 
 - `OCT`：3-octanol，是经典果蝇嗅觉条件化气味之一。
@@ -113,6 +139,13 @@ cd /unify/ydchen/unidit/bio_fly
 | `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_key_conditions.mp4` | 146 | 30 | 1920 | 720 |
 | `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_mb_perturbations.mp4` | 146 | 30 | 2400 | 720 |
 | `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_full_both_sides.mp4` | 146 | 30 | 1920 | 1440 |
+
+v2 QC：
+
+| video | frames | fps | width | height | duration | nonblank |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_key_conditions.mp4` | 600 | 30 | 1920 | 1080 | 20.0 s | true |
+| `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_mb_perturbations.mp4` | 750 | 30 | 1920 | 1080 | 25.0 s | true |
 
 ## 预览 trial 结果
 

@@ -38,6 +38,7 @@ venv/
 # Large scientific datasets and downloaded models
 data/
 external/
+workpacks/
 *.feather
 *.parquet
 *.h5

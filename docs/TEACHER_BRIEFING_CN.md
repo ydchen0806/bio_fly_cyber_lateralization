@@ -106,6 +106,8 @@ Eon 的公开说明是 `https://eon.systems/updates/embodied-brain-emulation`。
 
 `mean_physical_laterality_index` 不做 `CS+` 方向校正，直接看身体真实向左还是向右漂移。这个变量用来检查是否存在纯粹的运动侧偏。
 
+`motor primitive` 是低维动作原语，例如前进、转向、回避、梳理、取食和记忆表达。它不是肌肉级命令，也不是 Eon 私有控制器权重。本项目把它作为公开可审计的中间层，用来说明某类 DN family 更接近哪类行为出口。
+
 ## 5. 当前代码结构
 
 核心包目录：
@@ -115,6 +117,8 @@ Eon 的公开说明是 `https://eon.systems/updates/embodied-brain-emulation`。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/food_memory.py`：食物气味 CS+/CS- 记忆套件。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/behavior.py`：FlyGym 嗅觉行为仿真和轨迹/视频保存。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py`：论文视频拼接和 CS+/CS- 可视化标注。
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/oct_mch_assay_v2.py`：本轮新增的 OCT/MCH v2 场景视频渲染，直接从 trajectory CSV 重画实验场景。
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/mb_dn_motor_readout.py`：本轮新增的 `MBON/DAN/APL/DPM -> DN -> motor primitive` 直接读出。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/olfactory_perturbation.py`：嗅觉扰动、长期记忆、弱气味、单侧感觉剥夺实验。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/lateralization_behavior.py`：左右侧化剂量扫描和镜像/救援对照。
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/structure_behavior_linkage.py`：结构-功能-行为相关分析。
@@ -128,6 +132,8 @@ Eon 的公开说明是 `https://eon.systems/updates/embodied-brain-emulation`。
 - `/unify/ydchen/unidit/bio_fly/scripts/run_four_card_experiment_suite.py`：四卡连接组传播和随机对照。
 - `/unify/ydchen/unidit/bio_fly/scripts/run_olfactory_perturbation_suite.py`：嗅觉扰动实验。
 - `/unify/ydchen/unidit/bio_fly/scripts/run_lateralization_behavior_suite.py`：侧化行为实验。
+- `/unify/ydchen/unidit/bio_fly/scripts/make_oct_mch_assay_v2_videos.py`：生成 v2 OCT/MCH 论文视频。
+- `/unify/ydchen/unidit/bio_fly/scripts/run_mb_dn_motor_readout.py`：四卡运行 MB-DN-motor 直接读出。
 
 论文和视频目录：
 
@@ -140,6 +146,9 @@ Eon 的公开说明是 `https://eon.systems/updates/embodied-brain-emulation`。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_visual_object_tracking.mp4`：视觉目标跟踪视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_front_leg_grooming_proxy.mp4`：前足梳理代理视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`：四宫格多模态总览视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4`：v2 OCT/MCH 核心条件视频，不再使用 FlyGym raw video 背景。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4`：v2 OCT/MCH MB 扰动视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/mb_dn_motor_readout_summary.mp4`：MB-DN-motor 直接读出机制视频。
 
 ## 6. 本轮新增/改进了什么
 
@@ -211,6 +220,24 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 ```
 
 该套件总共跑了 `800` 条短时程轨迹，输出在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50`，解释文档在 `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`。
+
+第五，新增 OCT/MCH `assay_video_v2`：
+
+- 代码：`/unify/ydchen/unidit/bio_fly/src/bio_fly/oct_mch_assay_v2.py`
+- 脚本：`/unify/ydchen/unidit/bio_fly/scripts/make_oct_mch_assay_v2_videos.py`
+- 视频：`/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4`
+- 视频：`/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4`
+
+这版视频从轨迹 CSV 直接重画实验场景，能看到培养皿、OCT/MCH 气味杯、气味羽流、糖滴或电击栅格、轨迹尾迹和统计 inset。它解决了旧版视频过于像“果蝇 + 蓝黄示意标签”的问题。
+
+第六，新增 MB-DN-motor 直接读出：
+
+- 代码：`/unify/ydchen/unidit/bio_fly/src/bio_fly/mb_dn_motor_readout.py`
+- 脚本：`/unify/ydchen/unidit/bio_fly/scripts/run_mb_dn_motor_readout.py`
+- 报告：`/unify/ydchen/unidit/bio_fly/docs/MB_DN_MOTOR_READOUT_CN.md`
+- 输出：`/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout`
+
+这个模块不是恢复 Eon 私有权重，而是把缺失的 `DN-to-body` 接口显式做成公开替代层：先看 MBON/DAN/APL/DPM 是否通过 FlyWire 传播到 DN，再把 DN family 映射成低维 motor primitive。实际四卡运行耗时 `31.81` 秒，最强条件是 `left_MBON_to_DN`，而 `right_MBON_to_DN` 和 `right_memory_axis_to_DN` 显示更明显的右偏 DN laterality index。
 
 ## 7. 当前关键结果
 

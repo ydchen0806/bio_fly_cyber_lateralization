@@ -11,6 +11,7 @@
 - `/unify/ydchen/unidit/bio_fly/docs/DATA_DOWNLOAD_AND_MB_DISCOVERY_CN.md`：数据下载、FlyWire 接入和蘑菇体结构发现。
 - `/unify/ydchen/unidit/bio_fly/docs/EON_MULTIMODAL_REPRODUCTION_CN.md`：Eon/CyberFly 多模态复现边界和公开替代方案。
 - `/unify/ydchen/unidit/bio_fly/docs/DN_BEHAVIOR_READOUT_REPORT_CN.md`：descending-neuron 行为接口分析。
+- `/unify/ydchen/unidit/bio_fly/docs/MB_DN_MOTOR_READOUT_CN.md`：本轮新增的 `MBON/DAN/APL/DPM -> DN -> motor primitive` 直接读出，解释四卡传播、DN family、motor primitive 和 Eon 边界。
 - `/unify/ydchen/unidit/bio_fly/docs/OLFACTORY_PERTURBATION_MEMORY_CN.md`：嗅觉扰动和记忆行为实验。
 - `/unify/ydchen/unidit/bio_fly/docs/LATERALIZATION_BEHAVIOR_SIMULATION_CN.md`：侧化行为仿真和剂量/镜像实验。
 - `/unify/ydchen/unidit/bio_fly/docs/STRUCTURE_BEHAVIOR_LINKAGE_CN.md`：结构-功能-行为联动统计。
@@ -32,6 +33,11 @@
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_key_conditions.mp4`：OCT/MCH 核心条件左右 mirror-side 代表性轨迹视频。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_mb_perturbations.mp4`：MB 扰动条件左右 mirror-side 代表性轨迹视频。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_video_qc.json`：OCT/MCH 视频帧数、分辨率和非空检查结果。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_key_conditions.mp4`：本轮新增 v2 核心条件视频，不使用 FlyGym raw video 背景，直接由轨迹 CSV 重画培养皿、气味杯、糖/电击、轨迹尾迹和统计 inset。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_mb_perturbations.mp4`：本轮新增 v2 MB perturbation 视频。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/OCT_MCH_ASSAY_VIDEO_V2_CN.md`：v2 视频变量和 QC 报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/MB_DN_MOTOR_READOUT_CN.md`：MB-DN-motor 直接读出完整输出报告。
+- `/unify/ydchen/unidit/bio_fly/paper/video/mb_dn_motor_readout_summary.mp4`：MB-DN-motor 机制视频论文副本。
 
 ## 论文目录
 
@@ -60,6 +66,8 @@
 
 - 项目已接入 FlyWire 公开连接组、注释和 FlyGym/NeuroMechFly 风格行为代理。
 - 项目已实现四卡连接组传播、蘑菇体侧化扰动、嗅觉记忆代理行为、多模态 DN readout、逆向拟合 motor interface、OCT/MCH 条件化实验表、OCT/MCH glomerulus-level sensory encoder 和 calibrated motor-to-behavior bridge。
+- 本轮已新增四卡 `MBON/DAN/APL/DPM -> DN -> motor primitive` 直接读出，明确把缺失的 Eon DN-to-body 接口变成公开可审计的替代层。
+- 本轮已新增 OCT/MCH `assay_video_v2`，解决旧视频过于像“果蝇 + 蓝黄标签”的问题。
 - 当前结果支持“蘑菇体左右结构侧化可能影响嗅觉记忆检索和行为偏置”的可检验假说。
 - OCT/MCH mirror-side `n=50` 早期动力学套件稳定复现奖励趋近和惩罚回避，但 MB 侧化扰动相对 WT 的行为差异仍未通过 FDR；这是需要写入论文边界的正式负结果。
 

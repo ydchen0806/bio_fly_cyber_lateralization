@@ -139,6 +139,41 @@
 - 培养皿、糖滴、电极、气味杯、滤纸和羽流是 post-render scene overlay，用于论文读者理解实验结构。
 - 这些视频不用于声称“连接组单独自动涌现完整果蝇行为”；它们用于展示公开替代闭环和正式统计结果对应的代表性轨迹。
 
+## 新增 OCT/MCH assay video v2
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4`：v2 核心条件视频，不使用 FlyGym raw video 背景，直接由 trajectory CSV 重画实验场景。画面包含培养皿、OCT/MCH 气味杯、滤纸、气味羽流、糖滴、电击栅格、果蝇身体朝向、轨迹尾迹和正式 `n=100` 统计 inset。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4`：v2 MB perturbation 视频，展示 WT、left MB gain 0.25、right MB gain 0.25、left/right averaged 和 left/right swapped。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_assay_v2_key_conditions_frame.png`：v2 代表性中帧缩略图。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/OCT_MCH_ASSAY_VIDEO_V2_CN.md`：v2 视频报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_assay_video_v2/oct_mch_assay_v2_qc.json`：v2 QC，key conditions 为 `600` 帧、`20.0 s`、`1920x1080`；MB perturbations 为 `750` 帧、`25.0 s`、`1920x1080`。
+
+建议论文用法：
+
+- Supplementary Video：优先用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4` 替代旧版 key conditions 视频。
+- Supplementary Video：用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_mb_perturbations.mp4` 展示 MB perturbation 负结果。
+- Figure thumbnail：用 `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_assay_v2_key_conditions_frame.png`。
+
+严谨边界：v2 是数据驱动的实验场景动画，但仍然是代表性 trajectory visualization；统计证据来自 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50`。
+
+## 新增 MB-DN-motor 直接读出图和视频
+
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_family_heatmap.png`：MBON/DAN/APL/DPM 与 OCT/MCH KC context seed 招募 DN family 的热图。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_motor_primitive_heatmap.png`：DN family 映射到 motor primitive 的热图。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_laterality_index.png`：MB-to-DN readout 的左右偏侧指数。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_mb_dn_motor_mechanism.png`：机制示意图。
+- `/unify/ydchen/unidit/bio_fly/paper/video/mb_dn_motor_readout_summary.mp4`：机制视频，展示 `MB seed -> FlyWire propagation -> DN family -> motor primitive`。
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/mb_dn_condition_summary.csv`：条件级数值表。
+- `/unify/ydchen/unidit/bio_fly/outputs/mb_dn_motor_readout/mb_dn_motor_primitives.csv`：motor primitive 数值表。
+- `/unify/ydchen/unidit/bio_fly/docs/MB_DN_MOTOR_READOUT_CN.md`：中文解释文档。
+
+建议论文用法：
+
+- 正文或扩展数据图：`Fig_mb_dn_laterality_index.png` 可支持“右侧 MBON/memory-axis 有更明显右偏 DN 读出”的机制假说。
+- 方法学图：`Fig_mb_dn_motor_mechanism.png` 用于说明我们没有恢复 Eon 私有 DN-to-body 权重，而是实现公开替代接口。
+- Supplementary Video：`mb_dn_motor_readout_summary.mp4` 作为 interface-layer 机制动画。
+
+严谨边界：这个模块支持“公开连接组中 MB 输出到 DN 层存在可检测读出”的假说；不能写成已经证明完整行为涌现。
+
 ## 新增 Eon/CyberFly 多模态复现视频
 
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_visual_object_tracking.mp4`：视觉目标跟踪复现/代理视频。
