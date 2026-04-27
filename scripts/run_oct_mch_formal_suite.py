@@ -25,6 +25,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--render-devices", nargs="*", default=["0", "1", "2", "3"])
     parser.add_argument("--keep-trajectories", action="store_true")
     parser.add_argument("--mujoco-gl", default="egl", choices=["egl", "glfw", "osmesa"])
+    parser.add_argument("--camera-fps", type=int, default=30)
+    parser.add_argument("--camera-play-speed", type=float, default=0.18)
+    parser.add_argument("--camera-width", type=int, default=640)
+    parser.add_argument("--camera-height", type=int, default=480)
     parser.add_argument("--mirror-sides", action="store_true", help="Run each condition with CS+ on both left and right sides.")
     parser.add_argument("--early-fraction", type=float, default=0.25, help="Fraction of each trajectory used for early-turning metrics.")
     parser.add_argument("--commit-y-threshold", type=float, default=0.75, help="Signed lateral displacement threshold for commitment latency.")
@@ -44,6 +48,9 @@ def main() -> None:
         render_devices=args.render_devices,
         keep_trajectories=args.keep_trajectories,
         mujoco_gl=args.mujoco_gl,
+        camera_fps=args.camera_fps,
+        camera_play_speed=args.camera_play_speed,
+        camera_window_size=(args.camera_width, args.camera_height),
         mirror_sides=args.mirror_sides,
         early_fraction=args.early_fraction,
         commit_y_threshold=args.commit_y_threshold,

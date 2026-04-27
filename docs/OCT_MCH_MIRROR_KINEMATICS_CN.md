@@ -31,6 +31,43 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/OCT_MCH_FORMAL_SUITE_CN.md`
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/suite_metadata.json`
 
+## 2026-04-27 新增 mirror-side 论文视频
+
+本轮新增一个独立渲染预览目录，用于生成 paper 级补充视频：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview`
+
+该目录不是新的正式显著性统计，而是每个条件、每个 side 各 1 条渲染 trial。视频中右下角统计 inset 仍然引用本报告的正式 `n=100` mirror-side 统计结果。
+
+新增视频：
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`：四个核心条件，左右 mirror-side 成对展示。适合作为论文补充视频主入口。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`：WT 与四个 MB 扰动条件成对展示。适合说明“当前 MB 扰动相对 WT 未达到 FDR 显著”的负结果边界。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_cs_plus_left.mp4`：所有 8 个条件在 `CS+` 左侧时的代表性轨迹。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_cs_plus_right.mp4`：所有 8 个条件在 `CS+` 右侧时的代表性轨迹。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_full_both_sides.mp4`：所有 8 个条件、左右两种摆放的 16-panel 全量视频。
+
+视频说明文档：
+
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`
+
+视频 QC：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_video_qc.json`
+- 所有合成视频均为 `146` 帧、`30` fps；核心视频分辨率为 `1920x720`，全量 16-panel 视频为 `1920x1440`，MB perturbation 视频为 `2400x720`。
+- 首帧像素方差均大于 `3300`，说明没有黑屏或空白写入。
+
+画面变量解释：
+
+- `OCT` 是 3-octanol，`MCH` 是 4-methylcyclohexanol。
+- `CS+` 是训练时与糖奖励或电击配对的气味，`CS-` 是未配对对照气味。
+- `US=sucrose` 表示糖奖励，预期行为是趋近 `CS+`。
+- `US=shock` 表示电击惩罚，预期行为是回避 `CS+`、转向 `CS-`。
+- 绿色圆点是起点，粉色线是 trajectory CSV 计算出的轨迹尾迹，黑白圆点是当前轨迹位置。
+- 右下角 inset 的 `expected choice`、`q`、`approach margin` 和 `vs WT` 来自 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50`，不是单条视频 trial。
+
+新增运行命令见 `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`。
+
 ## 变量解释
 
 - `OCT_3-octanol`：3-octanol，经典果蝇嗅觉条件化气味之一。

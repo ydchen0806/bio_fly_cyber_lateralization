@@ -1,0 +1,57 @@
+[
+  {
+    "video": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_cs_plus_left.mp4",
+    "paper_copy": "/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_cs_plus_left.mp4",
+    "frames": 146,
+    "fps": 30.0,
+    "width": 1920,
+    "height": 720,
+    "first_frame_variance": 3349.302413327135,
+    "thumbnail": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/thumbnails/oct_mch_mirror_assay_scene_cs_plus_left_frame0.png",
+    "size_mb": 3.382
+  },
+  {
+    "video": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_cs_plus_right.mp4",
+    "paper_copy": "/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_cs_plus_right.mp4",
+    "frames": 146,
+    "fps": 30.0,
+    "width": 1920,
+    "height": 720,
+    "first_frame_variance": 3333.863584455076,
+    "thumbnail": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/thumbnails/oct_mch_mirror_assay_scene_cs_plus_right_frame0.png",
+    "size_mb": 3.348
+  },
+  {
+    "video": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_full_both_sides.mp4",
+    "paper_copy": "/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_full_both_sides.mp4",
+    "frames": 146,
+    "fps": 30.0,
+    "width": 1920,
+    "height": 1440,
+    "first_frame_variance": 3331.471308863448,
+    "thumbnail": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/thumbnails/oct_mch_mirror_assay_scene_full_both_sides_frame0.png",
+    "size_mb": 6.739
+  },
+  {
+    "video": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_key_conditions.mp4",
+    "paper_copy": "/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4",
+    "frames": 146,
+    "fps": 30.0,
+    "width": 1920,
+    "height": 720,
+    "first_frame_variance": 3342.058065363401,
+    "thumbnail": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/thumbnails/oct_mch_mirror_assay_scene_key_conditions_frame0.png",
+    "size_mb": 3.397
+  },
+  {
+    "video": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_mb_perturbations.mp4",
+    "paper_copy": "/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4",
+    "frames": 146,
+    "fps": 30.0,
+    "width": 2400,
+    "height": 720,
+    "first_frame_variance": 3339.775163082689,
+    "thumbnail": "/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/thumbnails/oct_mch_mirror_assay_scene_mb_perturbations_frame0.png",
+    "size_mb": 4.147
+  }
+]

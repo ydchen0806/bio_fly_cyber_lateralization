@@ -11,7 +11,8 @@
 3. 四卡 GPU 功能传播正式套件已在 `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite` 生成结果，`534` 个扰动规格、`3` hop、每步最多 `5000` 个活跃节点，总耗时约 `11.089` 秒。
 4. 最新嗅觉记忆仿真套件在 `/unify/ydchen/unidit/bio_fly/outputs/olfactory_perturbation_suite` 生成，按文件时间估计从 `2026-04-26 12:09:56` 到 `2026-04-26 12:21:51`，约 `11.9` 分钟，其中包含屏幕筛选、四卡渲染、统计图和两个长视频。
 5. OCT/MCH mirror-side 早期动力学正式套件已在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 生成结果：8 个条件、每条件 nominal `50` + mirror `50` 条轨迹、总计 `800` 条短时程试验。
-6. 快速回归测试请在 `/unify/ydchen/unidit/bio_fly` 下运行 `/unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q`；最近一次完整测试结果见本文末尾。
+6. OCT/MCH mirror-side 论文视频已在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos` 和 `/unify/ydchen/unidit/bio_fly/paper/video` 生成，包含培养皿场景、OCT/MCH 气味杯、糖奖励/电击标注、轨迹尾迹和正式 `n=100` 统计 inset。
+7. 快速回归测试请在 `/unify/ydchen/unidit/bio_fly` 下运行 `/unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q`；最近一次完整测试结果见本文末尾。
 
 ## 2026-04-26 最新交付物入口
 
@@ -29,10 +30,29 @@
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_front_leg_grooming_proxy.mp4`：机械感觉触发前足梳理代理视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`：嗅觉食物记忆、视觉、梳理的四宫格总览视频。
 
+2026-04-27 新增 OCT/MCH mirror-side 论文视频：
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`：OCT 奖励、MCH counterbalance、OCT 电击和弱 OCT/强 MCH 冲突四个核心条件，左右 mirror-side 成对展示。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`：WT、left MB gain 0.25、right MB gain 0.25、left/right averaged 和 left/right swapped 的 MB 扰动对比视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_cs_plus_left.mp4`：8 个条件在 `CS+` 左侧时的代表性轨迹。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_cs_plus_right.mp4`：8 个条件在 `CS+` 右侧时的代表性轨迹。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_full_both_sides.mp4`：8 个条件、左右两种摆放的全量 16-panel 视频。
+
+对应说明文档：
+
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`：解释视频每个变量、轨迹尾迹、统计 inset、运行命令、输出路径和严谨边界。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_video_qc.json`：记录每个视频的帧数、分辨率、首帧像素方差和缩略图路径。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_mirror_assay_video_frame.png`：带轨迹尾迹和统计 inset 的代表性中帧，可用作视频缩略图。
+
+这些视频中的单条轨迹来自 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview`，只用于代表性展示；右下角统计 inset 来自 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 的 `n=100` 正式 mirror-side 统计。
+
 本轮重要代码改动：
 
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py`：论文视频拼接增加 assay-scene 场景层，包括培养皿/agar 背景、糖滴、气味杯、滤纸、CS+/CS- 羽流和比例尺，解决“觅食视频里看不到食物/气味目标”的问题。
 - `/unify/ydchen/unidit/bio_fly/scripts/make_food_memory_assay_scene_videos.py`：从已有 FlyGym rendered trials 重新生成 assay-scene 论文视频，不需要重跑 MuJoCo。
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py`：新增 OCT/MCH 专用 `make_oct_mch_assay_scene_video`，支持 `OCT`/`MCH` 气味身份、`US=sucrose/shock`、mirror-side 标签、trajectory tail 和正式统计 inset。
+- `/unify/ydchen/unidit/bio_fly/scripts/make_oct_mch_assay_scene_videos.py`：从 OCT/MCH render preview 与 `n=100` 正式统计表生成 5 个 paper 视频并复制到 `/unify/ydchen/unidit/bio_fly/paper/video`。
+- `/unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py`：CLI 增加 `--camera-fps`、`--camera-play-speed`、`--camera-width` 和 `--camera-height`，便于控制渲染视频规格。
 
 本轮重新运行命令和耗时：
 
@@ -322,7 +342,7 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 最近一次完整测试结果：
 
 ```text
-35 passed, 43 warnings in 5.79s
+36 passed, 43 warnings in 13.38s
 ```
 
 warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增 mirror-side 动力学测试通过。

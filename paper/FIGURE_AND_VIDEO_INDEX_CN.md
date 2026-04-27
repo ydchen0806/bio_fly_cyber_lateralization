@@ -112,6 +112,33 @@
 - 复现脚本：`/unify/ydchen/unidit/bio_fly/scripts/make_food_memory_assay_scene_videos.py`。
 - 严谨边界：这些实验场景物体是 post-render scene overlay，用于论文/汇报可读性；FlyGym 原始仿真输入是 OdorArena 气味源，不是可摄取糖滴力学对象。
 
+## 新增 OCT/MCH mirror-side 论文视频
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`：核心 OCT/MCH 条件视频，包含 `OCT sucrose WT`、`MCH sucrose WT counterbalance`、`OCT shock WT` 和 `Weak OCT / strong MCH conflict`，每个条件左右 mirror-side 成对展示。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`：MB perturbation 视频，包含 WT、left MB gain 0.25、right MB gain 0.25、left/right averaged 和 left/right swapped。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_cs_plus_left.mp4`：8 个条件在 `CS+` 左侧时的代表性轨迹。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_cs_plus_right.mp4`：8 个条件在 `CS+` 右侧时的代表性轨迹。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_full_both_sides.mp4`：8 个条件、左右两种摆放的全量 16-panel 视频。
+
+配套材料：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_assay_scene_video_manifest.json`：视频生成 manifest。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_video_qc.json`：视频帧数、分辨率、首帧非空检查和缩略图路径的论文目录副本。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_mirror_assay_video_frame.png`：带轨迹尾迹的代表性中帧，适合作为视频缩略图或补充图入口。
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`：完整变量解释和复现命令。
+
+建议论文用法：
+
+- Supplementary Video：优先使用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`，展示奖励趋近、惩罚回避、气味身份 counterbalance 和弱 OCT/强 MCH 冲突。
+- Supplementary Video：使用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`，透明展示 MB perturbation 相对 WT 未通过 FDR 的负结果。
+- Figure thumbnail：可以在图注中引用 `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_mirror_assay_video_frame.png` 作为视频缩略图。
+
+严谨边界：
+
+- 每个视频 panel 是单条代表性渲染 trial；统计 inset 来自 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 的正式 `n=100` mirror-side 结果。
+- 培养皿、糖滴、电极、气味杯、滤纸和羽流是 post-render scene overlay，用于论文读者理解实验结构。
+- 这些视频不用于声称“连接组单独自动涌现完整果蝇行为”；它们用于展示公开替代闭环和正式统计结果对应的代表性轨迹。
+
 ## 新增 Eon/CyberFly 多模态复现视频
 
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_visual_object_tracking.mp4`：视觉目标跟踪复现/代理视频。

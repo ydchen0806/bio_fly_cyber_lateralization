@@ -17,6 +17,7 @@
 - `/unify/ydchen/unidit/bio_fly/docs/TARGET_PRIORITIZATION_CN.md`：可湿实验验证的 MBON/DAN/APL/DPM 靶点优先级。
 - `/unify/ydchen/unidit/bio_fly/docs/MOTOR_AND_ODOR_BRIDGE_CN.md`：本轮新增的 OCT/MCH sensory encoder、calibrated motor interface 和行为桥接总结。
 - `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`：OCT/MCH 镜像摆放、早期转向动力学和 MB 扰动负结果正式报告。
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`：OCT/MCH mirror-side 论文视频渲染说明，解释视频变量、轨迹尾迹、统计 inset、运行命令和严谨边界。
 
 ## 当前关键输出
 
@@ -28,6 +29,9 @@
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_early_suite_n50/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH `n=50` early-decision 正式代理仿真报告。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/OCT_MCH_FORMAL_SUITE_CN.md`：OCT/MCH `n=50` mirror-side early-kinematics 正式代理仿真报告。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/figures/Fig_oct_mch_formal_suite.png`：镜像摆放后的 valence、早期转向和 physical laterality 汇总图。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_key_conditions.mp4`：OCT/MCH 核心条件左右 mirror-side 代表性轨迹视频。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_mb_perturbations.mp4`：MB 扰动条件左右 mirror-side 代表性轨迹视频。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_video_qc.json`：OCT/MCH 视频帧数、分辨率和非空检查结果。
 
 ## 论文目录
 

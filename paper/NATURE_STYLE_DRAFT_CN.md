@@ -159,6 +159,22 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_eon_multimodal_benchmark.py \
 
 `cs_plus_weak_conflict` 是最适合真实实验的条件：CS+ 强度被削弱到 `0.28`，CS- 强度保持 `1.0`。如果真实果蝇仍选择 CS+，说明记忆能覆盖强即时感觉输入；如果转向 CS-，说明感觉强度主导决策。左右蘑菇体操控可进一步揭示这种竞争是否侧化。
 
+### 结果 3.5：OCT/MCH mirror-side 视频把代表性轨迹与正式统计证据绑定
+
+为避免补充视频只显示抽象蓝黄点，我们将 OCT/MCH mirror-side 实验重新渲染为 assay-scene 风格视频。视频中包含培养皿、OCT/MCH 气味杯、滤纸、糖滴或电击标注、轨迹尾迹、起点和当前轨迹位置。每个 panel 的右下角 inset 显示正式 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 统计结果，而不是当前单条视频 trial 的统计。
+
+新增视频位于：
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_full_both_sides.mp4`
+
+代表性中帧：
+
+![OCT/MCH mirror-side video frame](/unify/ydchen/unidit/bio_fly/paper/figures/Fig_oct_mch_mirror_assay_video_frame.png)
+
+该材料的论文作用是展示正式统计结论对应的行为几何：奖励条件中 `OCT` 或 `MCH` 作为 `CS+` 时趋近相应气味源，电击条件中 `OCT` 作为 `CS+` 时转向 `CS-`，弱 `OCT`/强 `MCH` 冲突条件仍显示记忆驱动的 `CS+` 选择倾向。与此同时，MB perturbation 视频应作为负结果展示：当前低维 calibrated bridge 稳定表达 valence memory，但 MB 左右扰动相对 WT 仍未通过 FDR，因此不能写成已证明侧化扰动产生显著行为效应。
+
 ### 结果 4：候选实验靶点集中在 APL、DPM、MBON 和 DAN
 
 靶点表位于 `/unify/ydchen/unidit/bio_fly/outputs/target_prioritization/memory_axis_target_family_summary.csv`。
@@ -224,6 +240,18 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_eon_multimodal_benchmark.py \
 
 [Supplementary Video 3：嗅觉扰动，CS+ 右侧](/unify/ydchen/unidit/bio_fly/outputs/olfactory_perturbation_suite/videos/olfactory_perturbation_cs_plus_right_long.mp4)
 
+### Supplementary Video 4
+
+使用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`。
+
+[Supplementary Video 4：OCT/MCH mirror-side 核心条件](/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4)
+
+### Supplementary Video 5
+
+使用 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`。
+
+[Supplementary Video 5：OCT/MCH MB perturbation mirror-side 对照](/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4)
+
 ## 讨论
 
 本研究的核心贡献是提出可复现的结构-功能-行为桥接框架。传统连接组论文常停留在结构统计，纯 AI 模拟又容易缺乏生物约束。本项目把真实连接矩阵、神经递质侧化、记忆轴细胞类别和 embodied 行为轨迹放入同一套统计框架，提供了可被实验检验的机制假说。
@@ -255,7 +283,7 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 /unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q
 ```
 
-当前测试结果：`35 passed, 43 warnings in 5.79s`。warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增测试通过。
+当前测试结果：`36 passed, 43 warnings in 13.38s`。warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增测试通过。
 
 ## 新增结果：FlyWire v783 连接表直接支持侧化反馈模块
 

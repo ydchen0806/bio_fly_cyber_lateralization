@@ -218,6 +218,31 @@ pilot 结论：
 
 - 奖励条件 `oct_sucrose_appetitive_wt` 和 `mch_sucrose_appetitive_wt_counterbalanced` 都选择 CS+。
 - 惩罚条件 `oct_shock_aversive_wt` 选择 CS-，说明行为参数方向可以表达奖励/惩罚反转。
+
+## 2026-04-27 OCT/MCH mirror-side 论文视频闭环
+
+本轮继续完成 OCT/MCH mirror-side 代表性视频，重点解决“视频只有蓝黄示意点、不像真实行为实验环境”的问题。新增内容：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py`：新增 OCT/MCH assay-scene overlay、trajectory tail、正式统计 inset 和 `make_oct_mch_assay_scene_video`。
+- `/unify/ydchen/unidit/bio_fly/scripts/make_oct_mch_assay_scene_videos.py`：一键生成 5 个 OCT/MCH paper 视频并复制到 `/unify/ydchen/unidit/bio_fly/paper/video`。
+- `/unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py`：新增 camera 参数 CLI，方便控制 FlyGym raw video 的帧率、窗口大小和播放速度。
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`：新增完整中文操作文档和变量解释。
+
+本轮输出：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/oct_mch_formal_trials.csv`：16 条渲染预览 trial，每个条件左右 mirror-side 各 1 条。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/trial_artifacts`：raw mp4、trajectory CSV 和轨迹图。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos`：合成后的 paper 风格视频、manifest、QC 和缩略图。
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_full_both_sides.mp4`
+
+视频解释边界：
+
+- 单条视频 trial 是代表性可视化，不是显著性统计。
+- 统计 inset 来自 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 的正式 `n=100` mirror-side 结果。
+- 培养皿、糖滴、电极、气味杯、滤纸和羽流是 post-render scene overlay；FlyGym 仿真输入仍是 OdorArena 的两个气味源。
+- 当前视频增强了论文材料表达力，但仍不能声称“连接组单独自动涌现完整行为”。
 - `weak_oct_strong_mch_conflict` 在弱 OCT / 强 MCH 冲突下仍选择 CS+，支持“记忆项能覆盖部分即时感觉强度差”的代理预测。
 - `n=4` 的二项检验 FDR 为 `0.125`，不能写成显著性证据，只能写成 pilot 方向验证。
 

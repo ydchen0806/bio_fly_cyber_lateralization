@@ -371,8 +371,9 @@ outputs/four_card_suite_smoke/suite_top_targets.csv
 - `src/bio_fly/functional.py`：扰动 spec、propagation/LIF 验证入口。
 - `src/bio_fly/experiment_suite.py`：四卡系统仿真、随机/消融对照、统计、图表和动态视频。
 - `src/bio_fly/behavior.py`：FlyGym/MuJoCo odor-memory proxy experiment。
-- `src/bio_fly/video.py`：论文补充视频 2×2 panel 拼接。
+- `src/bio_fly/video.py`：论文补充视频拼接，包括 food-memory assay scene、OCT/MCH mirror-side scene、轨迹尾迹和统计 inset。
 - `scripts/make_food_memory_assay_scene_videos.py`：从已有 FlyGym food-memory rendered trials 生成 assay-scene 论文视频，不需要重跑 MuJoCo。
+- `scripts/make_oct_mch_assay_scene_videos.py`：从 OCT/MCH render preview 和正式 `n=100` mirror-side 统计表生成 paper 视频。
 
 ## 7. 输出解释
 
@@ -387,6 +388,9 @@ outputs/four_card_suite_smoke/suite_top_targets.csv
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_left.mp4` 和 `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_right.mp4`：培养皿/糖滴/气味杯场景版 food-memory 补充视频。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/*`：OCT/MCH mirror-side `n=50` 早期动力学正式套件；总计 800 条短时程 trial，包含 side-balanced valence memory 和 MB 扰动 WT 比较。
 - `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`：上述套件的中文解释、变量定义、结果和边界。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_key_conditions.mp4`：OCT/MCH 核心条件 mirror-side 论文视频，含轨迹尾迹和正式统计 inset。
+- `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos/oct_mch_mirror_assay_scene_mb_perturbations.mp4`：OCT/MCH MB 扰动 mirror-side 论文视频。
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`：OCT/MCH 视频变量解释、复现命令、QC 和边界说明。
 
 ## 8. 二次开发建议
 

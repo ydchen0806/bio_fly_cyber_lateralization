@@ -345,6 +345,32 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_food_memory_suite.py \
   --camera-play-speed 0.14
 ```
 
+运行 OCT/MCH mirror-side 论文视频：
+
+```bash
+python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
+  --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview \
+  --n-trials 1 \
+  --run-time 0.8 \
+  --max-workers 4 \
+  --mirror-sides \
+  --render \
+  --keep-trajectories \
+  --render-devices 0 1 2 3
+
+python /unify/ydchen/unidit/bio_fly/scripts/make_oct_mch_assay_scene_videos.py \
+  --summary /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/oct_mch_formal_trials.csv \
+  --aggregate /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_condition_summary.csv \
+  --comparisons /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_wt_comparisons.csv
+```
+
+视频结果入口：
+
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_key_conditions.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_mirror_assay_scene_mb_perturbations.mp4`
+- `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`
+
 运行回归测试：
 
 ```bash
@@ -361,6 +387,7 @@ python -m pytest -q
 - 左右蘑菇体结构侧化可以被映射到可解释行为参数，并通过 CS+/CS- 气味选择任务生成反事实视频。
 - 右侧 serotonin 相关 KC 输入和左侧 glutamate 相关 KC 输入在之前四卡套件中对 DAN/APL/DPM 和 response laterality 等指标显示了 FDR 校正后的显著差异。
 - OCT/MCH mirror-side `n=50` 行为代理稳定表达奖励趋近、惩罚回避和弱 CS+ 冲突下的记忆方向。
+- OCT/MCH mirror-side 视频已经把代表性轨迹、左右摆放、OCT/MCH 气味身份、糖奖励/电击和正式 `n=100` 统计 inset 放到同一个画面，适合给非生物背景评审解释“果蝇闻到了什么、预期做什么、统计证据在哪里”。
 
 不能写：
 
@@ -369,6 +396,7 @@ python -m pytest -q
 - 当前视频中的“食物”是真实可摄取糖滴力学对象。
 - 当前 2 个 trial 的食物视频足以证明行为显著性。
 - 当前 calibrated motor bridge 已经证明 MB 侧化扰动产生显著行为差异。
+- OCT/MCH 单条视频 trial 本身已经证明显著性；显著性应引用 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 的正式统计表。
 
 ## 11. Nature 级别还差什么
 
