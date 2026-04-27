@@ -21,15 +21,18 @@
 
 本轮重新生成的 paper 级视频入口：
 
-- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`：CS+ 食物/糖奖励气味在左侧，CS- 诱饵气味在右侧。
-- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`：CS+ 食物/糖奖励气味在右侧，CS- 诱饵气味在左侧。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`：新版 assay-scene 视频，CS+ 食物/糖奖励气味在左侧，CS- 诱饵气味在右侧。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`：新版 assay-scene 视频，CS+ 食物/糖奖励气味在右侧，CS- 诱饵气味在左侧。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_left.mp4`：同上，保留显式 assay-scene 文件名。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_right.mp4`：同上，保留显式 assay-scene 文件名。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_visual_object_tracking.mp4`：视觉目标跟踪复现/代理视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_front_leg_grooming_proxy.mp4`：机械感觉触发前足梳理代理视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`：嗅觉食物记忆、视觉、梳理的四宫格总览视频。
 
 本轮重要代码改动：
 
-- `/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py`：论文视频拼接增加 `CS+ sugar/food odour`、`CS- decoy odour` 和半透明气味羽流标注，解决“觅食视频里看不到食物/气味目标”的问题。
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py`：论文视频拼接增加 assay-scene 场景层，包括培养皿/agar 背景、糖滴、气味杯、滤纸、CS+/CS- 羽流和比例尺，解决“觅食视频里看不到食物/气味目标”的问题。
+- `/unify/ydchen/unidit/bio_fly/scripts/make_food_memory_assay_scene_videos.py`：从已有 FlyGym rendered trials 重新生成 assay-scene 论文视频，不需要重跑 MuJoCo。
 
 本轮重新运行命令和耗时：
 
@@ -41,7 +44,7 @@
 - 本项目已经下载并使用 FlyWire v783 公开连接组、突触表、连接表、neuropil 计数和注释，总量约 `10.6 GB`。
 - 公开数据可以支持真实连接组传播和结构-功能统计。
 - Eon 内部完整 DN-to-motor 权重、训练权重和所有闭环参数没有公开，因此不能把当前视频写成“连接组单独自动涌现完整果蝇行为”。
-- 当前视频中 `CS+`/`CS-` 可视化标记是论文可读性的 post-render annotation；真实仿真输入是 FlyGym OdorArena 的两个气味源，不是可摄取糖滴力学对象。
+- 当前视频中培养皿、糖滴、气味杯、滤纸和 `CS+`/`CS-` 羽流是论文可读性的 post-render scene overlay；真实仿真输入仍是 FlyGym OdorArena 的两个气味源，不是可摄取糖滴力学对象。
 
 ## 给非生物背景老师的背景解释
 
@@ -319,7 +322,7 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 最近一次完整测试结果：
 
 ```text
-35 passed, 43 warnings in 14.81s
+35 passed, 43 warnings in 5.79s
 ```
 
 warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增 mirror-side 动力学测试通过。
@@ -418,6 +421,8 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error main_merged.tex
 - `/unify/ydchen/unidit/bio_fly/paper/main_merged.pdf`：已编译 PDF。
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`：带食物线索标注的 CS+ 左侧补充视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`：带食物线索标注的 CS+ 右侧补充视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_left.mp4`：培养皿/糖滴/气味杯场景版 CS+ 左侧补充视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_right.mp4`：培养皿/糖滴/气味杯场景版 CS+ 右侧补充视频。
 
 ## Eon/CyberFly 多模态复现基准
 
@@ -473,12 +478,15 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/food_memory.py`
 - `/unify/ydchen/unidit/bio_fly/scripts/run_food_memory_suite.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/make_food_memory_assay_scene_videos.py`
 - `/unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/FOOD_MEMORY_SIMULATION_CN.md`
 - `/unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/food_memory_behavior_summary.csv`
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`
 
 这里的“食物”被实现为糖奖励相关气味源 `CS+`，竞争气味为 `CS-`。FlyGym 当前环境没有真实可摄取糖滴对象，因此该实验是食物气味记忆仿真，不应在论文中写成真实进食行为。主指标建议使用 `mean_food_approach_margin`、`mean_signed_final_y` 和 `mean_path_length`，因为 `food_choice_rate` 在当前小样本中容易饱和。
+
+视频表现层更新：新版 paper 视频使用 assay-scene 后处理，把 FlyGym 原始小球 marker 画成培养皿中的糖滴、气味杯、滤纸片、羽流和比例尺。该层只用于让老师/审稿人看懂“食物气味在哪里”，不改变仿真控制输入。
 
 复现命令：
 
@@ -489,6 +497,12 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
   --output-dir /unify/ydchen/unidit/bio_fly/outputs/food_memory_suite \
   --paper-video-dir /unify/ydchen/unidit/bio_fly/paper/video \
   --n-trials 1 --run-time 0.9 --render-device 0
+
+/unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/make_food_memory_assay_scene_videos.py \
+  --summary /unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/rendered_trials/memory_choice_summary.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/videos \
+  --paper-video-dir /unify/ydchen/unidit/bio_fly/paper/video \
+  --replace-paper-defaults
 ```
 
 详细说明见 `/unify/ydchen/unidit/bio_fly/docs/ARTICLE_REVISION_AND_FUNCTIONAL_SIMULATION_CN.md`。

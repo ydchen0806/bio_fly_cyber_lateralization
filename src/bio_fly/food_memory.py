@@ -137,6 +137,7 @@ def run_food_memory_suite(
         columns=3,
         panel_size=(480, 360),
         fps=30,
+        scene_style="assay",
     )
     right_video = make_behavior_grid_video(
         summary_path=summary_path,
@@ -146,6 +147,7 @@ def run_food_memory_suite(
         columns=3,
         panel_size=(480, 360),
         fps=30,
+        scene_style="assay",
     )
     paper_left = _copy_video(left_video, paper_video_dir / "food_memory_cs_plus_left.mp4")
     paper_right = _copy_video(right_video, paper_video_dir / "food_memory_cs_plus_right.mp4")

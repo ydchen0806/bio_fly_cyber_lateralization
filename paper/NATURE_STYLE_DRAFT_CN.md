@@ -255,7 +255,7 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 /unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q
 ```
 
-当前测试结果：`35 passed, 43 warnings in 14.81s`。warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增测试通过。
+当前测试结果：`35 passed, 43 warnings in 5.79s`。warnings 主要来自小样本 t 检验、seaborn/pandas 未来行为提示和数值精度提示，不影响本轮新增测试通过。
 
 ## 新增结果：FlyWire v783 连接表直接支持侧化反馈模块
 
@@ -329,11 +329,16 @@ source /unify/ydchen/unidit/bio_fly/env/bin/activate
 
 - `/unify/ydchen/unidit/bio_fly/scripts/run_food_memory_suite.py`
 - `/unify/ydchen/unidit/bio_fly/src/bio_fly/food_memory.py`
+- `/unify/ydchen/unidit/bio_fly/scripts/make_food_memory_assay_scene_videos.py`
 - `/unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/food_memory_behavior_summary.csv`
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_left.mp4`
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_right.mp4`
 
 仿真条件包括 balanced naive search、learned sugar memory、left KC-APL-DPM feedback、right DAN-MBON output 和 weak-sugar/strong-decoy conflict。当前小样本中二分类 food choice rate 饱和，因此论文主指标应使用连续轨迹变量。该实验的科学价值在于把“左侧反馈稳定 / 右侧输出调制”转化为真实行为学可检验预测：如果左侧 KC-APL-DPM 反馈模块参与食物记忆稳定，则在弱糖气味和强竞争气味冲突条件下，单侧操控应最明显地改变 food approach margin。
+
+2026-04-27 视频层更新：food-memory paper 视频已替换为 assay-scene 版本，在 FlyGym 原始果蝇轨迹上叠加培养皿/agar 背景、糖滴、气味杯、滤纸片、羽流和比例尺。该层是 post-render scene overlay，用于让读者理解 CS+/CS- 的实验语义；真实仿真输入仍是 OdorArena 气味源，不是可摄取糖滴力学对象。
 
 ## 新增结果：descending-neuron 行为接口把多模态连接组响应落到身体控制层
 

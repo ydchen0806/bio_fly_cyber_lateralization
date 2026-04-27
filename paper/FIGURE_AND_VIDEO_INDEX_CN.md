@@ -100,14 +100,17 @@
 
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`：糖奖励相关食物气味 CS+ 位于左侧时的五条件行为仿真拼接视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`：糖奖励相关食物气味 CS+ 位于右侧时的镜像仿真拼接视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_left.mp4`：同一视频的显式 assay-scene 文件名，含培养皿、糖滴、气味杯、滤纸片、羽流和比例尺。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_right.mp4`：同一视频的显式 assay-scene 文件名，含培养皿、糖滴、气味杯、滤纸片、羽流和比例尺。
 - `/unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/FOOD_MEMORY_SIMULATION_CN.md`：食物气味记忆仿真实验解释。
 - `/unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/food_memory_behavior_summary.csv`：食物气味记忆仿真统计表。
 
-2026-04-26 更新：
+2026-04-27 更新：
 
-- 上面两个 paper 视频已经重新生成，视频面板内叠加了 `CS+ sugar/food odour`、`CS- decoy odour` 和半透明气味羽流。
+- 上面两个 paper 默认视频已经替换为 assay-scene 版本，视频面板内叠加了培养皿/agar 背景、糖滴、气味杯、滤纸片、`CS+`/`CS-` 羽流和比例尺。
 - 标注含义：`CS+` 是训练时和糖奖励/食物意义配对的气味，`CS-` 是中性或竞争诱饵气味。
-- 严谨边界：这些彩色气味源标记是 post-render annotation，用于论文/汇报可读性；FlyGym 原始仿真输入是 OdorArena 气味源，不是可摄取糖滴力学对象。
+- 复现脚本：`/unify/ydchen/unidit/bio_fly/scripts/make_food_memory_assay_scene_videos.py`。
+- 严谨边界：这些实验场景物体是 post-render scene overlay，用于论文/汇报可读性；FlyGym 原始仿真输入是 OdorArena 气味源，不是可摄取糖滴力学对象。
 
 ## 新增 Eon/CyberFly 多模态复现视频
 

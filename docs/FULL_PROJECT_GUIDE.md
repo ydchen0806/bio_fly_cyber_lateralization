@@ -64,6 +64,13 @@ python scripts/make_behavior_comparison_video.py \
   --cs-plus-side left \
   --output outputs/behavior_data_driven/paper_comparison_cs_plus_left.mp4
 
+# 从已有 FlyGym raw videos 生成培养皿/糖滴/气味杯场景版 food-memory paper videos
+python scripts/make_food_memory_assay_scene_videos.py \
+  --summary /unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/rendered_trials/memory_choice_summary.csv \
+  --output-dir /unify/ydchen/unidit/bio_fly/outputs/food_memory_suite/videos \
+  --paper-video-dir /unify/ydchen/unidit/bio_fly/paper/video \
+  --replace-paper-defaults
+
 # OCT/MCH 镜像摆放早期动力学正式套件
 /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py \
   --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv \
@@ -365,6 +372,7 @@ outputs/four_card_suite_smoke/suite_top_targets.csv
 - `src/bio_fly/experiment_suite.py`：四卡系统仿真、随机/消融对照、统计、图表和动态视频。
 - `src/bio_fly/behavior.py`：FlyGym/MuJoCo odor-memory proxy experiment。
 - `src/bio_fly/video.py`：论文补充视频 2×2 panel 拼接。
+- `scripts/make_food_memory_assay_scene_videos.py`：从已有 FlyGym food-memory rendered trials 生成 assay-scene 论文视频，不需要重跑 MuJoCo。
 
 ## 7. 输出解释
 
@@ -376,6 +384,7 @@ outputs/four_card_suite_smoke/suite_top_targets.csv
 - `outputs/four_card_suite/figures/*.png|*.pdf`：文章主图/扩展图候选。
 - `outputs/four_card_suite/videos/cyber_fly_lateralized_memory_axis.mp4`：结构到功能机制动态演示视频。
 - `outputs/behavior_data_driven/*.mp4`：FlyGym embodied behavior 补充视频候选。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_left.mp4` 和 `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_right.mp4`：培养皿/糖滴/气味杯场景版 food-memory 补充视频。
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/*`：OCT/MCH mirror-side `n=50` 早期动力学正式套件；总计 800 条短时程 trial，包含 side-balanced valence memory 和 MB 扰动 WT 比较。
 - `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`：上述套件的中文解释、变量定义、结果和边界。
 

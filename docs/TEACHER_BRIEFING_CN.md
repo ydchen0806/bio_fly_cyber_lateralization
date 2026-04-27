@@ -135,6 +135,8 @@ Eon 的公开说明是 `https://eon.systems/updates/embodied-brain-emulation`。
 - `/unify/ydchen/unidit/bio_fly/paper/FIGURE_AND_VIDEO_INDEX_CN.md`：图和视频索引。
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`：CS+ 在左侧的食物气味记忆视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`：CS+ 在右侧的食物气味记忆视频。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_left.mp4`：培养皿/糖滴/气味杯场景版，CS+ 在左侧。
+- `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_assay_scene_cs_plus_right.mp4`：培养皿/糖滴/气味杯场景版，CS+ 在右侧。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_visual_object_tracking.mp4`：视觉目标跟踪视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_front_leg_grooming_proxy.mp4`：前足梳理代理视频。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`：四宫格多模态总览视频。
@@ -189,9 +191,10 @@ python /unify/ydchen/unidit/bio_fly/scripts/run_food_memory_suite.py \
 第三，改进视频可读性：
 
 - 修改文件：`/unify/ydchen/unidit/bio_fly/src/bio_fly/video.py`
-- 新增标注：`CS+ sugar/food odour` 和 `CS- decoy odour`
-- 新增半透明气味羽流，让老师一眼看出“食物相关气味”和“诱饵气味”的位置。
-- 在视频中明确标注这些 marker 是 post-render paper-readable annotation，避免误导为 FlyGym 原生食物物体。
+- 新增脚本：`/unify/ydchen/unidit/bio_fly/scripts/make_food_memory_assay_scene_videos.py`
+- 新增 assay-scene 场景层：培养皿/agar 背景、糖滴、气味杯、滤纸片、半透明气味羽流和比例尺。
+- 新版默认 paper 视频已经替换为 `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4` 和 `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_right.mp4`。
+- 在视频中明确标注这些物体是 post-render paper-readable scene overlay，避免误导为 FlyGym 原生食物物体。
 
 第四，新增 OCT/MCH mirror-side 早期动力学正式套件：
 
