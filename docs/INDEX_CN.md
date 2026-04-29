@@ -6,6 +6,7 @@
 
 - `/unify/ydchen/unidit/bio_fly/README.md`：项目总入口，适合第一次阅读。
 - `/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md`：给非生物背景、AI 背景老师看的解释性总览。
+- `/unify/ydchen/unidit/bio_fly/docs/NON_BIOLOGIST_VALIDATION_LOGIC_CN.md`：给完全没有生物背景读者的验证逻辑说明，逐一解释仿真做了什么、发现了什么、名词含义、证明 A/B 和湿实验验证路线。
 - `/unify/ydchen/unidit/bio_fly/docs/PROJECT_IMPLEMENTATION_STATUS_CN.md`：当前工程完成度、模块状态、结果边界和下一步。
 - `/unify/ydchen/unidit/bio_fly/docs/FULL_PROJECT_GUIDE.md`：项目目录、依赖、命令和二次开发指南。
 - `/unify/ydchen/unidit/bio_fly/docs/DATA_DOWNLOAD_AND_MB_DISCOVERY_CN.md`：数据下载、FlyWire 接入和蘑菇体结构发现。
@@ -28,7 +29,8 @@
 
 1. `/unify/ydchen/unidit/bio_fly/README.md` 的“给第一次接触赛博果蝇的读者：我们到底做了什么仿真”。这里用表格解释每个仿真实验的输入、操作、输出、结论、局限和一键复现命令。
 2. `/unify/ydchen/unidit/bio_fly/docs/DPM_OPTOGENETIC_VALIDATION_CN.md` 的“这个仿真实验到底怎么跑”和“湿实验怎么验证最严谨”。这里专门解释 DPM 光遗传、5-HT release pattern、180 度旋转控制和群体 T-maze 验证。
-3. `/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md`。这里适合给非生物背景或 AI 背景老师快速理解项目主线。
+3. `/unify/ydchen/unidit/bio_fly/docs/NON_BIOLOGIST_VALIDATION_LOGIC_CN.md`。这里逐一解释所有关键名词、证明 A/B 的逻辑和真实湿实验怎么做。
+4. `/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md`。这里适合给非生物背景或 AI 背景老师快速理解项目主线。
 
 最短复现路径：
 
