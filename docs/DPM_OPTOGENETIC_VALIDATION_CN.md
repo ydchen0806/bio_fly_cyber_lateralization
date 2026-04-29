@@ -77,6 +77,159 @@ CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python \
 4. **行为验证不需要直接测每只果蝇的 NT 侧化。** 使用几百只果蝇群体 T-maze，在训练或测试窗口给 DPM 红光刺激，看 OCT/MCH choice index 是否按仿真方向移动。
 5. **结构验证仍是硬红线。** 仿真和功能/行为结果最多形成强佐证；若要把“递质侧化是群体稳定结构规律”写成定论，仍需 GRASP、split-GFP 或等价结构实验。
 
+## 这五个仿真实验分别怎么做，结果是什么
+
+### 1. 选 DPM neuron 作为起点，做 FlyWire 上的连接组传播
+
+这一步是在回答：如果我们把 DPM 当成输入起点，它的影响会沿着真实连接组跑到哪里。
+
+怎么做：
+
+1. 从 FlyWire 注释里挑出 DPM 相关 neuron，拆成 `left_DPM_opto`、`right_DPM_opto` 和 `bilateral_DPM_opto`。
+2. 在 GPU0/1 上运行 signed multi-hop propagation。
+3. 把传播结果聚合到 `KC_all`、`KCa'b'_memory_consolidation`、`MBON_output`、`DAN_teaching`、`APL_feedback` 和 `DN_motor_exit`。
+4. 用随机或对照 seed 做比较，确认不是任意神经元都能产生同样的 readout。
+
+看什么结果：
+
+| condition | n_seed_neurons | n_active_neurons | absolute_mass | left_abs_mass | right_abs_mass | right_laterality_index |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `left_DPM_opto` | 1 | 6280 | 1.283 | 1.176 | 0.1068 | -0.8334 |
+| `right_DPM_opto` | 1 | 6386 | 1.403 | 0.1351 | 1.267 | 0.8073 |
+| `bilateral_DPM_opto` | 2 | 6378 | 1.264 | 0.8107 | 0.4528 | -0.2832 |
+
+最关键的下游 ROI 结果是：
+
+| condition | roi | abs_mass |
+| --- | --- | ---: |
+| `left_DPM_opto` | `KC_all` | 1.45 |
+| `right_DPM_opto` | `KC_all` | 1.405 |
+| `bilateral_DPM_opto` | `KC_all` | 1.396 |
+| `right_DPM_opto` | `KCa'b'_memory_consolidation` | 0.4485 |
+| `left_DPM_opto` | `KCa'b'_memory_consolidation` | 0.4461 |
+| `bilateral_DPM_opto` | `KCa'b'_memory_consolidation` | 0.4527 |
+| `left_DPM_opto` | `MBON_output` | 0.3471 |
+| `right_DPM_opto` | `MBON_output` | 0.3428 |
+| `left_DPM_opto` | `APL_feedback` | 0.1799 |
+| `left_DPM_opto` | `DAN_teaching` | 0.1624 |
+
+这说明什么：
+
+- DPM 作为起点，最强的传播首先回到 KC/蘑菇体相关区域。
+- `KCa'b'_memory_consolidation` 是最值得优先看的记忆巩固子区之一。
+- `MBON`、`APL` 和 `DAN` 也会被带动，说明这不是局部噪声，而是记忆轴上的系统性传播。
+- 右侧 DPM seed 的整体右偏最强，`right_laterality_index = 0.8073`，左侧 DPM 则是左偏，`-0.8334`。
+
+### 2. 扫描不同光遗传协议，尤其是 CsChrimson 和 ReaChR
+
+这一步是在回答：什么光遗传工具和刺激参数最适合做后续湿实验。
+
+怎么做：
+
+1. 把 `opsin`、`wavelength_nm`、`frequency_hz`、`pulse_width_ms`、`train_duration_s` 和 `irradiance_mw_mm2` 组成一个协议库。
+2. 对每个协议都跑一次 DPM 传播和 release 预测。
+3. 给每个协议打一个 `wetlab_priority_score`，综合考虑可测性和对照清晰度。
+
+结果最靠前的协议是：
+
+| protocol_id | opsin | wavelength_nm | frequency_hz | pulse_width_ms | train_duration_s | irradiance_mw_mm2 | peak_total_release_au | release_auc_au_s | peak_brain_registered_li | wetlab_priority_score |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `CsChrimson_red_617nm_40Hz_20ms_5.0s_0.1mW` | `CsChrimson_red` | 617 | 40 | 20 | 5.0 | 0.1 | 1.7707 | 11.6495 | 0.8022 | 4.2102 |
+| `ReaChR_red_627nm_40Hz_20ms_5.0s_0.1mW` | `ReaChR_red` | 627 | 40 | 20 | 5.0 | 0.1 | 1.7707 | 11.6495 | 0.8022 | 4.2102 |
+| `CsChrimson_red_617nm_40Hz_20ms_0.5s_1.0mW` | `CsChrimson_red` | 617 | 40 | 20 | 0.5 | 1.0 | 1.6606 | 3.5636 | 0.8010 | 4.2075 |
+| `ReaChR_red_627nm_40Hz_20ms_0.5s_1.0mW` | `ReaChR_red` | 627 | 40 | 20 | 0.5 | 1.0 | 1.6606 | 3.5636 | 0.8010 | 4.2075 |
+
+这说明什么：
+
+- 这套仿真更支持红光工具，而不是把蓝光当主实验条件。
+- `CsChrimson` 和 `ReaChR` 都是高优先级候选，优先级接近。
+- 5 秒、0.1 mW/mm2 这一组协议同时兼顾了释放峰值和 AUC，因此最适合作为“先跑通验证”的湿实验起点。
+
+### 3. 预测 DPM 激活后左右半脑的 5-HT 释放 pattern
+
+这一步是在回答：DPM 被光遗传激活后，左右半脑的血清素释放会不会出现稳定偏侧。
+
+怎么做：
+
+1. 把 DPM 激活后的传播结果映射成一个相对的 5-HT 释放曲线。
+2. 分别计算左半脑和右半脑的 `release_au`。
+3. 用 `brain_registered_release_li` 判断左右偏向。
+4. 另外计算 `image_li_after_180deg_rotation`，看旋转后图像坐标是否会误导判断。
+
+结果最稳定的是：
+
+| protocol_id | fly_model | peak_total_release_au | release_auc_au_s | peak_brain_registered_li | mean_rotation_discrepancy |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `CsChrimson_red_617nm_40Hz_20ms_5.0s_0.1mW` | `lateralized_fly` | 1.7707 | 11.6495 | 0.8022 | 0.0 |
+| `ReaChR_red_627nm_40Hz_20ms_5.0s_0.1mW` | `lateralized_fly` | 1.7707 | 11.6495 | 0.8022 | 0.0 |
+| `CsChrimson_red_617nm_40Hz_20ms_0.5s_1.0mW` | `lateralized_fly` | 1.6606 | 3.5636 | 0.8010 | 0.0 |
+| `ReaChR_red_627nm_20Hz_20ms_1.0s_1.0mW` | `lateralized_fly` | 1.7639 | 4.6138 | 0.8021 | 0.0 |
+
+同一协议下的 `camera_artifact_control` 会给出负的旋转差异，例如：
+
+- `CsChrimson_red_617nm_40Hz_20ms_5.0s_0.1mW` 的 `mean_rotation_discrepancy = -1.2289`
+- `ReaChR_red_627nm_20Hz_20ms_1.0s_1.0mW` 的 `mean_rotation_discrepancy = -0.8862`
+
+这说明什么：
+
+- 如果你按脑侧去看，仿真给出的 release 偏侧是稳定右偏，`peak_brain_registered_li` 大约在 `0.80` 左右。
+- 如果你只按图像坐标去看，水平旋转 180 度以后会出现相反的假象，所以必须做脑侧注册。
+- 这一步不是说真实果蝇已经被测出来，而是说我们已经把“脑侧真实偏侧化”和“成像角度伪影”区分开了。
+
+### 4. 做 180 度旋转控制，判断这是不是“脑侧真实偏侧化”而不是成像角度伪影
+
+这一步的核心不是再跑一个新生物学现象，而是一个排错实验。
+
+怎么做：
+
+1. 对同一只果蝇，按原始方向记录一次。
+2. 再把果蝇水平旋转 180 度，重复记录。
+3. 分析时分别计算 image-coordinate 下的 LI 和 brain-registered LI。
+4. 看两者在旋转后是否表现一致。
+
+仿真结果的逻辑是：
+
+- `fly_model = lateralized_fly` 时，脑侧注册的 LI 不变，说明是真实偏侧化。
+- `fly_model = camera_artifact_control` 时，图像坐标下的 LI 会翻转，说明如果只看画面方向就会误判。
+
+这一步的结论很重要，因为它决定我们后面能不能把“右侧更强”写成真正的脑侧发现，而不是显微镜摆放导致的左右假象。
+
+### 5. 把这个结果映射到 OCT/MCH 群体行为，预测 choice index 会怎么变
+
+这一步是在回答：如果 DPM/5-HT 偏侧化是真的，它有没有可能改变群体气味记忆选择。
+
+怎么做：
+
+1. 把 DPM 的 release 预测映射到 OCT/MCH 行为代理。
+2. 设定三个行为条件：`oct_shock_aversive_wt`、`oct_sucrose_appetitive_wt` 和 `weak_oct_strong_mch_conflict`。
+3. 计算给 DPM 红光刺激前后的 `choice_index_delta` 和 `approach_margin`。
+
+结果最敏感的是 weak conflict 条件：
+
+| assay_condition | base_expected_choice_rate | predicted_expected_choice_rate_with_DPM_opto | predicted_choice_index_delta | predicted_approach_margin_with_DPM_opto |
+| --- | ---: | ---: | ---: | ---: |
+| `weak_oct_strong_mch_conflict` | 0.88 | 0.9319 | 0.1038 | 0.2787 |
+| `oct_sucrose_appetitive_wt` | 0.86 | 0.8988 | 0.0777 | 0.2757 |
+| `oct_shock_aversive_wt` | 0.86 | 0.8276 | -0.0647 | -0.2365 |
+
+这说明什么：
+
+- 普通正性任务里，DPM 红光刺激会把 choice index 往正方向推一点，但效应不如 conflict 条件敏感。
+- 普通惩罚任务里，choice index 会往负方向走，表示更偏向回避。
+- `weak_oct_strong_mch_conflict` 是最适合做湿实验验证的条件，因为它最容易暴露 DPM/5-HT 调节，不容易天花板化。
+
+### 这一整套仿真最后得出的总结
+
+把上面 5 步合在一起，当前仿真已经给出了一个明确的可检验假说：
+
+1. DPM 的连接组传播可以强烈投射到 KC/蘑菇体记忆相关区域。
+2. 红光 DPM 光遗传协议里，`CsChrimson 617 nm` 和 `ReaChR 627 nm` 是最值得先做的两个候选。
+3. DPM 激活后，按脑侧注册的 5-HT release pattern 预测是右偏，峰值 `LI` 大约 `0.80`。
+4. 180 度旋转控制说明必须区分真实脑侧化和成像角度伪影。
+5. 在行为层面，最敏感的验证条件不是普通强刺激，而是 `weak OCT / strong MCH conflict`，预测 `choice_index_delta` 约 `+0.104`。
+
+这就是我们目前“仿真做了什么、发现了什么、下一步怎么用湿实验验证”的完整逻辑。
+
 ## 文献依据
 
 - DPM 5-HT 与蘑菇体 ARM/记忆相关：Lee et al., Neuron 2011，PubMed: https://pubmed.ncbi.nlm.nih.gov/21808003/
