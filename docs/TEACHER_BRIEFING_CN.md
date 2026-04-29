@@ -2,7 +2,7 @@
 
 保存路径：`/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md`
 
-最后更新：`2026-04-27`
+最后更新：`2026-04-29`
 
 ## 1. 这个项目在研究什么
 
@@ -33,6 +33,36 @@ Eon 的公开说明是 `https://eon.systems/updates/embodied-brain-emulation`。
 **公开可复现的赛博果蝇系统目前是分层闭环：真实连接组负责功能传播，下降神经元/目标神经元负责行为 readout，FlyGym/NeuroMechFly 和低维控制器负责身体运动。**
 
 这不是削弱项目价值，反而是发表时必须写清楚的方法学边界。否则容易被审稿人质疑“把控制器行为说成连接组涌现”。
+
+## 2.1 我们实际做的仿真实验，用大白话怎么理解
+
+可以把本项目理解成一个“果蝇大脑电路的推演器”。输入不是自然语言，也不是随便训练一个 AI，而是公开的 FlyWire 果蝇脑连接图和我们从论文 zip 中整理出的左右蘑菇体递质侧化假说。我们做的事情是：人为激活某一类神经元或某一条侧化通路，看这个扰动会沿真实连接图传到哪里，再把下游响应转成可测的成像指标或行为指标。
+
+当前最重要的五组仿真实验如下。
+
+| 实验 | 大白话解释 | 主要输出 | 现在能讲的结论 |
+| --- | --- | --- | --- |
+| 结构侧化整理 | 先确认我们要研究的“左右不一样”到底是什么 | `/unify/ydchen/unidit/bio_fly/outputs/structure_behavior_linkage/nt_structural_summary.csv` | 当前主线是右侧 5-HT 更强、左侧 Glu 更强，alpha'beta' 记忆巩固区最突出 |
+| 四卡连接组传播 | 把右侧 5-HT 或左侧 Glu 作为起点，沿 FlyWire 接线图推演影响范围 | `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite/suite_empirical_significance.csv` | 侧化信号不是停留在结构描述，会传播到 memory axis、DAN、APL、DPM、MBON/MBIN 和左右读出 |
+| OCT/MCH 行为代理 | 用 OCT/MCH 两种气味做“闻到什么、学到什么、往哪边走”的可视化实验 | `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 和 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4` | 代理系统能表达奖励趋近和惩罚回避，但不能单独证明真实行为因果 |
+| 会议反馈分拆实验 | 按老师建议，把 5-HT-right 和 Glu-left 分开看 | `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429` | Glu-left 更像广谱 memory-output 扰动；5-HT-right 更适合做 DPM 光遗传和 5-HT release 验证 |
+| DPM 光遗传仿真 | 模拟用红光激活 DPM neuron，预测左右 5-HT release pattern 和行为变化 | `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429` | 推荐 CsChrimson 617 nm 或 ReaChR 627 nm；最值得做的行为条件是 weak OCT/strong MCH conflict |
+
+这五组实验的关系是：
+
+`结构侧化发现 -> 连接组传播验证它能影响下游 -> OCT/MCH 行为代理提供可视化任务 -> DPM 光遗传给出湿实验可测的 release pattern -> 群体 T-maze 验证行为方向`
+
+关键点是：仿真不是最终结论，而是把“很难直接在真实果蝇上同时测结构、功能和行为”的问题拆成几条可以做的实验路线。
+
+## 2.2 现在为了严谨，真实湿实验应该怎么做
+
+第一条是结构验证。用 GRASP、split-GFP 或等价结构标记方法，验证 right DPM/5-HT input -> right `KCa'b'` 和 left Glu input -> left `KCa'b'` 是否在多只果蝇中稳定存在。这个实验是硬红线，因为它回答“这个侧化是不是个体偶然现象”。
+
+第二条是功能成像验证。用 DPM-driver 表达 CsChrimson 或 ReaChR，同时在 KC 或 MB compartment 表达 5-HT sensor 或 GCaMP。用 617/627 nm 红光激活 DPM，记录左右 dF/F、AUC、半衰期和 release LI。关键控制是把同一只果蝇水平旋转 180 度后重做，分析时按脑侧注册：真实脑侧化应保持脑侧 LI，成像角度伪影更可能按相机坐标翻转。
+
+第三条是群体行为验证。成像后的果蝇不能继续做行为，所以行为要用独立群体。用 OCT/MCH T-maze 或摄像轨迹实验，在训练、巩固或测试窗口给 DPM 红光刺激，重点做 weak OCT/strong MCH conflict 和 delayed memory window。主指标是 choice index、approach margin、early turning bias，同时做 CS+/CS- side mirror、OCT/MCH counterbalance、no-opsin、retinal-minus 和 red-light-only 对照。
+
+这三条证据的分工很清楚：结构实验证明“侧化存在”，功能成像证明“DPM 光遗传能读出侧化 release pattern”，行为实验证明“这个轴能调节群体记忆选择”。只有三者合起来，才适合写成强机制故事。
 
 ## 3. 当前已经下载和准备了哪些数据
 

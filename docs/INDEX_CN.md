@@ -22,6 +22,29 @@
 - `/unify/ydchen/unidit/bio_fly/docs/MEETING_FEEDBACK_EXPERIMENTS_CN.md`：2026-04-29 生物老师会议反馈后的定向实验报告，包含 5-HT/Glu 分拆、DPM 光遗传协议扫描、180 度旋转控制、GRASP 靶点和群体 T-maze 行为指标。
 - `/unify/ydchen/unidit/bio_fly/docs/DPM_OPTOGENETIC_VALIDATION_CN.md`：DPM 光遗传仿真验证报告，包含 opsin/波长/频率/时长协议库、5-HT release pattern 预测、旋转控制、群体 T-maze 行为调节预测和湿实验推荐表。
 
+## 如果只想看“我们到底做了什么仿真”
+
+建议按这个顺序读：
+
+1. `/unify/ydchen/unidit/bio_fly/README.md` 的“给第一次接触赛博果蝇的读者：我们到底做了什么仿真”。这里用表格解释每个仿真实验的输入、操作、输出、结论、局限和一键复现命令。
+2. `/unify/ydchen/unidit/bio_fly/docs/DPM_OPTOGENETIC_VALIDATION_CN.md` 的“这个仿真实验到底怎么跑”和“湿实验怎么验证最严谨”。这里专门解释 DPM 光遗传、5-HT release pattern、180 度旋转控制和群体 T-maze 验证。
+3. `/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md`。这里适合给非生物背景或 AI 背景老师快速理解项目主线。
+
+最短复现路径：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python \
+  /unify/ydchen/unidit/bio_fly/scripts/run_dpm_optogenetic_validation.py \
+  --devices cuda:0 cuda:1
+
+CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python \
+  /unify/ydchen/unidit/bio_fly/scripts/run_meeting_feedback_experiments.py \
+  --devices cuda:0 cuda:1
+```
+
+这两条命令分别生成 `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429` 和 `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429`。它们回答的核心问题是：DPM 光遗传能否预测偏侧化 5-HT release pattern，以及 5-HT-right/Glu-left 两条侧化轴分别会怎样影响可观测 readout。
+
 ## 当前关键输出
 
 - `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/OCT_MCH_SENSORY_ENCODER_CN.md`：OCT/MCH glomerulus-level sensory encoder 输出报告。

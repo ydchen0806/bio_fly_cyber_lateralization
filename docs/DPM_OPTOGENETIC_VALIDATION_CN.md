@@ -2,12 +2,80 @@
 
 本报告回答当前最核心的问题：能否通过仿真脑先模拟光遗传激活 DPM neuron，预测偏侧化果蝇的激活 pattern 和 5-HT 释放 pattern，并把结果转成湿实验方便验证的设计。
 
+## 给不熟悉赛博果蝇的读者：这个仿真实验到底怎么跑
+
+本报告里的“仿真脑”不是一个已经完整复制真实果蝇所有生理过程的数字生命体。它是一个连接组约束的预测器：用真实 FlyWire 接线图告诉我们，假如 DPM 神经元被光遗传激活，影响会优先沿哪些连接传播到蘑菇体、DAN、APL、MBON 和下游 readout；再用一个明确写出的 release/readout 模型，把这种传播转成可被湿实验测量的 5-HT 释放曲线和群体行为预测。
+
+完整流程如下：
+
+1. **选择 seed。** 从 FlyWire/注释表中选择 DPM neuron，分别构造 `left_DPM_opto`、`right_DPM_opto` 和 `bilateral_DPM_opto` 三类输入。
+2. **设置虚拟光刺激。** 枚举 `ChR2_blue`、`ReaChR_red`、`CsChrimson_red`，并扫描波长、频率、脉宽、刺激时长和光强。
+3. **连接组传播。** 在 GPU0/1 上运行 signed propagation，计算 DPM 激活经过 FlyWire 连接矩阵传播到哪些 neuron 和哪些脑区。
+4. **ROI 聚合。** 把传播后的神经元响应聚合到 `KC_all`、`KCa'b'_memory_consolidation`、`MBON_output`、`DAN_teaching`、`APL_feedback` 等下游读出。
+5. **释放曲线预测。** 用光刺激能量、opsin 波长匹配度、DPM 左右传播强度和侧化假设，生成 `left_release_au`、`right_release_au`、release AUC 和 release LI。
+6. **旋转伪影控制。** 模拟“果蝇水平旋转 180 度”后的图像坐标和脑侧坐标。如果是真实脑侧化，按脑侧注册的 LI 不应变号；如果只是成像角度伪影，图像坐标下的 LI 会跟着翻转。
+7. **行为预测。** 把 DPM/5-HT release 预测映射到 OCT/MCH T-maze 代理，输出 `choice_index_delta`、`approach_margin` 和最值得做的实验条件。
+
+一句话解释：我们不是声称“仿真已经看到了真实 5-HT 释放”，而是在用连接组和光遗传参数生成一个可检验预测：**如果 DPM 5-HT 侧化是真实的，那么用红光激活 DPM 时，右侧相关 readout 应更强，并且这个差异应能在 180 度旋转控制和独立群体行为实验中被验证。**
+
+## 每个关键变量是什么意思
+
+| 变量 | 含义 | 怎么解释 |
+| --- | --- | --- |
+| `opsin` | 光遗传工具名称，例如 `ChR2_blue`、`ReaChR_red`、`CsChrimson_red` | 不同 opsin 对不同波长的光敏感性不同；本项目优先推荐红光工具，因为更适合成人果蝇行为并减少蓝光视觉干扰 |
+| `wavelength_nm` | 光波长，单位 nm | 470 nm 是蓝光，617/627 nm 是红光；数值决定是否能有效激活对应 opsin |
+| `frequency_hz` | 光脉冲频率，每秒多少次 | 40 Hz 表示每秒 40 个脉冲；频率越高不一定越好，可能引入非生理或热效应 |
+| `pulse_width_ms` | 每个光脉冲持续时间，单位 ms | 20 ms 表示每次亮光 20 毫秒；与频率共同决定 duty cycle |
+| `train_duration_s` | 一组刺激持续时间，单位秒 | 5 s 是主推荐协议；0.5 s 高光强可作为短刺激对照 |
+| `irradiance_mw_mm2` | 光强，单位 mW/mm2 | 湿实验中需要从低强度开始，避免热效应和非特异行为扰动 |
+| `protocol_energy` | 协议总能量的相对量 | 由光强、频率、脉宽和时长综合得到，用于比较不同协议 |
+| `left_release_au` / `right_release_au` | 左/右半脑预测 5-HT 释放强度 | `au` 是 arbitrary unit，表示相对量，不是真实浓度 |
+| `peak_total_release_au` | 预测释放峰值总量 | 用于排序哪个协议更容易产生可检测信号 |
+| `release_auc_au_s` | 释放曲线下面积 | 反映一段时间内总释放量，适合与成像 AUC 对接 |
+| `brain_registered_release_li` | 按脑侧注册的左右释放指数 | 常用形式为 `(right - left)/(right + left)`；正值表示右侧更强 |
+| `image_li_after_180deg_rotation` | 果蝇旋转 180 度后，按相机图像坐标看到的 LI | 用来区分真实脑侧化和成像角度伪影 |
+| `choice_index_delta` | 光遗传刺激前后群体选择指数变化 | 正值表示更偏向仿真预测的记忆方向，负值表示相反 |
+| `approach_margin` | 接近目标气味相对远离竞争气味的优势 | 越大表示越靠近预期目标 |
+| `wetlab_priority_score` | 湿实验优先级 | 综合效应大小、可测性、文献可行性和对照清晰度；不是 p 值 |
+
+## 一键复现命令
+
+推荐只使用 GPU0/1，避免影响其它卡上的任务：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python \
+  /unify/ydchen/unidit/bio_fly/scripts/run_dpm_optogenetic_validation.py \
+  --devices cuda:0 cuda:1
+```
+
+主要输出目录：
+
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429`
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_optogenetic_protocol_library.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_5ht_release_pattern_summary.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_optogenetic_behavior_predictions.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_wetlab_protocol_recommendations.csv`
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/videos/dpm_optogenetic_release_prediction.mp4`
+
+如果要同时复现会议反馈分拆实验：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly
+CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python \
+  /unify/ydchen/unidit/bio_fly/scripts/run_meeting_feedback_experiments.py \
+  --devices cuda:0 cuda:1
+```
+
+对应输出目录是 `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429`。
+
 ## 结论先行
 
 1. **成像证明和行为证明应分开做。** 5-HT 侧化成像会破坏或强扰动果蝇，不能要求同一只果蝇继续做行为；因此本项目把“释放 pattern 成像验证”和“群体行为调节验证”拆成两条链。
 2. **DPM 光遗传优先用红光工具。** 文献支持 ReaChR/CsChrimson 在成人果蝇行为中用红光激活；本仿真把 617/627 nm 设为优先协议，470 nm 只作为蓝光 positive/control 或校准，不作为主行为实验。
 3. **最关键的可验证 readout 是 brain-registered laterality index。** 如果是真实偏侧化，水平旋转果蝇 180 度后，按脑侧配准的左右符号应保持；如果是成像角度伪影，图像坐标符号会翻转。
 4. **行为验证不需要直接测每只果蝇的 NT 侧化。** 使用几百只果蝇群体 T-maze，在训练或测试窗口给 DPM 红光刺激，看 OCT/MCH choice index 是否按仿真方向移动。
+5. **结构验证仍是硬红线。** 仿真和功能/行为结果最多形成强佐证；若要把“递质侧化是群体稳定结构规律”写成定论，仍需 GRASP、split-GFP 或等价结构实验。
 
 ## 文献依据
 
@@ -15,6 +83,74 @@
 - 5-HT sensor 可报告 DPM/KC 相关 5-HT dynamics：Wan et al., Nature Neuroscience 2021，PMC: https://pmc.ncbi.nlm.nih.gov/articles/PMC8544647/
 - ReaChR 成人果蝇红光光遗传行为：Inagaki et al., Nature Methods 2014，PMC: https://pmc.ncbi.nlm.nih.gov/articles/PMC4151318/
 - DPM appetitive/aversive memory trace 与时间窗：Yu et al. / follow-up memory trace work，PMC: https://pmc.ncbi.nlm.nih.gov/articles/PMC3396741/
+
+## 湿实验怎么验证最严谨
+
+### 证明 1：结构层面确认侧化不是偶然
+
+目标：验证“右侧 5-HT/DPM 输入更强、左侧 Glu 输入更强，且 alpha'beta' 记忆巩固区最明显”是否是群体稳定规律。
+
+推荐实验：
+
+- 使用 GRASP/split-GFP 或等价突触接触报告，优先看 right DPM/5-HT input -> right `KCa'b'`。
+- 同时选择 left Glu input -> left `KCa'b'` 作为相反方向 positive control。
+- 分析时必须按脑侧注册，而不是按显微镜图像左右注册。
+- 每只果蝇只提供结构或成像证据，不要求继续做行为。
+
+主指标：
+
+- 左右 ROI 的荧光强度、接触点数量或体素体积。
+- laterality index：`(right - left) / (right + left)`。
+- 180 度旋转或盲法 ROI 注册后的 LI 稳定性。
+
+### 证明 2：功能层面验证 DPM 光遗传 release pattern
+
+目标：验证仿真预测的 DPM 红光激活是否会产生可重复的右偏 5-HT/KC readout。
+
+推荐实验：
+
+- 遗传设计：`DPM-driver > CsChrimson` 或 `DPM-driver > ReaChR`，KC 或 MB compartment 表达 5-HT sensor 或 GCaMP。
+- 光刺激：优先从 `617/627 nm, 40 Hz, 20 ms pulses, 5.0 s, 0.1 mW/mm2` 起步。
+- 同一只果蝇做两个方向：原始方向和水平旋转 180 度。
+- 对照：no-opsin、retinal-minus、red-light-only、盲法 ROI 注册、低频/低强度 dose control。
+
+主指标：
+
+- 左/右 peak dF/F。
+- 左/右 AUC。
+- 响应上升时间和半衰期。
+- brain-registered release LI。
+- image-coordinate LI 在 180 度旋转后的变化。
+
+判定逻辑：
+
+- 如果是**真实脑侧化**，按脑侧注册的 LI 应保持同一方向。
+- 如果是**成像角度伪影**，按图像坐标看的 LI 更可能随旋转翻转。
+
+### 证明 3：行为层面验证 DPM/5-HT 轴能调节记忆选择
+
+目标：不要求每只果蝇都测 NT 侧化，而是在群体层面验证“DPM 红光刺激会按仿真方向改变 OCT/MCH 记忆选择”。
+
+推荐实验：
+
+- 使用独立果蝇群体，不和成像果蝇混用。
+- 任务：OCT/MCH T-maze 或摄像轨迹实验。
+- 条件：优先做 `weak OCT / strong MCH conflict` 和 delayed memory window，因为普通强气味任务容易天花板化。
+- 在训练、巩固或测试窗口给 DPM 红光刺激，先选一个预注册主窗口，避免事后挑选。
+- 做 CS+/CS- side mirror 和 OCT/MCH counterbalance。
+- 对照：no-opsin、retinal-minus、red-light-only、无训练 naive、红光但不表达 opsin。
+
+主指标：
+
+- choice index。
+- approach margin。
+- early turning bias。
+- 群体速度和活动量，排除只是红光让果蝇不动或过度兴奋。
+
+判定逻辑：
+
+- 如果 DPM/5-HT 轴影响记忆表达，红光组相对对照组的 choice index 应按仿真方向移动。
+- 如果只改变活动量而不改变 choice index，需要谨慎解释为非特异运动效应。
 
 ## 1. 仿真生成的数据
 

@@ -2,6 +2,54 @@
 
 本项目目录是 `/unify/ydchen/unidit/bio_fly`。目标是把论文 zip 中的 FlyWire 结构组学发现，转成可复现、可统计、可渲染视频的功能仿真证据链，用于研究果蝇左右脑蘑菇体不对称性与嗅觉记忆行为之间的关系。
 
+## 给第一次接触赛博果蝇的读者：我们到底做了什么仿真
+
+这里的“赛博果蝇”不是指已经完整复制了 Eon Systems 的私有闭环系统，也不是指“只把连接组丢进去就自动长出完整果蝇行为”。本项目当前实现的是一个**公开可审计的替代仿真脑流程**：
+
+`FlyWire 真实连接组/神经递质注释 -> 指定神经元或脑区作为输入 seed -> GPU signed propagation 计算扰动如何沿连接图传播 -> 把传播结果聚合到 KC/MBON/DAN/APL/DPM/DN 等功能脑区 -> 用透明的行为读出模型生成 OCT/MCH 选择率、轨迹和视频 -> 提出湿实验可验证的预测`
+
+这套流程的价值在于：它把“左脑和右脑蘑菇体的结构差异”转成了可以反复运行、可以做随机对照、可以画图、可以给湿实验老师执行的预测。它的边界也很明确：当前行为层是代理读出，不等于真实果蝇完整运动系统；DPM 光遗传结果是预测，不是已经在真实果蝇上测到的实验事实。
+
+### 本项目已经实际完成的仿真实验
+
+| 实验 | 输入是什么 | 我们怎么操作 | 输出文件 | 当前能说明什么 | 当前不能说明什么 | 一键复现 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 论文 zip 结构发现整理 | `/unify/ydchen/unidit/bio_fly/Subgraph__status5___Morphology_Topology_Connectivity_ (1).zip` 和 FlyWire 注释 | 解压、整理 figure/table 线索，把“右侧 5-HT、左侧 Glu、alpha'beta' 区最强”转成结构摘要 | `/unify/ydchen/unidit/bio_fly/outputs/structure_behavior_linkage/nt_structural_summary.csv` | KC 输入递质侧化是当前最稳的结构主线 | zip 本身不是 root-id 级原始连接组，结构硬证据仍需 GRASP/split-GFP | 见 `/unify/ydchen/unidit/bio_fly/docs/DATA_DOWNLOAD_AND_MB_DISCOVERY_CN.md` |
+| 四卡连接组传播 | FlyWire v783/v630 连接表、KC/MB 递质侧化 seed | 在 `cuda:0-3` 上做 signed multi-hop propagation，并用随机 KC seed 做经验显著性对照 | `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite/suite_empirical_significance.csv` | 右侧 5-HT KC seed 和左侧 Glu KC seed 的影响能传播到 memory axis、DAN、APL、DPM、MBON/MBIN 和左右读出 | 传播不是生物化学动力学，也不是全脑 spiking 闭环 | `cd /unify/ydchen/unidit/bio_fly && /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_four_card_experiment_suite.py --devices cuda:0 cuda:1 cuda:2 cuda:3 --steps 3 --max-active 5000 --n-random-per-family 128 --output-dir /unify/ydchen/unidit/bio_fly/outputs/four_card_suite` |
+| OCT/MCH 嗅觉记忆代理 | OCT、MCH 两种气味，CS+/CS- 奖励或惩罚条件，mirror-side 左右摆放 | 生成 T-maze/培养皿风格轨迹，平衡 CS+ 左右位置，统计 expected choice rate、approach margin、early lateral velocity | `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50/oct_mch_formal_condition_summary.csv` 和 `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4` | 代理系统能稳定表达“奖励趋近、惩罚回避、弱 CS+/强 CS- 冲突”的方向，且不是简单左右摆放偏差 | MB 侧化扰动相对 WT 的行为差异目前未通过 FDR，不能写成已经证明真实行为因果 | `cd /unify/ydchen/unidit/bio_fly && /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_oct_mch_formal_suite.py --condition-table /unify/ydchen/unidit/bio_fly/outputs/connectome_motor_bridge/oct_mch_calibrated_behavior_conditions.csv --output-dir /unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50 --n-trials 50 --run-time 0.2 --max-workers 4 --mirror-sides` |
+| 会议反馈分拆验证 | 生物老师提出的 5-HT/Glu 分拆、DPM 光遗传、180 度旋转、群体 T-maze 和 GRASP 验证需求 | 分别移除或减弱 5-HT-right、Glu-left、both-blunted，扫描 DPM 光遗传传播和群体可观测指标 | `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/MEETING_FEEDBACK_EXPERIMENTS_CN.md` | Glu-left 是更强广谱 memory-output 扰动；5-HT-right 更适合做 DPM/5-HT release 和记忆巩固时间窗验证轴 | 不能用计算分拆替代真实遗传或成像验证 | `cd /unify/ydchen/unidit/bio_fly && CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_meeting_feedback_experiments.py --devices cuda:0 cuda:1` |
+| DPM 光遗传仿真验证 | DPM neuron seed、CsChrimson/ReaChR/ChR2 光遗传参数、FlyWire 下游 ROI、OCT/MCH 行为代理 | 用 `cuda:0,1` 传播 DPM 激活，扫描波长/频率/脉宽/时长/光强，预测 5-HT release pattern、旋转控制和群体行为 delta | `/unify/ydchen/unidit/bio_fly/docs/DPM_OPTOGENETIC_VALIDATION_CN.md` 和 `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429` | 推荐 617/627 nm 红光 DPM 协议；预测偏侧化果蝇按脑侧注册的 release LI 保持右偏；群体 T-maze 最敏感条件是 weak OCT/strong MCH conflict | 不能声称真实 5-HT 已释放或真实行为已改变；必须用湿实验验证 | `cd /unify/ydchen/unidit/bio_fly && CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_dpm_optogenetic_validation.py --devices cuda:0 cuda:1` |
+
+### 这些输出怎么读
+
+- `absolute_mass`：扰动沿连接组传播后的总响应量。它像“影响范围/强度”的粗粒度指标，不是钙信号，也不是真实神经递质浓度。
+- `laterality_index` 或 `LI`：左右差异指数，常用形式是 `(right - left) / (right + left)`。正值表示右侧更强，负值表示左侧更强。
+- `choice_index`：群体行为选择指数。正值通常表示更偏向预期方向，例如更接近奖励 CS+ 或更远离惩罚 CS+。
+- `CS+`：训练时与糖奖励、安全或正性结果配对的气味。
+- `CS-`：训练时不奖励、竞争或负性结果配对的气味。
+- `OCT`：3-octanol，果蝇经典嗅觉条件化气味之一。
+- `MCH`：4-methylcyclohexanol，另一种经典嗅觉条件化气味。
+- `DPM`：dorsal paired medial neuron，与蘑菇体记忆维持和 5-HT 调节相关。
+- `wetlab_priority_score`：按仿真效应强度、文献可行性、光遗传参数可操作性和对照清晰度综合排序的实验优先级，不是生物学显著性 p 值。
+
+### 目前最清楚的结论
+
+1. 结构层面最稳的发现是：KC 输入存在稳定递质侧化，核心是右侧 5-HT/serotonin 偏强、左侧 Glu/glutamate 偏强，并且在 alpha'beta' 记忆巩固相关亚区最突出。
+2. 这个发现不是纯描述，因为四卡传播显示这些 seed 的影响能投射到 memory axis、DAN、APL、DPM、MBON/MBIN 和左右读出。
+3. 会议反馈后的分拆实验提示：Glu-left 更像广谱 memory-output 扰动轴，5-HT-right 更适合作为 DPM 光遗传、5-HT release pattern 和记忆时间窗的验证轴。
+4. OCT/MCH 代理行为和视频已经可以作为“可复现行为框架”和“湿实验设计草图”，但还不是证明真实果蝇行为因果的最终证据。
+5. DPM 光遗传仿真给出可直接讨论的湿实验方案：优先用 CsChrimson 617 nm 或 ReaChR 627 nm，做 40 Hz、20 ms、5 s、0.1 mW/mm2 左右的红光协议，主读出为按脑侧注册的 5-HT sensor dF/F、AUC、release LI，以及独立群体 T-maze 的 choice index。
+
+### 为了严谨，必须怎样用湿实验验证
+
+本项目建议把真实验证拆成三条互补链，而不是要求同一只果蝇既做破坏性成像又做行为：
+
+1. **结构硬证据：GRASP/split-GFP 或等价结构验证。** 目标是确认右侧 DPM/5-HT 到右侧 alpha'beta' KC、左侧 Glu 输入到左侧 alpha'beta' KC 的连接或接触差异是否在群体中稳定存在。这个实验回答“结构侧化是不是某只 FlyWire 果蝇的偶然现象”。
+2. **功能成像证据：DPM 光遗传 release pattern。** 用 DPM-driver 表达 CsChrimson/ReaChR，用 KC 或 MB compartment 表达 5-HT sensor 或 GCaMP；同一只果蝇做原始方向和水平旋转 180 度，分析时按脑侧而不是相机坐标注册。若真实偏侧化存在，brain-registered LI 应保持；若是成像角度伪影，image-coordinate LI 会随旋转翻转。
+3. **行为群体证据：OCT/MCH T-maze 或轨迹记录。** 另取独立群体，不要求测每只果蝇 NT 侧化；在训练、巩固或测试窗口给 DPM 红光刺激，优先测试 weak OCT/strong MCH conflict 和 delayed memory window。主指标是 choice index、approach margin、early turning bias，并做 CS+/CS- side mirror、OCT/MCH counterbalance、no-opsin、retinal-minus、red-light-only 对照。
+
+三条链合在一起才是强论证：结构证据说明侧化真实存在，功能成像说明侧化能被 DPM 光遗传读出，群体行为说明这个轴能调节记忆选择。当前仿真已经完成的是“提出并量化这些预测”，真实湿实验还没有被本项目替代。
+
 ## 一句话结论
 
 当前版本已经完成从“结构发现”到“功能传播”再到“行为视频”的闭环原型：
