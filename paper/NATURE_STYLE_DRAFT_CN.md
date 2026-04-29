@@ -564,3 +564,28 @@ early-decision assay 在更短时间窗内仍然保留同向效应：
 > Side-balanced embodied simulations confirmed that the public connectome-to-motor bridge robustly expresses olfactory valence memory, but did not yield FDR-significant behavioural effects of unilateral MB perturbations. This negative result localizes the missing mechanism to the interface between MB compartmental readouts and descending motor pathways, motivating a direct MBON/DAN/APL/DPM-to-DN mapping rather than further tuning of a low-dimensional lateral bias term.
 
 下一步主实验应直接使用 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_sensory_encoder/oct_mch_kc_readout.csv` 的 OCT/MCH KC readout，构建 `KC -> MBON/DAN/APL/DPM -> DN` 的侧化 readout，并把曲率趋势作为候选连续指标，而不是继续扩大同一个低维 `MemoryCondition` 参数扫描。
+
+## 新增结果：会议反馈后的分拆验证、DPM 光遗传预测和群体 T-maze 指标
+
+2026-04-29 与生物老师讨论后，我们把原先较宽泛的“递质侧化影响记忆行为”拆成更可验证的三条实验链。输出目录为 `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429`，完整中文报告为 `/unify/ydchen/unidit/bio_fly/docs/MEETING_FEEDBACK_EXPERIMENTS_CN.md`。
+
+第一，会议明确指出，结构证据是硬红线。功能成像和行为学可以提供强佐证，但不能替代结构验证。因此本文不再把仿真写成“已经证明偏侧化存在”，而是写成：FlyWire 统计提出右侧 5-HT 与左侧 Glu 的结构假说；GRASP 或 split-GFP 实验需要优先验证 `right DPM/5-HT input -> right KCa'b'`，并以 `left Glu input -> left KCa'b'` 作为相反方向 positive control。
+
+第二，会议建议把 5-HT 右偏和 Glu 左偏拆开，而不是合并成一个“侧化强弱”指标。我们因此新增 `double_dissociation_metrics.csv`，用 `abs(z)` 比较每条扰动对 readout 的强度。之所以使用绝对值，是因为 signed z 的正负表示读出方向，而不是机制主导性。当前结果不支持“完美双重分离”的强说法；更严谨的结论是：`left_glutamate_kc_activate` 是更强的广谱 memory-output 扰动，在 `response_laterality_abs`、`memory_axis_abs_mass`、`MBON/MBIN`、`DAN` 和 `DPM` 等指标上均强于 `right_serotonin_kc_activate`；而 `right_serotonin_kc_activate` 更适合作为 DPM/5-HT、记忆巩固和时间窗调制的验证轴。
+
+第三，会议提出一个更接近湿实验的功能验证方案：模拟光遗传激活 DPM，用不同频率、时长和波形刺激，预测有偏侧与无偏侧条件下 5-HT 释放或下游响应模式。我们在 GPU0/1 上分别传播 left/right DPM seed，得到 `dpm_gpu_propagation_summary.csv`。结果显示 `left_DPM_opto` 的 right laterality index 为 `-0.8334`，`right_DPM_opto` 为 `+0.8073`，`bilateral_DPM_opto` 为 `-0.2832`；主要招募 Kenyon cell、MBIN、MBON 和 DAN。这给成像实验一个直接预测：如果 DPM/5-HT 偏侧是真实且稳定的，左右 DPM 光遗传激活应产生方向相反的下游读出侧化；如果旋转果蝇 180 度后方向随样本而非相机坐标保持一致，则更支持生物侧化而非成像角度偏差。
+
+第四，由于脑成像是破坏性实验，无法在同一只果蝇上继续做行为，会议建议把行为验证转为群体 T-maze 指标。我们新增 `group_behavior_predictions.csv`，把仿真输出压缩成真实实验可量化的 choice index。预测值为：WT OCT/MCH choice index 约 `0.72`；移除 5-HT-right 轴后降至 `0.595`；移除 Glu-left 轴后降至 `0.566`；双轴共同减弱后降至 `0.36`。这不是对真实果蝇行为的直接证明，而是给后续几百只果蝇群体统计提供效应方向、样本量估计和优先条件。
+
+新增图件已同步到 `/unify/ydchen/unidit/bio_fly/paper/figures` 和 `/unify/ydchen/unidit/bio_fly/ppt/figures`：
+
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_meeting_double_dissociation_heatmap.png`：5-HT-right 与 Glu-left 的分拆 readout 热图。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_dpm_optogenetic_protocol_predictions.png`：DPM 光遗传频率、时长、波形预测。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_group_behavior_observable_predictions.png`：群体 T-maze 可观测 choice index 预测。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_validation_logic_after_meeting.png`：结构、功能、行为三层验证逻辑。
+
+写入主文时建议使用以下谨慎表述：
+
+> Meeting-driven analyses separated the right-serotonin and left-glutamate axes into experimentally addressable hypotheses. Left glutamate-biased KC perturbation produced the stronger broad memory-output effect, whereas the right serotonin/DPM axis provides a more direct optogenetic and consolidation-window validation route. These simulations prioritize GRASP targets, DPM stimulation protocols and group-level T-maze observables, but do not replace direct structural validation of neurotransmitter-specific lateralization.
+
+中文解释为：会议反馈后，本文的叙事应从“仿真证明侧化导致行为”改为“结构统计发现侧化，连接组传播证明其具有功能可传播性，新增仿真把它转化为 GRASP、DPM 光遗传和群体 T-maze 的可检验预测”。这条链条更严谨，也更符合探索性 Nature 风格论文的证据分级。

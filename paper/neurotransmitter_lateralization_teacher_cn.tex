@@ -1,0 +1,211 @@
+\documentclass[11pt,fontset=none]{ctexart}
+
+\usepackage[a4paper,top=2.2cm,bottom=2.2cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+\setCJKmainfont[BoldFont={WenQuanYi Zen Hei}]{WenQuanYi Micro Hei}
+\setCJKsansfont[BoldFont={WenQuanYi Zen Hei}]{WenQuanYi Micro Hei}
+\setCJKmonofont{WenQuanYi Micro Hei Mono}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\graphicspath{{/unify/ydchen/unidit/bio_fly/paper/figures/}{/unify/ydchen/unidit/bio_fly/outputs/four_card_suite/figures/}}
+\urlstyle{tt}
+\sloppy
+
+\definecolor{FlyBlue}{HTML}{275A9A}
+\definecolor{FlyOrange}{HTML}{B9652B}
+\definecolor{FlyRed}{HTML}{9B2C2C}
+\definecolor{FlyGreen}{HTML}{2D7554}
+
+\newcommand{\key}[1]{\textcolor{FlyBlue}{\textbf{#1}}}
+\newcommand{\warn}[1]{\textcolor{FlyRed}{\textbf{#1}}}
+
+\title{\textbf{左右脑神经递质侧化与果蝇记忆：中文解读稿}}
+\author{bio\_fly 项目}
+\date{2026 年 4 月 27 日}
+
+\begin{document}
+\maketitle
+
+\section*{研究概述}
+
+本研究的主发现是：果蝇蘑菇体 Kenyon cell（KC）接收到的上游输入并不是左右完全对称。右侧 KC 更富集血清素预测输入，左侧 KC 更富集谷氨酸预测输入，最强差异出现在与记忆巩固相关的 $\alpha'\beta'$ 亚区。进一步的 FlyWire 连接组仿真检验表明，这些侧化递质信号可以传播到记忆轴、调节轴和下降神经元读出。现有结果支持“结构侧化具有功能可传播性”，但还不能直接等同于真实动物行为因果。
+
+\section*{先看名词}
+
+\begin{table}[H]
+\centering\small
+\caption{生物学名词表}
+\begin{tabularx}{\linewidth}{@{}p{2.8cm}X@{}}
+\toprule
+\textbf{名词} & \textbf{解释} \\
+\midrule
+神经递质 & 神经元之间传递信号的化学物质。一个连接点的递质类型会影响下游神经元如何响应。\\
+血清素 Ser / 5-HT & 一种调节性递质，常与脑状态、睡眠、记忆巩固等有关。本项目发现它在右侧 KC 输入中更高。\\
+谷氨酸 Glu / GLU & 一种重要突触递质。本项目发现它在多数 KC 亚型中左侧更高。\\
+多巴胺 DA & 果蝇蘑菇体中的奖励/惩罚教学信号常由多巴胺神经元提供。\\
+GABA & 常见抑制性递质，在部分 KC 亚型也有侧化。\\
+乙酰胆碱 ACh & KC 自己的输出基本是乙酰胆碱，所以本研究说的侧化主要是“KC 接收到的输入侧化”。\\
+OCT 气味 & 3-octanol，是嗅觉记忆实验中的气味；不要和章鱼胺 Oct/OA 混淆。\\
+MCH 气味 & 4-methylcyclohexanol，是 OCT 的经典配对/对照气味。\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\caption{脑区、神经元和统计量}
+\begin{tabularx}{\linewidth}{@{}p{2.8cm}X@{}}
+\toprule
+\textbf{名词} & \textbf{解释} \\
+\midrule
+MB / 蘑菇体 & 果蝇学习和记忆的核心脑区，尤其参与气味记忆。\\
+KC & Kenyon cell，蘑菇体主细胞，把气味编码成稀疏神经活动。\\
+MBON & 蘑菇体输出神经元，把记忆价值信息传给下游。\\
+DAN & 多巴胺神经元，常携带奖励或惩罚教学信号。\\
+APL / DPM & 蘑菇体内部反馈和记忆维持相关神经元。\\
+DN & 下降神经元，是脑信号通向身体运动系统的重要接口。\\
+Cohen's $d$ & 效应量。本文约定 $d>0$ 表示右侧更高，$d<0$ 表示左侧更高，绝对值越大差异越大。\\
+FDR $q$ & 多重比较校正后的显著性。通常 $q<0.05$ 代表通过统计校正。\\
+laterality index & 左右偏向指数，$(R-L)/(R+L)$；正数偏右，负数偏左。\\
+matched random control & 同一侧、同样数量的随机 KC 对照，用来排除“随便激活一批 KC 也会这样”的可能。\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section*{原始结构发现：右侧血清素，左侧谷氨酸}
+
+结构统计的核心结果如下。
+
+\begin{itemize}
+  \item 血清素：11 个测试亚型全部右偏，其中 9 个通过 FDR 校正；平均右偏指数约 0.174，最大效应量 $|d|=1.45$，最小 FDR $q=9.19\times10^{-48}$。
+  \item 谷氨酸：11 个测试亚型中 7 个左偏并通过 FDR 校正；平均右偏指数约 -0.061，最大效应量 $|d|=1.47$，最小 FDR $q=1.52\times10^{-50}$。
+  \item 最强区域：$\alpha'\beta'$ 记忆巩固相关亚区。KC$\alpha'\beta'$-ap2 中谷氨酸左偏 $d=-1.47$，血清素右偏 $d=+1.45$。
+  \item 重要限定：这不是 KC 输出递质变了。KC 输出基本仍是乙酰胆碱；侧化发生在 KC 接收到的上游输入组成上。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{Fig_ext1_cohens_d_heatmap_all_NT.png}
+\caption{所有递质在 KC 亚型中的左右效应量热图。红色代表右侧更高，蓝色代表左侧更高。最稳定的模式是血清素右偏和谷氨酸左偏。}
+\end{figure}
+
+\section*{为什么这个发现和记忆有关}
+
+果蝇蘑菇体不是一个均质脑区，不同叶区参与不同时间尺度的记忆。$\alpha'\beta'$ 叶区常与记忆巩固相关，而本项目中血清素右偏和谷氨酸左偏在该叶区最强。这意味着左右半脑可能不是简单备份，而是存在输入化学组成上的分工：一侧更偏调节性血清素输入，另一侧更偏谷氨酸输入。这个发现为“果蝇记忆侧化”提供了一个可量化的连接组基础。
+
+\section*{仿真如何加强这个发现}
+
+单纯统计左右差异只能说明结构存在不对称。为检验这种不对称是否具有功能意义，本研究进一步进行了递质侧化 seed 传播仿真。
+
+\begin{enumerate}
+  \item 根据结构结果选择右侧血清素富集 KC 和左侧谷氨酸富集 KC。
+  \item 在 FlyWire signed connectivity 上进行多 hop 稀疏传播。
+  \item 与同侧、同数量的随机 KC seed 做 matched random control。
+  \item 读出 memory axis、MBON、DAN、APL、DPM、response laterality 等指标。
+\end{enumerate}
+
+结果显示，右侧血清素 KC 激活显著改变 DAN、DPM、APL、response laterality 等读出；左侧谷氨酸 KC 激活显著改变 memory axis、DAN、MBIN、DPM、MBON、APL 和左右读出。两组关键结果均达到 FDR $q=0.038$。这说明按递质侧化选择出来的 KC 群体，在连接组传播后不是随机 KC 的等价替代。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{Fig2_functional_metric_heatmap.png}
+\caption{四卡传播仿真中的功能读出热图。它显示递质侧化 seed 对 memory axis 和调节轴读出的影响。}
+\end{figure}
+
+\section*{行为仿真的作用和边界}
+
+OCT/MCH 行为仿真用于检验嗅觉记忆任务本身是否可运行。OCT + sucrose 表示 OCT 气味和糖奖励配对，OCT 是 CS+；OCT + shock 表示 OCT 气味和电击惩罚配对，OCT 仍是 CS+，但动物应回避它。CS- 是没有配对奖励或惩罚的对照气味，US 是糖或电击。
+
+当前 mirror-side 正式实验中，奖励和惩罚方向是显著的：OCT+sucrose 选择率约 0.86，OCT+shock 按预期回避率约 0.86，FDR $q$ 约 $10^{-13}$ 到 $10^{-15}$。但是单侧 MB silencing、symmetrization、swap 等扰动还没有在行为层打出显著差异，主要 FDR $q=1.0$。因此行为仿真支持嗅觉记忆任务框架和视频展示，但还不能证明递质侧化已经导致真实行为改变。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{Fig_oct_mch_assay_v2_key_conditions_frame.png}
+\caption{OCT/MCH 行为视频的代表帧。视频用于说明实验场景、气味杯、糖/电击线索和轨迹，不作为显著性本身；显著性来自独立的 n=100 trial 统计。}
+\end{figure}
+
+\section*{会议反馈后的新增验证设计}
+
+与生物老师讨论后，本项目把验证逻辑进一步收紧为三条链路：结构验证、功能验证和群体行为验证。最重要的变化是：\warn{GRASP 或 split-GFP 结构验证是硬证据}，仿真、钙成像和 T-maze 行为只能提供功能或行为层佐证，不能替代结构证据。
+
+\begin{enumerate}
+  \item \key{5-HT 与 Glu 分拆。} 不再把右侧血清素和左侧谷氨酸简单合并成一个“侧化强弱”。本轮按 $|z|$ 比较扰动强度，因为 signed $z$ 的正负表示读出方向，不表示哪条机制更重要。当前结果显示，左侧谷氨酸 KC 扰动是更强的广谱 memory-output 扰动；右侧血清素 KC 扰动更适合进入 DPM、5-HT 释放和记忆巩固时间窗验证。
+  \item \key{DPM 光遗传协议扫描。} 用 GPU0/1 分别传播 left/right DPM seed，预测左右 DPM 光遗传激活应产生相反方向的 readout 偏侧化。left DPM 的 right laterality index 为 -0.8334，right DPM 为 +0.8073，bilateral DPM 为 -0.2832。这个结果可转化为湿实验：改变刺激频率、时长和波形，比较偏侧化果蝇与非偏侧化果蝇的 5-HT 释放或下游钙信号。
+  \item \key{群体 T-maze 指标。} 因为脑成像后单只果蝇不能再做行为，行为验证应转成几百只果蝇的群体统计。仿真预测 WT OCT/MCH choice index 约 0.72；去除 5-HT-right 轴后降至 0.595；去除 Glu-left 轴后降至 0.566；双轴共同减弱后降至 0.36。这给真实 T-maze 实验提供了明确效应方向。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{Fig_meeting_double_dissociation_heatmap.png}
+\caption{会议反馈后的 5-HT/Glu 分拆验证。图中显示的是不同 readout 上两条候选机制轴的绝对效应强度；当前更稳的结论是 Glu-left 为更强广谱扰动，5-HT-right 更适合作为 DPM/5-HT 记忆巩固验证轴。}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{Fig_dpm_optogenetic_protocol_predictions.png}
+\caption{DPM 光遗传协议扫描预测。该图把会议中提出的“用不同频率、时长、波形刺激 DPM”转化为可复现实验条件，用于指导后续成像或释放检测。}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{Fig_group_behavior_observable_predictions.png}
+\caption{群体 T-maze 可观测指标预测。该结果不是直接证明真实行为因果，而是给后续几百只果蝇群体实验提供 choice index 的预期方向。}
+\end{figure}
+
+\section*{可支持的结论与边界}
+
+\begin{enumerate}
+  \item 可以说：FlyWire 连接组统计支持 KC 输入递质存在稳定左右侧化，最主要是血清素右偏和谷氨酸左偏。
+  \item 可以说：这种侧化在 $\alpha'\beta'$ 记忆巩固相关亚区最强，因此具有明确的记忆生物学意义。
+  \item 可以说：四卡连接组传播显示递质侧化 seed 能显著改变记忆轴和调节轴读出，相比同侧随机 KC 对照不是等价的。
+  \item 可以说：OCT/MCH 代理行为实验能稳定表达奖励/惩罚方向。
+  \item 不能说：已经证明血清素/谷氨酸侧化决定真实动物行为。
+  \item 不能说：已经完整复刻 Eon Systems 私有赛博果蝇闭环系统。
+  \item 不能说：连接组单独、无代理层、自动涌现完整果蝇行为。
+\end{enumerate}
+
+\section*{后续验证方向}
+
+如果要把这条故事推进到高水平投稿，最关键的不是继续调视频，而是直接验证“侧化递质输入是否造成记忆差异”。
+
+\begin{itemize}
+  \item 单侧操控右侧血清素输入，重点看 $\alpha'\beta'$ KC 记忆巩固相关反应是否改变。
+  \item 单侧操控左侧谷氨酸输入，测试是否影响记忆维持、反馈或竞争气味选择。
+  \item 对 MBON、DAN、APL、DPM 做左/右分侧激活或抑制，并记录 OCT/MCH 行为 choice index。
+  \item 做钙成像，比较左右 $\alpha'\beta'$ KC、MBON 和 DN 在 CS+/CS- 测试中的响应。
+\end{itemize}
+
+\section*{文件和复现路径}
+
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}p{3.0cm}X@{}}
+\toprule
+\textbf{内容} & \textbf{绝对路径} \\
+\midrule
+英文主文 TeX & \url{/unify/ydchen/unidit/bio_fly/paper/main_merged.tex} \\
+英文主文 PDF & \url{/unify/ydchen/unidit/bio_fly/paper/main_merged.pdf} \\
+中文解读 TeX & \url{/unify/ydchen/unidit/bio_fly/paper/neurotransmitter_lateralization_teacher_cn.tex} \\
+中文解读 PDF & \url{/unify/ydchen/unidit/bio_fly/paper/neurotransmitter_lateralization_teacher_cn.pdf} \\
+PPT TeX & \url{/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.tex} \\
+PPT PDF & \url{/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf} \\
+结构侧化汇总 & \url{/unify/ydchen/unidit/bio_fly/outputs/structure_behavior_linkage/nt_structural_summary.csv} \\
+递质 seed 汇总 & \url{/unify/ydchen/unidit/bio_fly/outputs/model_linkage_gpu/kc_nt_seed_summary.csv} \\
+四卡传播显著性 & \url{/unify/ydchen/unidit/bio_fly/outputs/four_card_suite/suite_empirical_significance.csv} \\
+OCT/MCH 视频 & \url{/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4} \\
+会议反馈报告 & \url{/unify/ydchen/unidit/bio_fly/docs/MEETING_FEEDBACK_EXPERIMENTS_CN.md} \\
+DPM 光遗传预测 & \url{/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/dpm_gpu_propagation_summary.csv} \\
+群体 T-maze 预测 & \url{/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/group_behavior_predictions.csv} \\
+\bottomrule
+\end{tabularx}
+\normalsize
+
+\end{document}

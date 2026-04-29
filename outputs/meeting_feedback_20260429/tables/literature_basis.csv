@@ -1,0 +1,6 @@
+topic,source,url,use_in_project
+DPM/5-HT memory trace,"Yu et al., Cell 2006",https://doi.org/10.1016/j.cell.2005.09.037,支持 DPM 神经元和嗅觉记忆时间窗、branch-specific memory trace 相关；因此新增 DPM 光遗传协议扫描。
+DPM serotonin and ARM,"Lee et al., Neuron 2011",https://pubmed.ncbi.nlm.nih.gov/21808003/,支持 DPM 释放 5-HT 到蘑菇体并影响 anesthesia-resistant memory；因此把 5-HT 右偏解释为记忆巩固/调节轴候选。
+GRASP synaptic validation,"Feinberg et al., Neuron 2008; Drosophila transsynaptic tools review",https://pmc.ncbi.nlm.nih.gov/articles/PMC8524129/,支持用 split-GFP/GRASP 作为结构连接验证；因此新增 GRASP 靶点优先级表。
+OCT/MCH T-maze assay,Drosophila adult olfactory shock learning protocol,https://pmc.ncbi.nlm.nih.gov/articles/PMC4672959/,支持 3-octanol 和 4-methylcyclohexanol 作为标准嗅觉学习气味；因此行为预测转成 T-maze 群体 choice index。
+MB lateralized memory,"Pascual and Preat, Science 2004",https://doi.org/10.1126/science.1100621,支持果蝇记忆与左右不对称结构相关；因此保留偏侧化研究主线，但明确单脑 FlyWire 的边界。

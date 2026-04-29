@@ -1,0 +1,7 @@
+priority,grasp_pair,side,target_subtype,reason,n_seed_neurons,expected_signal
+1,DPM/5-HT input -> right KCa'b',right,KCa'b'-ap1,5-HT right enrichment strongest in alpha' beta' memory-consolidation subtypes,27,right GRASP signal > left after brain-side registration
+1,DPM/5-HT input -> right KCa'b',right,KCa'b'-ap2,5-HT right enrichment strongest in alpha' beta' memory-consolidation subtypes,30,right GRASP signal > left after brain-side registration
+1,DPM/5-HT input -> right KCa'b',right,KCa'b'-m,5-HT right enrichment strongest in alpha' beta' memory-consolidation subtypes,30,right GRASP signal > left after brain-side registration
+2,putative glutamatergic input -> left KCa'b',left,KCa'b'-ap1,Glu left bias provides opposite-direction positive control,30,left GRASP signal > right
+2,putative glutamatergic input -> left KCa'b',left,KCa'b'-ap2,Glu left bias provides opposite-direction positive control,28,left GRASP signal > right
+2,putative glutamatergic input -> left KCa'b',left,KCa'b'-m,Glu left bias provides opposite-direction positive control,30,left GRASP signal > right

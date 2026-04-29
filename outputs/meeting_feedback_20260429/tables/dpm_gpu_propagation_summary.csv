@@ -1,0 +1,4 @@
+condition,device,n_seed_neurons,n_active_neurons,absolute_mass,left_abs_mass,right_abs_mass,right_laterality_index,top_cell_classes
+left_DPM_opto,cuda:0,1,6280,1.2828794717788696,1.1757562160491943,0.10683809220790863,-0.8334031399950789,Kenyon_Cell:0.7370; unannotated:0.1342; MBIN:0.1119; MBON:0.1107; DAN:0.0571
+right_DPM_opto,cuda:1,1,6386,1.4027972221374512,0.1351347118616104,1.267134189605713,0.8072627700433113,Kenyon_Cell:0.7507; unannotated:0.1798; MBON:0.1480; MBIN:0.0965; DAN:0.0765
+bilateral_DPM_opto,cuda:0,2,6378,1.2637608051300049,0.8106589913368225,0.452808678150177,-0.2832287060672807,Kenyon_Cell:0.7788; MBON:0.1191; MBIN:0.1031; unannotated:0.0850; DAN:0.0611

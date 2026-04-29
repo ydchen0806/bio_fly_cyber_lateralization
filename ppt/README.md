@@ -1,0 +1,94 @@
+# 赛博果蝇项目教师汇报 PPT
+
+保存路径：`/unify/ydchen/unidit/bio_fly/ppt/README.md`
+
+## 文件说明
+
+- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.tex`：中文 Beamer PPT 源码。
+- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`：编译后的汇报 PDF。
+- `/unify/ydchen/unidit/bio_fly/ppt/figures`：PPT 使用的论文级图表素材。
+
+## 编译命令
+
+```bash
+cd /unify/ydchen/unidit/bio_fly/ppt
+latexmk -xelatex -interaction=nonstopmode -halt-on-error cyber_fly_teacher_report.tex
+```
+
+清理 LaTeX 中间文件：
+
+```bash
+cd /unify/ydchen/unidit/bio_fly/ppt
+latexmk -c cyber_fly_teacher_report.tex
+```
+
+## 2026-04-27 编译检查结果
+
+已在本机完成 XeLaTeX 编译：
+
+- 输出 PDF：`/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`
+- 页数：`34`
+- 文件大小：约 `2.6 MB`
+- 格式检查：LaTeX 日志中未发现 `Overfull`、`LaTeX Error`、`Package Error`、`Undefined control sequence` 或 `Fatal error`。
+- 日志中仍有窄列表格里的英文短语断行提示，以及 beamer/ctex 导航元信息造成的 `Missing character ... nullfont` 提示；它们未造成可见文字缺失，不影响 PDF 使用。
+- 渲染检查：使用 Ghostscript 将 PDF 渲染为 PNG，确认新增术语页、递质侧化主发现页、结构热图页、四卡传播仿真页、中文路径表和英文 paper reader guide 均能正常显示。
+- 人工抽查：名词说明页、血清素/谷氨酸侧化页、四卡传播仿真页、OCT/MCH 统计页、MB 扰动负结果页、隐患页、补充实验页和 take-home message 页可以正常显示。
+
+日志中仍有 `fontspec` 的 WenQuanYi 字体 `Script CJK` 提示，以及 beamer/ctex 生成导航元信息时的 `Missing character ... nullfont` 提示。它们未导致编译失败，也未在抽查页面中造成可见文字缺失；当前 PDF 可用于汇报。
+
+## 2026-04-27 二次改稿说明
+
+用户反馈上一版“AI 味太重，发现和结论没有说清楚”。本版已改成面向真实组会汇报的叙事结构：
+
+- 标题改为明确科学问题：`左右脑神经递质侧化能否影响果蝇记忆？`
+- 第二页直接给出当前最稳的结论，不再只做泛泛摘要。
+- 新增开场名词说明，解释神经递质、血清素、谷氨酸、多巴胺、GABA、ACh、OCT 气味、MCH 气味、MB、KC、MBON、DAN、APL、DPM、DN、Cohen's d、FDR q 和 laterality index。
+- 主体现在以用户原始 paper 的主发现为核心：右侧血清素富集、左侧谷氨酸偏置，并强调最强位置是 $\alpha'\beta'$ 记忆巩固相关亚区。
+- 主体按证据链展开：递质侧化结构统计、递质 seed 四卡连接组传播、MB--DN 连接组传播、OCT/MCH 行为仿真、MB 侧化扰动、视频可视化。
+- 每个关键实验都说明“怎么做、看什么指标、发现什么、不能过度解释什么”。
+- 新增四卡传播仿真页：右侧血清素 KC seed 和左侧谷氨酸 KC seed 相对同侧随机 KC 对照，显著改变 memory axis、DAN、APL、DPM、MBON/MBIN 和左右读出，FDR q=0.038。
+- 明确加入最重要的负结果：MB left/right silencing、symmetrization、swap 与 WT 相比当前均未显著改变行为，主要 FDR q=1.0。
+- 新增“当前隐患”和“还必须补什么”两组 slides，区分计算实验补强和湿实验验证。
+- 视频页明确说明视频用于展示和检查，统计证据来自 n=100 mirror-side trial，而不是视频本身。
+
+## PPT 内容结构
+
+这份汇报面向不熟悉生物学或 AI 仿真的老师，按下面逻辑组织：
+
+1. 先解释名词：神经递质、递质侧化、血清素、谷氨酸、OCT/MCH 气味、蘑菇体和统计量。
+2. 明确原始 paper 主发现：KC 输入中血清素系统性右偏，谷氨酸多数左偏，最强在 $\alpha'\beta'$。
+3. 展示递质侧化结构证据：Cohen's d 热图、FDR 显著性和效应量。
+4. 解释为什么这和记忆有关：$\alpha'\beta'$ 与记忆巩固相关，而该亚区递质侧化最强。
+5. 展示递质 seed 四卡传播仿真：右侧血清素 KC 和左侧谷氨酸 KC 不是随机 KC 的等价替代。
+6. 展示结构侧化审计和 MB--DN 读出：MBON/memory axis 可到达 DN，right MBON/right memory axis 读出更右偏。
+7. 展示 OCT/MCH 正式统计：OCT+sucrose、MCH+sucrose、OCT+shock、weak OCT/strong MCH conflict 均按预期显著。
+8. 主动展示 MB 扰动负结果：当前行为代理尚不能显著区分 left/right MB perturbation。
+9. 说明视频的意义和边界：视频让实验可读，不替代统计。
+10. 最后给出意义、隐患、计算实验补充、湿实验验证和组会汇报建议。
+
+## 严谨表述边界
+
+PPT 中刻意避免以下过度声称：
+
+- 不说“已经完整复刻 Eon 私有闭环系统”。
+- 不说“已经恢复 Eon DN-to-body 权重”。
+- 不说“连接组单独自动涌现完整果蝇行为”。
+- 不把当前 MB 扰动行为结果说成显著正结果。
+
+当前最稳妥的论文定位是：
+
+> 公开连接组约束的蘑菇体神经递质侧化发现与仿真验证：右侧血清素富集、左侧谷氨酸偏置可传播到记忆相关读出，并生成可由真实 OCT/MCH 行为学、单侧神经操控和钙成像进一步验证的因果假说。
+
+## PPT 使用的主要图表
+
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_oct_mch_formal_suite.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_oct_mch_assay_v2_key_conditions_frame.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_ext1_cohens_d_heatmap_all_NT.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig2_functional_metric_heatmap.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig3_empirical_null_significance.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_mb_transition_laterality.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_kc_upstream_nt_by_side.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_mb_dn_motor_mechanism.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_mb_dn_laterality_index.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_mb_dn_motor_primitive_heatmap.png`
+- `/unify/ydchen/unidit/bio_fly/ppt/figures/Fig_structure_behavior_linkage.png`

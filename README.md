@@ -7,18 +7,41 @@
 当前版本已经完成从“结构发现”到“功能传播”再到“行为视频”的闭环原型：
 
 1. 论文 zip `/unify/ydchen/unidit/bio_fly/Subgraph__status5___Morphology_Topology_Connectivity_ (1).zip` 主要是文稿和图包，不是 root-id 级可直接仿真的原始连接组数据包。
-2. 项目已接入 `/unify/ydchen/unidit/bio_fly/external/Drosophila_brain_model` 与 FlyWire v783/v630 连接矩阵，可运行 signed propagation 与 Brian2 smoke test。
-3. 四卡 GPU 功能传播正式套件已在 `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite` 生成结果，`534` 个扰动规格、`3` hop、每步最多 `5000` 个活跃节点，总耗时约 `11.089` 秒。
-4. 最新嗅觉记忆仿真套件在 `/unify/ydchen/unidit/bio_fly/outputs/olfactory_perturbation_suite` 生成，按文件时间估计从 `2026-04-26 12:09:56` 到 `2026-04-26 12:21:51`，约 `11.9` 分钟，其中包含屏幕筛选、四卡渲染、统计图和两个长视频。
-5. OCT/MCH mirror-side 早期动力学正式套件已在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 生成结果：8 个条件、每条件 nominal `50` + mirror `50` 条轨迹、总计 `800` 条短时程试验。
-6. OCT/MCH mirror-side 论文视频已在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos` 和 `/unify/ydchen/unidit/bio_fly/paper/video` 生成，包含培养皿场景、OCT/MCH 气味杯、糖奖励/电击标注、轨迹尾迹和正式 `n=100` 统计 inset。
-7. 快速回归测试请在 `/unify/ydchen/unidit/bio_fly` 下运行 `/unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q`；最近一次完整测试结果见本文末尾。
+2. 用户原始 paper 的主发现已经明确整理为“KC 输入递质侧化”：右侧血清素 Ser/5-HT 富集，左侧谷氨酸 Glu/GLU 偏置，最强在 $\alpha'\beta'$ 记忆巩固相关亚区。结构汇总见 `/unify/ydchen/unidit/bio_fly/outputs/structure_behavior_linkage/nt_structural_summary.csv`。
+3. 项目已接入 `/unify/ydchen/unidit/bio_fly/external/Drosophila_brain_model` 与 FlyWire v783/v630 连接矩阵，可运行 signed propagation 与 Brian2 smoke test。
+4. 四卡 GPU 功能传播正式套件已在 `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite` 生成结果，`534` 个扰动规格、`3` hop、每步最多 `5000` 个活跃节点，总耗时约 `11.089` 秒。
+5. 递质侧化 seed 仿真支持功能可传播性：右侧血清素 KC seed 和左侧谷氨酸 KC seed 相比同侧随机 KC 对照，显著改变 memory axis、DAN、APL、DPM、MBON/MBIN 与左右读出，显著性表见 `/unify/ydchen/unidit/bio_fly/outputs/four_card_suite/suite_empirical_significance.csv`。
+6. 最新嗅觉记忆仿真套件在 `/unify/ydchen/unidit/bio_fly/outputs/olfactory_perturbation_suite` 生成，按文件时间估计从 `2026-04-26 12:09:56` 到 `2026-04-26 12:21:51`，约 `11.9` 分钟，其中包含屏幕筛选、四卡渲染、统计图和两个长视频。
+7. OCT/MCH mirror-side 早期动力学正式套件已在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_n50` 生成结果：8 个条件、每条件 nominal `50` + mirror `50` 条轨迹、总计 `800` 条短时程试验。
+8. OCT/MCH mirror-side 论文视频已在 `/unify/ydchen/unidit/bio_fly/outputs/oct_mch_mirror_kinematics_render_preview/videos` 和 `/unify/ydchen/unidit/bio_fly/paper/video` 生成，包含培养皿场景、OCT/MCH 气味杯、糖奖励/电击标注、轨迹尾迹和正式 `n=100` 统计 inset。
+9. 快速回归测试请在 `/unify/ydchen/unidit/bio_fly` 下运行 `/unify/ydchen/unidit/bio_fly/env/bin/python -m pytest -q`；最近一次完整测试结果见本文末尾。
 
 ## 2026-04-26 最新交付物入口
 
 面向非生物/AI 背景老师的统一中文汇报文档已整理到：
 
 - `/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md`
+
+2026-04-27 已新增并编译出面向老师的递质侧化汇报材料：
+
+- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.tex`：中文 Beamer PPT 源码，已把“血清素右偏、谷氨酸左偏”作为主线，并在开头解释所有关键名词。
+- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`：编译后的 34 页 PPT。
+- `/unify/ydchen/unidit/bio_fly/paper/main_merged.tex`：英文主文，新增 reader guide、递质侧化 seed 的四卡传播结果和方法说明。
+- `/unify/ydchen/unidit/bio_fly/paper/main_merged.pdf`：编译后的 42 页英文 paper PDF。
+- `/unify/ydchen/unidit/bio_fly/paper/neurotransmitter_lateralization_teacher_cn.tex`：中文 paper 解读稿源码。
+- `/unify/ydchen/unidit/bio_fly/paper/neurotransmitter_lateralization_teacher_cn.pdf`：编译后的 6 页中文 paper 解读 PDF，专门解释神经递质、侧化、统计量、仿真加强和严谨边界。
+
+2026-04-29 根据生物老师会议反馈新增“分拆验证 + DPM 光遗传 + 群体 T-maze”实验：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/meeting_feedback_experiments.py`：新增会议反馈定向实验模块，包含 5-HT/Glu 绝对效应分拆、DPM 光遗传协议扫描、180 度旋转成像控制、群体 T-maze 可观测指标和 GRASP 靶点优先级。
+- `/unify/ydchen/unidit/bio_fly/scripts/run_meeting_feedback_experiments.py`：一键运行脚本。本轮使用 `CUDA_VISIBLE_DEVICES=0,1`，并在脚本参数中指定 `--devices cuda:0 cuda:1`，避免占用其它 GPU。
+- `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/MEETING_FEEDBACK_EXPERIMENTS_CN.md`：完整中文实验报告，解释会议反馈如何转成计算实验和湿实验建议。
+- `/unify/ydchen/unidit/bio_fly/docs/MEETING_FEEDBACK_EXPERIMENTS_CN.md`：报告副本，便于在 docs 中统一查阅。
+- `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/double_dissociation_metrics.csv`：5-HT 右偏和 Glu 左偏按 `abs(z)` 分拆的 readout 表。当前更严谨结论是：Glu-left 是更强广谱 memory-output 扰动，5-HT-right 更适合进入 DPM 光遗传和记忆巩固时间窗验证。
+- `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/dpm_gpu_propagation_summary.csv`：DPM 光遗传 GPU 传播结果。left DPM readout LI 为 `-0.833`，right DPM readout LI 为 `+0.807`。
+- `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/group_behavior_predictions.csv`：群体 T-maze 可观测指标预测。WT OCT/MCH choice index 约 `0.72`，移除 5-HT-right 轴预测降至 `0.595`，移除 Glu-left 轴预测降至 `0.566`，双轴减弱预测降至 `0.36`。
+- `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/grasp_priority_targets.csv`：GRASP 结构验证靶点。优先验证 right DPM/5-HT input -> right `KCa'b'`，并用 left Glu input -> left `KCa'b'` 作为相反方向 positive control。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_meeting_double_dissociation_heatmap.png`、`/unify/ydchen/unidit/bio_fly/paper/figures/Fig_dpm_optogenetic_protocol_predictions.png`、`/unify/ydchen/unidit/bio_fly/paper/figures/Fig_group_behavior_observable_predictions.png`、`/unify/ydchen/unidit/bio_fly/paper/figures/Fig_validation_logic_after_meeting.png`：新增 paper/PPT 共用图。
 
 本轮重新生成的 paper 级视频入口：
 

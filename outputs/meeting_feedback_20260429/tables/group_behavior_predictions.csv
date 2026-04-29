@@ -1,0 +1,5 @@
+assay,condition,predicted_choice_rate,predicted_choice_index,predicted_approach_margin,dominant_readout,experimental_observable
+OCT/MCH T-maze group choice,wild_type_lateralization,0.86,0.72,0.2653707576665711,normal valence memory,群体 T-maze OCT/MCH choice index
+OCT/MCH T-maze group choice,serotonin_right_bias_removed,0.7976192956409565,0.5952385912819129,0.23088322687587579,delayed consolidation / DPM-DAN modulation,训练后 30-60 min 的 delayed memory choice index、DPM/MB calcium readout
+OCT/MCH T-maze group choice,glutamate_left_bias_removed,0.783174272499015,0.5663485449980299,0.2207735356020231,memory-axis / MBON output gain,acquisition/retrieval choice index、CS+ approach margin、群体分布变宽
+OCT/MCH T-maze group choice,both_biases_blunted,0.6799999999999999,0.3599999999999999,0.16452986975327408,reduced learning confidence,几百只果蝇群体选择率下降；不要求单只果蝇成像后继续行为

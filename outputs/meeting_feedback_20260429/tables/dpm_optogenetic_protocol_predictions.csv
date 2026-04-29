@@ -1,0 +1,145 @@
+virtual_fly,frequency_hz,duration_s,waveform,duty_cycle,stimulation_energy,predicted_5ht_release_li_brain_registered,predicted_5ht_release_li_after_180deg_rotation,interpretation,rotation_discrepancy
+lateralized_ground_truth,5,0.5,pulse_train,0.25,0.625,0.2833352062444321,0.2833352062444321,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,0.5,sine_like,0.5,1.25,0.4514803969168141,0.4514803969168141,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,0.5,tonic,1.0,2.5,0.6361369198896157,0.6361369198896157,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,1.0,pulse_train,0.25,1.25,0.4514803969168141,0.4514803969168141,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,1.0,sine_like,0.5,2.5,0.6361369198896157,0.6361369198896157,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,1.0,tonic,1.0,5.0,0.7913583657612799,0.7913583657612799,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,2.0,pulse_train,0.25,2.5,0.6361369198896157,0.6361369198896157,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,2.0,sine_like,0.5,5.0,0.7913583657612799,0.7913583657612799,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,2.0,tonic,1.0,10.0,0.8934432256372069,0.8934432256372069,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,5.0,pulse_train,0.25,6.25,0.8301444430766151,0.8301444430766151,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,5.0,sine_like,0.5,12.5,0.9156815165415552,0.9156815165415552,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,5,5.0,tonic,1.0,25.0,0.9606955125438338,0.9606955125438338,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,0.5,pulse_train,0.25,1.25,0.4514803969168141,0.4514803969168141,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,0.5,sine_like,0.5,2.5,0.6361369198896157,0.6361369198896157,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,0.5,tonic,1.0,5.0,0.7913583657612799,0.7913583657612799,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,1.0,pulse_train,0.25,2.5,0.6361369198896157,0.6361369198896157,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,1.0,sine_like,0.5,5.0,0.7913583657612799,0.7913583657612799,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,1.0,tonic,1.0,10.0,0.8934432256372069,0.8934432256372069,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,2.0,pulse_train,0.25,5.0,0.7913583657612799,0.7913583657612799,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,2.0,sine_like,0.5,10.0,0.8934432256372069,0.8934432256372069,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,2.0,tonic,1.0,20.0,0.9495035466848348,0.9495035466848348,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,5.0,pulse_train,0.25,12.5,0.9156815165415552,0.9156815165415552,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,5.0,sine_like,0.5,25.0,0.9606955125438338,0.9606955125438338,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,10,5.0,tonic,1.0,50.0,0.9822954790869176,0.9822954790869176,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,0.5,pulse_train,0.25,2.5,0.6361369198896157,0.6361369198896157,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,0.5,sine_like,0.5,5.0,0.7913583657612799,0.7913583657612799,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,0.5,tonic,1.0,10.0,0.8934432256372069,0.8934432256372069,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,1.0,pulse_train,0.25,5.0,0.7913583657612799,0.7913583657612799,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,1.0,sine_like,0.5,10.0,0.8934432256372069,0.8934432256372069,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,1.0,tonic,1.0,20.0,0.9495035466848348,0.9495035466848348,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,2.0,pulse_train,0.25,10.0,0.8934432256372069,0.8934432256372069,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,2.0,sine_like,0.5,20.0,0.9495035466848348,0.9495035466848348,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,2.0,tonic,1.0,40.0,0.9770555190704172,0.9770555190704172,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,5.0,pulse_train,0.25,25.0,0.9606955125438338,0.9606955125438338,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,5.0,sine_like,0.5,50.0,0.9822954790869176,0.9822954790869176,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,20,5.0,tonic,1.0,100.0,0.99216319098775,0.99216319098775,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,0.5,pulse_train,0.25,5.0,0.7913583657612799,0.7913583657612799,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,0.5,sine_like,0.5,10.0,0.8934432256372069,0.8934432256372069,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,0.5,tonic,1.0,20.0,0.9495035466848348,0.9495035466848348,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,1.0,pulse_train,0.25,10.0,0.8934432256372069,0.8934432256372069,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,1.0,sine_like,0.5,20.0,0.9495035466848348,0.9495035466848348,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,1.0,tonic,1.0,40.0,0.9770555190704172,0.9770555190704172,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,2.0,pulse_train,0.25,20.0,0.9495035466848348,0.9495035466848348,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,2.0,sine_like,0.5,40.0,0.9770555190704172,0.9770555190704172,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,2.0,tonic,1.0,80.0,0.9897993636586959,0.9897993636586959,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,5.0,pulse_train,0.25,50.0,0.9822954790869176,0.9822954790869176,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,5.0,sine_like,0.5,100.0,0.99216319098775,0.99216319098775,true brain-side signal should keep anatomical sign after registration,0.0
+lateralized_ground_truth,40,5.0,tonic,1.0,200.0,0.9965608803260687,0.9965608803260687,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,0.5,pulse_train,0.25,0.625,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,0.5,sine_like,0.5,1.25,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,0.5,tonic,1.0,2.5,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,1.0,pulse_train,0.25,1.25,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,1.0,sine_like,0.5,2.5,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,1.0,tonic,1.0,5.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,2.0,pulse_train,0.25,2.5,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,2.0,sine_like,0.5,5.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,2.0,tonic,1.0,10.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,5.0,pulse_train,0.25,6.25,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,5.0,sine_like,0.5,12.5,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,5,5.0,tonic,1.0,25.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,0.5,pulse_train,0.25,1.25,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,0.5,sine_like,0.5,2.5,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,0.5,tonic,1.0,5.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,1.0,pulse_train,0.25,2.5,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,1.0,sine_like,0.5,5.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,1.0,tonic,1.0,10.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,2.0,pulse_train,0.25,5.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,2.0,sine_like,0.5,10.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,2.0,tonic,1.0,20.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,5.0,pulse_train,0.25,12.5,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,5.0,sine_like,0.5,25.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,10,5.0,tonic,1.0,50.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,0.5,pulse_train,0.25,2.5,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,0.5,sine_like,0.5,5.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,0.5,tonic,1.0,10.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,1.0,pulse_train,0.25,5.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,1.0,sine_like,0.5,10.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,1.0,tonic,1.0,20.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,2.0,pulse_train,0.25,10.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,2.0,sine_like,0.5,20.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,2.0,tonic,1.0,40.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,5.0,pulse_train,0.25,25.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,5.0,sine_like,0.5,50.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,20,5.0,tonic,1.0,100.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,0.5,pulse_train,0.25,5.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,0.5,sine_like,0.5,10.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,0.5,tonic,1.0,20.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,1.0,pulse_train,0.25,10.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,1.0,sine_like,0.5,20.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,1.0,tonic,1.0,40.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,2.0,pulse_train,0.25,20.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,2.0,sine_like,0.5,40.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,2.0,tonic,1.0,80.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,5.0,pulse_train,0.25,50.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,5.0,sine_like,0.5,100.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+non_lateralized_control,40,5.0,tonic,1.0,200.0,0.0,0.0,true brain-side signal should keep anatomical sign after registration,0.0
+camera_angle_artifact,5,0.5,pulse_train,0.25,0.625,0.2833352062444321,-0.2833352062444321,image-coordinate artifact flips under 180 degree rotation,-0.5666704124888642
+camera_angle_artifact,5,0.5,sine_like,0.5,1.25,0.4514803969168141,-0.4514803969168141,image-coordinate artifact flips under 180 degree rotation,-0.9029607938336282
+camera_angle_artifact,5,0.5,tonic,1.0,2.5,0.6361369198896157,-0.6361369198896157,image-coordinate artifact flips under 180 degree rotation,-1.2722738397792315
+camera_angle_artifact,5,1.0,pulse_train,0.25,1.25,0.4514803969168141,-0.4514803969168141,image-coordinate artifact flips under 180 degree rotation,-0.9029607938336282
+camera_angle_artifact,5,1.0,sine_like,0.5,2.5,0.6361369198896157,-0.6361369198896157,image-coordinate artifact flips under 180 degree rotation,-1.2722738397792315
+camera_angle_artifact,5,1.0,tonic,1.0,5.0,0.7913583657612799,-0.7913583657612799,image-coordinate artifact flips under 180 degree rotation,-1.5827167315225599
+camera_angle_artifact,5,2.0,pulse_train,0.25,2.5,0.6361369198896157,-0.6361369198896157,image-coordinate artifact flips under 180 degree rotation,-1.2722738397792315
+camera_angle_artifact,5,2.0,sine_like,0.5,5.0,0.7913583657612799,-0.7913583657612799,image-coordinate artifact flips under 180 degree rotation,-1.5827167315225599
+camera_angle_artifact,5,2.0,tonic,1.0,10.0,0.8934432256372069,-0.8934432256372069,image-coordinate artifact flips under 180 degree rotation,-1.7868864512744138
+camera_angle_artifact,5,5.0,pulse_train,0.25,6.25,0.8301444430766151,-0.8301444430766151,image-coordinate artifact flips under 180 degree rotation,-1.6602888861532301
+camera_angle_artifact,5,5.0,sine_like,0.5,12.5,0.9156815165415552,-0.9156815165415552,image-coordinate artifact flips under 180 degree rotation,-1.8313630330831103
+camera_angle_artifact,5,5.0,tonic,1.0,25.0,0.9606955125438338,-0.9606955125438338,image-coordinate artifact flips under 180 degree rotation,-1.9213910250876676
+camera_angle_artifact,10,0.5,pulse_train,0.25,1.25,0.4514803969168141,-0.4514803969168141,image-coordinate artifact flips under 180 degree rotation,-0.9029607938336282
+camera_angle_artifact,10,0.5,sine_like,0.5,2.5,0.6361369198896157,-0.6361369198896157,image-coordinate artifact flips under 180 degree rotation,-1.2722738397792315
+camera_angle_artifact,10,0.5,tonic,1.0,5.0,0.7913583657612799,-0.7913583657612799,image-coordinate artifact flips under 180 degree rotation,-1.5827167315225599
+camera_angle_artifact,10,1.0,pulse_train,0.25,2.5,0.6361369198896157,-0.6361369198896157,image-coordinate artifact flips under 180 degree rotation,-1.2722738397792315
+camera_angle_artifact,10,1.0,sine_like,0.5,5.0,0.7913583657612799,-0.7913583657612799,image-coordinate artifact flips under 180 degree rotation,-1.5827167315225599
+camera_angle_artifact,10,1.0,tonic,1.0,10.0,0.8934432256372069,-0.8934432256372069,image-coordinate artifact flips under 180 degree rotation,-1.7868864512744138
+camera_angle_artifact,10,2.0,pulse_train,0.25,5.0,0.7913583657612799,-0.7913583657612799,image-coordinate artifact flips under 180 degree rotation,-1.5827167315225599
+camera_angle_artifact,10,2.0,sine_like,0.5,10.0,0.8934432256372069,-0.8934432256372069,image-coordinate artifact flips under 180 degree rotation,-1.7868864512744138
+camera_angle_artifact,10,2.0,tonic,1.0,20.0,0.9495035466848348,-0.9495035466848348,image-coordinate artifact flips under 180 degree rotation,-1.8990070933696697
+camera_angle_artifact,10,5.0,pulse_train,0.25,12.5,0.9156815165415552,-0.9156815165415552,image-coordinate artifact flips under 180 degree rotation,-1.8313630330831103
+camera_angle_artifact,10,5.0,sine_like,0.5,25.0,0.9606955125438338,-0.9606955125438338,image-coordinate artifact flips under 180 degree rotation,-1.9213910250876676
+camera_angle_artifact,10,5.0,tonic,1.0,50.0,0.9822954790869176,-0.9822954790869176,image-coordinate artifact flips under 180 degree rotation,-1.9645909581738352
+camera_angle_artifact,20,0.5,pulse_train,0.25,2.5,0.6361369198896157,-0.6361369198896157,image-coordinate artifact flips under 180 degree rotation,-1.2722738397792315
+camera_angle_artifact,20,0.5,sine_like,0.5,5.0,0.7913583657612799,-0.7913583657612799,image-coordinate artifact flips under 180 degree rotation,-1.5827167315225599
+camera_angle_artifact,20,0.5,tonic,1.0,10.0,0.8934432256372069,-0.8934432256372069,image-coordinate artifact flips under 180 degree rotation,-1.7868864512744138
+camera_angle_artifact,20,1.0,pulse_train,0.25,5.0,0.7913583657612799,-0.7913583657612799,image-coordinate artifact flips under 180 degree rotation,-1.5827167315225599
+camera_angle_artifact,20,1.0,sine_like,0.5,10.0,0.8934432256372069,-0.8934432256372069,image-coordinate artifact flips under 180 degree rotation,-1.7868864512744138
+camera_angle_artifact,20,1.0,tonic,1.0,20.0,0.9495035466848348,-0.9495035466848348,image-coordinate artifact flips under 180 degree rotation,-1.8990070933696697
+camera_angle_artifact,20,2.0,pulse_train,0.25,10.0,0.8934432256372069,-0.8934432256372069,image-coordinate artifact flips under 180 degree rotation,-1.7868864512744138
+camera_angle_artifact,20,2.0,sine_like,0.5,20.0,0.9495035466848348,-0.9495035466848348,image-coordinate artifact flips under 180 degree rotation,-1.8990070933696697
+camera_angle_artifact,20,2.0,tonic,1.0,40.0,0.9770555190704172,-0.9770555190704172,image-coordinate artifact flips under 180 degree rotation,-1.9541110381408344
+camera_angle_artifact,20,5.0,pulse_train,0.25,25.0,0.9606955125438338,-0.9606955125438338,image-coordinate artifact flips under 180 degree rotation,-1.9213910250876676
+camera_angle_artifact,20,5.0,sine_like,0.5,50.0,0.9822954790869176,-0.9822954790869176,image-coordinate artifact flips under 180 degree rotation,-1.9645909581738352
+camera_angle_artifact,20,5.0,tonic,1.0,100.0,0.99216319098775,-0.99216319098775,image-coordinate artifact flips under 180 degree rotation,-1.9843263819755
+camera_angle_artifact,40,0.5,pulse_train,0.25,5.0,0.7913583657612799,-0.7913583657612799,image-coordinate artifact flips under 180 degree rotation,-1.5827167315225599
+camera_angle_artifact,40,0.5,sine_like,0.5,10.0,0.8934432256372069,-0.8934432256372069,image-coordinate artifact flips under 180 degree rotation,-1.7868864512744138
+camera_angle_artifact,40,0.5,tonic,1.0,20.0,0.9495035466848348,-0.9495035466848348,image-coordinate artifact flips under 180 degree rotation,-1.8990070933696697
+camera_angle_artifact,40,1.0,pulse_train,0.25,10.0,0.8934432256372069,-0.8934432256372069,image-coordinate artifact flips under 180 degree rotation,-1.7868864512744138
+camera_angle_artifact,40,1.0,sine_like,0.5,20.0,0.9495035466848348,-0.9495035466848348,image-coordinate artifact flips under 180 degree rotation,-1.8990070933696697
+camera_angle_artifact,40,1.0,tonic,1.0,40.0,0.9770555190704172,-0.9770555190704172,image-coordinate artifact flips under 180 degree rotation,-1.9541110381408344
+camera_angle_artifact,40,2.0,pulse_train,0.25,20.0,0.9495035466848348,-0.9495035466848348,image-coordinate artifact flips under 180 degree rotation,-1.8990070933696697
+camera_angle_artifact,40,2.0,sine_like,0.5,40.0,0.9770555190704172,-0.9770555190704172,image-coordinate artifact flips under 180 degree rotation,-1.9541110381408344
+camera_angle_artifact,40,2.0,tonic,1.0,80.0,0.9897993636586959,-0.9897993636586959,image-coordinate artifact flips under 180 degree rotation,-1.9795987273173918
+camera_angle_artifact,40,5.0,pulse_train,0.25,50.0,0.9822954790869176,-0.9822954790869176,image-coordinate artifact flips under 180 degree rotation,-1.9645909581738352
+camera_angle_artifact,40,5.0,sine_like,0.5,100.0,0.99216319098775,-0.99216319098775,image-coordinate artifact flips under 180 degree rotation,-1.9843263819755
+camera_angle_artifact,40,5.0,tonic,1.0,200.0,0.9965608803260687,-0.9965608803260687,image-coordinate artifact flips under 180 degree rotation,-1.9931217606521374

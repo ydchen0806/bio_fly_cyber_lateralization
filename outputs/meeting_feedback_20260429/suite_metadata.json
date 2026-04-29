@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-04-29T08:58:11",
+  "output_dir": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429",
+  "devices": [
+    "cuda:0",
+    "cuda:1"
+  ],
+  "report": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/MEETING_FEEDBACK_EXPERIMENTS_CN.md",
+  "tables": {
+    "literature": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/literature_basis.csv",
+    "double_dissociation": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/double_dissociation_metrics.csv",
+    "dpm_summary": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/dpm_gpu_propagation_summary.csv",
+    "protocols": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/dpm_optogenetic_protocol_predictions.csv",
+    "behavior": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/group_behavior_predictions.csv",
+    "grasp": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/grasp_priority_targets.csv"
+  },
+  "figures": {
+    "double_dissociation": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/figures/Fig_meeting_double_dissociation_heatmap.png",
+    "optogenetic": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/figures/Fig_dpm_optogenetic_protocol_predictions.png",
+    "behavior": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/figures/Fig_group_behavior_observable_predictions.png",
+    "validation": "/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/figures/Fig_validation_logic_after_meeting.png"
+  }
+}

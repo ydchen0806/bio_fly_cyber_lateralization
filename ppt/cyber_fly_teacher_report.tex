@@ -1,0 +1,852 @@
+\documentclass[aspectratio=169,10pt,fontset=none]{ctexbeamer}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\usefonttheme{professionalfonts}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usetikzlibrary{positioning}
+\hypersetup{unicode=true}
+
+\setCJKmainfont[BoldFont={WenQuanYi Zen Hei}]{WenQuanYi Micro Hei}
+\setCJKsansfont[BoldFont={WenQuanYi Zen Hei}]{WenQuanYi Micro Hei}
+\setCJKmonofont{WenQuanYi Micro Hei Mono}
+\setmainfont{DejaVu Sans}
+\setsansfont{DejaVu Sans}
+\graphicspath{{figures/}}
+\urlstyle{tt}
+
+\definecolor{FlyBlue}{HTML}{275A9A}
+\definecolor{FlyGreen}{HTML}{2D7554}
+\definecolor{FlyOrange}{HTML}{B9652B}
+\definecolor{FlyRed}{HTML}{9B2C2C}
+\definecolor{FlyGray}{HTML}{F5F7FA}
+\definecolor{FlyDark}{HTML}{1F2933}
+
+\setbeamercolor{title}{fg=white,bg=FlyBlue}
+\setbeamercolor{frametitle}{fg=white,bg=FlyBlue}
+\setbeamercolor{structure}{fg=FlyBlue}
+\setbeamercolor{block title}{fg=white,bg=FlyBlue}
+\setbeamercolor{block body}{fg=FlyDark,bg=FlyGray}
+\setbeamercolor{alerted text}{fg=FlyRed}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamerfont{footline}{family=\sffamily,size=\scriptsize}
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.3ex,dp=1ex,right]{author in head/foot}%
+      \normalfont\sffamily\scriptsize\insertframenumber{} / \inserttotalframenumber\hspace{1.5ex}%
+    \end{beamercolorbox}%
+  }%
+}
+
+\newcommand{\blue}[1]{\textcolor{FlyBlue}{\textbf{#1}}}
+\newcommand{\green}[1]{\textcolor{FlyGreen}{\textbf{#1}}}
+\newcommand{\orange}[1]{\textcolor{FlyOrange}{\textbf{#1}}}
+\newcommand{\red}[1]{\textcolor{FlyRed}{\textbf{#1}}}
+\newcommand{\tight}{\vspace{-0.35em}}
+
+\title[赛博果蝇项目汇报]{左右脑神经递质侧化能否影响果蝇记忆？}
+\subtitle{以血清素右偏、谷氨酸左偏为主线的 FlyWire 连接组统计、四卡传播仿真和行为验证}
+\author{bio\_fly 项目阶段汇报}
+\institute{\url{/unify/ydchen/unidit/bio_fly}}
+\date{2026 年 4 月 27 日}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  \vspace{-0.4em}
+  \begin{block}{今天要讲清楚的事}
+    用户原始 paper 的核心发现不是“做了一个赛博果蝇视频”，而是左右脑蘑菇体输入的神经递质组成不对称：右侧更偏血清素，左侧更偏谷氨酸。这里要回答的是：这个结构发现是否足够稳健，能否在连接组仿真中传播到记忆相关读出，并最终形成可验证的行为假说？
+  \end{block}
+\end{frame}
+
+\begin{frame}{先把名词说清楚 1：神经递质和侧化}
+\small
+\begin{tabularx}{\textwidth}{@{}p{2.7cm}X@{}}
+\toprule
+\textbf{词} & \textbf{这次汇报里的意思} \\
+\midrule
+神经递质 & 神经元之间传递信息的化学信号。一个神经元释放什么递质，会影响下游神经元是被激活、抑制，还是被调节状态。\\
+输入递质组成 & 这里重点看 KC 接收到的上游输入里，各类递质预测占比是多少；这不是说 KC 自己输出什么递质。\\
+侧化 / 偏极化 & 左右脑不是完全镜像。某种递质如果右侧更多，就叫右偏；左侧更多，就叫左偏。\\
+右侧血清素富集 & 右半脑 KC 接收到的血清素预测输入更高。本文用 Ser 或 5-HT 表示血清素。\\
+左侧谷氨酸偏置 & 左半脑 KC 接收到的谷氨酸预测输入更高。本文用 Glu 或 GLU 表示谷氨酸。\\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{先把名词说清楚 2：递质名称不要混淆}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{2.4cm}p{2.2cm}X@{}}
+\toprule
+\textbf{缩写} & \textbf{中文名} & \textbf{怎么理解} \\
+\midrule
+Ser / 5-HT & 血清素 & 常见调节性递质，和状态、睡眠、记忆巩固等过程有关；本项目最稳定结果是右侧富集。\\
+Glu / GLU & 谷氨酸 & 重要突触递质；本项目发现多数 KC 亚型左侧更高，尤其在 $\alpha'\beta'$ 记忆巩固相关亚区。\\
+DA & 多巴胺 & 在果蝇蘑菇体中常作为奖励/惩罚教学信号；在 $\alpha'\beta'$ 亚型也呈右偏趋势。\\
+GABA & $\gamma$-氨基丁酸 & 常见抑制性递质；在部分 KC 亚型呈左偏。\\
+ACh & 乙酰胆碱 & KC 输出基本是胆碱能；所以本研究的侧化主要是 KC 接收到的输入侧化。\\
+Oct / OA & 章鱼胺 & 昆虫重要调节性递质。注意：这不是 OCT 气味。\\
+OCT 气味 & 3-octanol & 嗅觉记忆实验里的气味之一，和上面的章鱼胺不是一回事。\\
+MCH 气味 & 4-MCH & 4-methylcyclohexanol 的简称，另一种经典果蝇气味，用来和 OCT 做配对/对照。\\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{先把名词说清楚 3：脑区和统计量}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{2.7cm}X@{}}
+\toprule
+\textbf{缩写/变量} & \textbf{汇报时怎么解释} \\
+\midrule
+MB / 蘑菇体 & 果蝇学习和记忆的核心脑区，尤其和气味记忆相关。\\
+KC & Kenyon cell，蘑菇体主细胞；气味信息在这里形成稀疏编码。\\
+MBON & 蘑菇体输出神经元，把“接近还是回避”的价值信息送往下游。\\
+DAN & 多巴胺神经元，提供奖励/惩罚教学信号。\\
+APL / DPM & 蘑菇体反馈和记忆维持相关神经元。\\
+DN & 下降神经元，脑信号通向身体运动系统的重要出口。\\
+Cohen's $d$ & 效应量；$d>0$ 表示右侧更高，$d<0$ 表示左侧更高，绝对值越大差异越大。\\
+FDR $q$ & 多重比较校正后的显著性；$q<0.05$ 通常认为通过统计校正。\\
+laterality index & 左右偏向指数，$(R-L)/(R+L)$；正数偏右，负数偏左。\\
+matched random control & 同侧、同规模的随机 KC 对照，用来检验结果是否只是随机抽一批神经元也会出现。\\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{本研究最核心的原始发现}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.43\textwidth}
+    \begin{tikzpicture}[scale=0.88]
+      \fill[blue!8] (-2.1,0) ellipse (1.45 and 2.05);
+      \fill[orange!12] (2.1,0) ellipse (1.45 and 2.05);
+      \draw[thick,FlyBlue] (-2.1,0) ellipse (1.45 and 2.05);
+      \draw[thick,FlyOrange] (2.1,0) ellipse (1.45 and 2.05);
+      \node[align=center] at (-2.1,1.05) {\Large 左脑};
+      \node[align=center] at (2.1,1.05) {\Large 右脑};
+      \node[align=center, text=FlyBlue] at (-2.1,0.0) {\Large \textbf{Glu/GLU}\\谷氨酸更高};
+      \node[align=center, text=FlyOrange] at (2.1,0.0) {\Large \textbf{Ser/5-HT}\\血清素更高};
+      \draw[->,very thick,FlyBlue] (-0.2,-1.4) -- (-1.3,-1.4);
+      \draw[->,very thick,FlyOrange] (0.2,-1.4) -- (1.3,-1.4);
+      \node[align=center] at (0,-2.25) {侧化不是“大小不一样”，\\而是输入化学组成不一样};
+    \end{tikzpicture}
+  \end{column}
+  \begin{column}{0.53\textwidth}
+    \begin{block}{一句话版本}
+      蘑菇体 KC 的上游输入有明显左右差异：\orange{血清素输入系统性右偏}，\blue{谷氨酸输入多数左偏}。
+    \end{block}
+    \begin{block}{关键数字}
+      \begin{itemize}
+        \item 血清素：11 个测试亚型全部右偏，其中 9 个 FDR 显著；最大 $|d|=1.45$。
+        \item 谷氨酸：11 个测试亚型中 7 个左偏并 FDR 显著；最大 $|d|=1.47$。
+        \item 最强区域：$\alpha'\beta'$ 记忆巩固相关亚区。
+      \end{itemize}
+    \end{block}
+    \begin{alertblock}{最容易误解的点}
+      这说的是 KC 接收到什么输入，不是说 KC 自己输出变成了血清素或谷氨酸；KC 输出仍基本是乙酰胆碱。
+    \end{alertblock}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{结构证据：血清素右偏、谷氨酸左偏不是孤立个例}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.58\textwidth}
+    \includegraphics[width=0.96\textwidth]{Fig_ext1_cohens_d_heatmap_all_NT.png}
+  \end{column}
+  \begin{column}{0.38\textwidth}
+    \begin{block}{怎么看这张图}
+      \begin{itemize}
+        \item 红色：右侧更高。
+        \item 蓝色：左侧更高。
+        \item 每一行是一种 KC 亚型。
+        \item 每一列是一种神经递质。
+      \end{itemize}
+    \end{block}
+    \begin{block}{最重要的模式}
+      Ser/5-HT 基本整列偏右；Glu/GLU 多数偏左。DA 在 $\alpha'\beta'$ 中也跟随血清素右偏。
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{为什么这和记忆有关}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.50\textwidth}
+    \begin{block}{$\alpha'\beta'$ 是关键位置}
+      \begin{itemize}
+        \item 果蝇蘑菇体不同叶区负责不同时间尺度的记忆。
+        \item $\alpha'\beta'$ 常与记忆巩固、稳定化相关。
+        \item 本项目中侧化最强的正是 $\alpha'\beta'$：Ser 右偏 $d$ 最高约 +1.45，Glu 左偏 $d$ 最低约 -1.47。
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{0.46\textwidth}
+    \begin{block}{生物学解释}
+      如果一个记忆相关脑区一侧更受血清素调节，另一侧更受谷氨酸输入影响，那么它可能不是“左右两份冗余备份”，而是有分工的双半脑计算系统。
+    \end{block}
+    \begin{alertblock}{严谨边界}
+      这仍是结构层发现。要上升到功能，需要证明这些递质侧化信号能沿连接组传播到记忆轴或运动出口。
+    \end{alertblock}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{仿真如何检验该发现的功能意义}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.47\textwidth}
+    \begin{block}{仿真输入}
+      本研究不随机激活整块蘑菇体，而是选择两类结构上有依据的 seed：
+      \begin{itemize}
+        \item 右侧血清素富集 KC。
+        \item 左侧谷氨酸富集 KC。
+      \end{itemize}
+    \end{block}
+    \begin{block}{对照}
+      与同侧、同数量的随机 KC seed 比较，用于区分递质侧化效应与一般性 KC 激活效应。
+    \end{block}
+  \end{column}
+  \begin{column}{0.49\textwidth}
+    \begin{block}{仿真过程}
+      在 FlyWire signed connectivity 上做多 hop 稀疏传播，四卡并行扫描多组条件，然后读出：
+      \begin{itemize}
+        \item memory axis 响应量。
+        \item MBON / DAN / APL / DPM 响应量。
+        \item response laterality 左右偏向。
+      \end{itemize}
+    \end{block}
+    \begin{center}
+      \blue{目的在于检验结构侧化是否能够通过连接组传播转化为可量化的功能读出。}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{仿真结果：递质侧化能传播到记忆相关读出}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.52\textwidth}
+    \includegraphics[width=\textwidth]{Fig2_functional_metric_heatmap.png}
+  \end{column}
+  \begin{column}{0.45\textwidth}
+    \begin{tabularx}{\textwidth}{@{}p{2.4cm}X@{}}
+    \toprule
+    \textbf{条件} & \textbf{相对随机对照的显著读出} \\
+    \midrule
+    右侧血清素 KC 激活 & DAN、DPM 响应增强；APL 和最大目标分数降低；左右偏向改变；FDR $q=0.038$。\\
+    左侧谷氨酸 KC 激活 & memory axis、DAN、MBIN、DPM 增强；MBON/APL 和左右偏向改变；FDR $q=0.038$。\\
+    \bottomrule
+    \end{tabularx}
+    \vspace{0.5em}
+    \begin{block}{这能说明什么}
+      递质侧化不是只停留在一张统计热图上；按侧化选择的 KC seed 能在连接组传播后改变记忆轴和调节轴读出。
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{这轮仿真的支持范围与边界}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.5cm}X@{}}
+\toprule
+\textbf{问题} & \textbf{当前回答} \\
+\midrule
+结构发现是否稳 & \green{稳。} 血清素右偏和谷氨酸左偏经多重统计、置换、bootstrap 和 SIMEX 等方法交叉验证。\\
+递质侧化能否影响功能读出 & \green{有支持。} 右侧血清素 KC 和左侧谷氨酸 KC 的传播读出显著区别于 matched random control。\\
+是否已经证明真实行为因果 & \red{没有。} 当前证据支持连接组传播与代理行为框架，不能替代真实单侧神经操控。\\
+是否完整复刻 Eon 私有闭环 & \red{没有。} 公开资料没有完整 DN-to-body 权重，因此当前实现的是公开可审计的替代接口。\\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{当前最稳的结论}
+\small
+\begin{tabularx}{\textwidth}{@{}p{2.6cm}X@{}}
+\toprule
+\textbf{问题} & \textbf{当前结论} \\
+\midrule
+系统是否跑通 & \green{跑通了。} 已将 FlyWire 数据、四卡 GPU 传播、OCT/MCH 任务、MB--DN 读出、统计图表和视频整合为可复现实验链。\\
+原始 paper 主发现是否清晰 & \green{清晰。} 核心是右侧血清素富集、左侧谷氨酸偏置，最强位于 $\alpha'\beta'$ 记忆巩固相关亚区。\\
+仿真是否支持功能传播 & \green{支持。} 右侧血清素 KC 和左侧谷氨酸 KC seed 相对 matched random controls 改变 memory axis、DAN、APL、DPM 和左右读出，FDR $q=0.038$。\\
+行为是否有稳定效应 & \green{有。} 在 100 个 mirror-side trials 条件下，OCT+sucrose 选择率为 0.86，OCT+shock 按预期回避率为 0.86，FDR $q$ 约为 $10^{-13}$ 到 $10^{-15}$。\\
+侧化是否有下游线索 & \orange{有结构和 DN readout 线索。} right MBON 和 right memory axis 到 DN 的 laterality index 分别为 +0.307 和 +0.420。\\
+是否已经证明因果 & \red{还没有。} MB 扰动与 WT 的行为差异当前不显著，主要 FDR $q=1.0$；因此当前结论应限定为假说生成和边界明确的功能验证。\\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{研究主线与证据链}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{从结构发现出发}
+      原始 paper 的核心线索是：左右蘑菇体在 KC、MBON、DAN、APL、DPM 等记忆相关环路上并非完全镜像。
+    \end{block}
+    \begin{block}{需要补足的证据}
+      结构差异本身不等于行为差异。需要证明其能够沿连接组传播到功能 readout，并形成可验证的行为预测。
+    \end{block}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{block}{本轮分析的判断标准}
+      \begin{itemize}
+        \item 结构层：左右连接是否不对称？
+        \item 功能层：不对称是否传播到 DN？
+        \item 行为层：OCT/MCH 记忆任务是否按预期工作？
+        \item 因果层：单侧 MB 扰动是否改变行为？
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\vspace{0.2em}
+\begin{center}
+\blue{结论应按证据链分层陈述，不能直接从结构图跳到行为因果。}
+\end{center}
+\end{frame}
+
+\begin{frame}{关键变量定义}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{2.0cm}X@{}}
+\toprule
+\textbf{变量} & \textbf{汇报时怎么解释} \\
+\midrule
+MB / 蘑菇体 & 果蝇学习和记忆核心脑区，尤其和气味记忆有关。\\
+KC & 蘑菇体内的 Kenyon cell，把气味变成稀疏神经编码。\\
+MBON & 蘑菇体输出神经元，把“这个气味值不值得接近/回避”的信息传给下游。\\
+DAN & 多巴胺神经元，提供奖励、惩罚和记忆更新信号。\\
+APL/DPM & 蘑菇体内部反馈和记忆维持相关神经元。\\
+DN & 下降神经元，是脑信号进入身体运动系统的重要出口。\\
+OCT/MCH & 两种经典果蝇气味：3-octanol 和 4-methylcyclohexanol。\\
+CS+ / CS- / US & CS+ 是和糖或电击配对的气味；CS- 是对照气味；US 是糖奖励或电击惩罚。\\
+laterality index & 左右偏向指数，$(R-L)/(R+L)$；正数偏右，负数偏左。\\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{本研究包含的实验类型}
+\small
+\begin{tabularx}{\textwidth}{@{}p{2.7cm}p{3.1cm}X@{}}
+\toprule
+\textbf{实验} & \textbf{怎么做} & \textbf{回答什么问题} \\
+\midrule
+结构侧化审计 & 统计 MB family 间左右连接强度 & 原始 paper 的结构发现能否转成机器可读、可复算的表格。\\
+四卡连接组传播 & 用 FlyWire signed connectivity 跑多 hop propagation & MB 记忆轴信号是否能进入下游 DN 出口。\\
+OCT/MCH 行为仿真 & OCT/MCH + sucrose/shock，mirror-side，n=100 & 嗅觉记忆任务本身是否有稳定、可统计的行为效应。\\
+MB 侧化扰动 & left/right silencing、symmetrization、swap & 当前行为层是否足够敏感地读出 MB 左右差异。\\
+视频和图表 & 从轨迹重画实验场景，而不是只贴蓝黄标签 & 给论文和答辩提供能看懂的补充材料。\\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{数据和算力：这不是手工玩具模型}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.50\textwidth}
+    \begin{block}{连接组数据}
+      \begin{itemize}
+        \item FlyWire 注释神经元：139,244 个。
+        \item 蘑菇体相关神经元：5,608 个。
+        \item signed connectivity：15,091,983 条边。
+        \item MB family：KC、MBON、DAN、APL、DPM。
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{0.46\textwidth}
+    \begin{block}{计算资源}
+      \begin{itemize}
+        \item 4 张 NVIDIA H20Z/H200 级 GPU。
+        \item 每张显存约 139.7 GiB。
+        \item MB--DN 读出：18 个 seed 条件。
+        \item 3 hop，max active 5000，耗时 31.81 秒。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\vspace{0.4em}
+\begin{center}
+这些规模支持正式 trial sweep 和随机对照，但还不是 Eon 私有闭环控制器的逐参数复刻。
+\end{center}
+\end{frame}
+
+\begin{frame}{实验 1：先看结构不对称是否真实存在}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.55\textwidth}
+    \includegraphics[width=\textwidth]{Fig_mb_transition_laterality.png}
+  \end{column}
+  \begin{column}{0.41\textwidth}
+    \begin{block}{做法}
+      \begin{itemize}
+        \item 把 MB 神经元按 family 分组。
+        \item 统计同侧 left 和 right 的突触连接数。
+        \item 计算 right laterality index。
+      \end{itemize}
+    \end{block}
+    \begin{block}{代表性结果}
+      \scriptsize
+      \begin{tabular}{@{}lrrr@{}}
+      \toprule
+      \textbf{连接} & \textbf{Left} & \textbf{Right} & \textbf{LI}\\
+      \midrule
+      KC$\to$KC & 203202 & 176064 & -0.072\\
+      KC$\to$DPM & 48204 & 39824 & -0.095\\
+      MBON$\to$KC & 4329 & 2625 & -0.245\\
+      MBON$\to$DAN & 2393 & 2747 & +0.069\\
+      \bottomrule
+      \end{tabular}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{实验 1 的发现：结构不是完全镜像}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{Fig_kc_upstream_nt_by_side.png}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{block}{发现}
+      \begin{itemize}
+        \item KC 内部复发、KC$\to$DPM、APL$\to$KC、DPM$\to$KC 多数呈左偏。
+        \item MBON$\to$DAN、DAN$\to$MBON、MBON$\to$APL 出现轻度右偏。
+        \item 结构层提示：左侧更像反馈/维持轴，右侧更像输出/教学轴候选。
+      \end{itemize}
+    \end{block}
+    \begin{alertblock}{这页不能过度解释}
+      结构差异只能说明“线路不对称”，不能单独说明动物行为一定不对称。
+    \end{alertblock}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{实验 2：把 MB 记忆轴传播到 DN}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.46\textwidth}
+    \begin{block}{输入 seed}
+      \begin{itemize}
+        \item MBON：学习后价值输出。
+        \item DAN：奖励/惩罚教学信号。
+        \item APL/DPM：反馈和记忆维持。
+        \item memory axis：MBON+DAN+APL+DPM 合并。
+        \item OCT/MCH KC context：气味上下文。
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{0.50\textwidth}
+    \begin{block}{传播和读出}
+      \begin{itemize}
+        \item 用 FlyWire signed connectivity 做 3 hop propagation。
+        \item 分 left、right、bilateral 三种 seed 侧别。
+        \item 在 DN 层汇总：recruited DN 数、abs mass、signed mass、laterality index。
+        \item 再把 DN family 压缩成 motor primitive，用于行为假说。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\vspace{0.25em}
+\begin{center}
+\blue{这一实验回答：MB 结构差异有没有通向运动出口的功能路径？}
+\end{center}
+\end{frame}
+
+\begin{frame}{实验 2 的发现：MBON 是最强 DN 出口}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.52\textwidth}
+    \includegraphics[width=\textwidth]{Fig_mb_dn_laterality_index.png}
+  \end{column}
+  \begin{column}{0.46\textwidth}
+    \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    \textbf{条件} & \textbf{DN数} & \textbf{abs mass} & \textbf{LI}\\
+    \midrule
+    left MBON & 202 & 0.064815 & +0.082\\
+    bilateral MBON & 177 & 0.046990 & +0.222\\
+    right MBON & 149 & 0.034105 & +0.307\\
+    bilateral memory axis & 108 & 0.024549 & +0.230\\
+    right memory axis & 110 & 0.021524 & +0.420\\
+    left memory axis & 111 & 0.021501 & -0.016\\
+    \bottomrule
+    \end{tabular}
+    \vspace{0.6em}
+    \begin{block}{怎么解释}
+      left MBON 的总 DN 响应最强；但 right MBON/right memory axis 的右偏更明显。也就是说，\blue{“输出强度”}和\blue{“左右偏向”}是两个不同问题。
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{实验 2 的机制图：为什么要加 DN/motor primitive}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.57\textwidth}
+    \includegraphics[width=\textwidth]{Fig_mb_dn_motor_mechanism.png}
+  \end{column}
+  \begin{column}{0.39\textwidth}
+    \begin{block}{Eon 没公开的关键层}
+      公开资料没有给出完整 DN-to-body 权重，所以不能声称恢复了 Eon 的私有闭环控制器。
+    \end{block}
+    \begin{block}{公开替代方案}
+      先做透明的中间层：MB seed $\to$ DN family $\to$ motor primitive。这样每一步都能被复算，也便于后续用真实行为或成像数据替换。
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{实验 2 的行为出口：现在只到低维动作假说}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.61\textwidth}
+    \includegraphics[width=\textwidth]{Fig_mb_dn_motor_primitive_heatmap.png}
+  \end{column}
+  \begin{column}{0.35\textwidth}
+    \begin{block}{可说的发现}
+      \begin{itemize}
+        \item MBON/memory axis 主要读出到 DNa/DNp 等下降通路。
+        \item 当前最稳定的 motor primitive 是 turning / orientation 候选。
+        \item DAN/APL/DPM 更适合解释 state modulation，而不是直接运动命令。
+      \end{itemize}
+    \end{block}
+    \begin{alertblock}{不能说}
+      不能把 heatmap 直接说成真实果蝇肌肉命令或完整行为涌现。
+    \end{alertblock}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{实验 3：OCT/MCH 嗅觉记忆怎么设计}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.50\textwidth}
+    \begin{block}{训练含义}
+      \begin{itemize}
+        \item OCT + sucrose：OCT 是 CS+，US 是糖，预期接近 OCT。
+        \item MCH + sucrose：MCH 是 CS+，用于气味身份反向配对。
+        \item OCT + shock：OCT 是 CS+，但 US 是电击，预期回避 OCT。
+        \item weak OCT vs strong MCH：测试记忆能否压过气味强度差异。
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{0.46\textwidth}
+    \begin{block}{统计设置}
+      \begin{itemize}
+        \item 每个正式条件 n=100。
+        \item 50 个 CS+ 在左，50 个 CS+ 在右。
+        \item 指标：choice rate、approach margin、early lateral velocity、laterality index。
+        \item 多重比较用 FDR q 控制。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\vspace{0.25em}
+\begin{center}
+mirror-side 的目的很简单：避免把“左边/右边位置偏好”误当成气味记忆。
+\end{center}
+\end{frame}
+
+\begin{frame}{实验 3 的发现：奖励和惩罚方向显著}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.53\textwidth}
+    \includegraphics[width=0.98\textwidth]{Fig_oct_mch_formal_suite.png}
+  \end{column}
+  \begin{column}{0.43\textwidth}
+    \begin{tabular}{@{}lccc@{}}
+    \toprule
+    \textbf{条件} & \textbf{预期率} & \textbf{margin} & \textbf{FDR q}\\
+    \midrule
+    OCT+sucrose & 0.86 & +0.265 & $9.47{\times}10^{-14}$\\
+    MCH+sucrose & 0.85 & +0.246 & $4.83{\times}10^{-13}$\\
+    OCT+shock & 0.86 & -0.244 & $9.47{\times}10^{-14}$\\
+    conflict & 0.88 & +0.265 & $3.82{\times}10^{-15}$\\
+    \bottomrule
+    \end{tabular}
+    \vspace{0.7em}
+    \begin{block}{结论}
+      行为层本身是可用的：奖励条件接近 CS+，电击条件回避 CS+，冲突条件仍能表现记忆驱动选择。
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{最重要的负结果：MB 扰动还没有打出显著行为差异}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}lrrrrX@{}}
+\toprule
+\textbf{扰动条件} & \textbf{n} & \textbf{选择率} & \textbf{$\Delta$margin} & \textbf{q} & \textbf{解释} \\
+\midrule
+left MB silenced & 100 & 0.89 & +0.032 & 1.0 & 与 WT 相比没有显著降低接近。\\
+right MB silenced & 100 & 0.89 & +0.039 & 1.0 & 与 WT 相比没有显著改变选择。\\
+MB symmetrized & 100 & 0.89 & +0.027 & 1.0 & 对称化没有产生预期的行为下降。\\
+MB swapped & 100 & 0.87 & -0.002 & 1.0 & 左右交换没有显著反转行为。\\
+\bottomrule
+\end{tabularx}
+\vspace{0.8em}
+\begin{alertblock}{这页是答辩时必须主动说的}
+当前 OCT/MCH 行为代理能验证 valence 和气味记忆，但还不能敏感地验证 MB 侧化扰动。侧化结论现在主要来自结构和 DN readout，行为因果仍需要更强闭环控制器或湿实验。
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{会议反馈后的新增实验：5-HT 与 Glu 分拆验证}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.58\textwidth}
+    \includegraphics[width=\textwidth]{Fig_meeting_double_dissociation_heatmap.png}
+  \end{column}
+  \begin{column}{0.38\textwidth}
+    \begin{block}{新增判断}
+      \begin{itemize}
+        \item 不能只讲一个总的“偏侧化强弱”。
+        \item 5-HT 右偏和 Glu 左偏要拆成两条候选机制轴。
+        \item 本轮按 $|z|$ 比较，Glu-left 是更强的广谱 memory-output 扰动。
+        \item 5-HT-right 更适合进入 DPM 光遗传和记忆巩固时间窗验证。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{会议反馈后的新增实验：DPM 光遗传协议扫描}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.58\textwidth}
+    \includegraphics[width=\textwidth]{Fig_dpm_optogenetic_protocol_predictions.png}
+  \end{column}
+  \begin{column}{0.38\textwidth}
+    \begin{block}{实验设计对应会议建议}
+      \begin{itemize}
+        \item 用 GPU0/1 传播 left/right DPM seed。
+        \item 扫描频率、时长和波形，预测 5-HT release LI。
+        \item 真正的脑侧偏侧化在 180 度旋转后，脑侧坐标配准应保持符号。
+        \item 成像角度伪影会在图像坐标中翻转。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{会议反馈后的新增实验：群体 T-maze 可观测指标}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.56\textwidth}
+    \includegraphics[width=\textwidth]{Fig_group_behavior_observable_predictions.png}
+  \end{column}
+  \begin{column}{0.40\textwidth}
+    \begin{block}{为什么转成群体行为}
+      \begin{itemize}
+        \item 脑成像后果蝇不能继续行为。
+        \item 单只成像和几百只 T-maze 统计规模不匹配。
+        \item 因此把预测转成群体 choice index。
+        \item 重点看 delayed memory window 和 OCT/MCH choice index。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{会议反馈后的验证逻辑：结构是硬红线}
+\scriptsize
+\includegraphics[height=0.58\textheight,keepaspectratio]{Fig_validation_logic_after_meeting.png}
+\vspace{0.1em}
+\begin{block}{更新后的严谨口径}
+GRASP 结构验证是硬证据；DPM 光遗传、钙成像和群体 T-maze 是功能/行为佐证。当前仿真用于给出优先靶点和可量化预测，不能替代结构验证。
+\end{block}
+\end{frame}
+
+\begin{frame}{视频做了什么：让实验能被看懂，而不是替代统计}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.62\textwidth}
+    \includegraphics[width=\textwidth]{Fig_oct_mch_assay_v2_key_conditions_frame.png}
+  \end{column}
+  \begin{column}{0.34\textwidth}
+    \begin{block}{新版视频补了什么}
+      \begin{itemize}
+        \item 培养皿、气味杯、滤纸。
+        \item OCT/MCH 气味羽流。
+        \item 糖滴和电击栅格。
+        \item 轨迹尾迹和统计 inset。
+      \end{itemize}
+    \end{block}
+    \begin{alertblock}{汇报口径}
+      视频是展示和检查，不是显著性证据；显著性来自 n=100 的 trial 统计。
+    \end{alertblock}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{把三层证据连起来}
+\small
+\includegraphics[width=\textwidth]{Fig_structure_behavior_linkage.png}
+\vspace{0.35em}
+\begin{block}{这张图要讲的不是“完美闭环”，而是证据链}
+结构层发现左右 MB 不对称；连接组传播显示 MBON/memory axis 可达 DN，且右侧输出轴有更强右偏读出；行为层证明 OCT/MCH 任务方向成立，但单侧 MB 扰动还没有显著改变行为。
+\end{block}
+\end{frame}
+
+\begin{frame}{目前真正的新发现是什么}
+\small
+\begin{enumerate}
+  \item \blue{递质侧化发现：} KC 输入中血清素系统性右偏，谷氨酸多数左偏，最强区域是 $\alpha'\beta'$ 记忆巩固相关亚区。
+  \item \blue{结构连接发现：} MB 内部和 MB family 之间的左右连接不是完全镜像，反馈/维持相关连接多处左偏，输出/教学相关连接存在右偏候选。
+  \item \blue{功能传播发现：} 右侧血清素 KC 和左侧谷氨酸 KC seed 能把侧化信号传播到 memory axis、DAN、APL、DPM 等读出，并区别于同侧随机 KC 对照。
+  \item \blue{行为发现：} OCT/MCH 奖励和惩罚记忆在 mirror-side 仿真中方向稳定、统计显著。
+  \item \red{约束性发现：} 当前行为代理对 MB 侧化扰动不敏感，因此不能把递质侧化说成已经被行为因果证明。
+\end{enumerate}
+\vspace{0.4em}
+\begin{center}
+以上结论按结构、传播、行为与边界分层陈述，便于与后续湿实验对接。
+\end{center}
+\end{frame}
+
+\begin{frame}{当前最稳的结论层级}
+\small
+\begin{enumerate}
+  \item \blue{结构层：} 果蝇蘑菇体 KC 输入存在稳定递质侧化，核心是血清素右偏、谷氨酸左偏，而且在 $\alpha'\beta'$ 记忆巩固相关亚区最强。
+  \item \blue{功能层：} 这种侧化不是单纯描述性的，因为四卡传播已经证明它会投射到 memory axis、DAN、APL、DPM、MBON/MBIN 和左右偏向读出。
+      \item \blue{边界层：} MB 扰动当前不显著，因此该结果更适合作为边界条件而非正向因果证据。
+  \item \blue{方法层：} OCT/MCH 任务和视频提供了可视化、可复现的行为框架，适合作为方法和补充材料。
+\end{enumerate}
+\vspace{0.4em}
+\begin{center}
+\blue{以上四点构成当前最稳健的主结论层级。}
+\end{center}
+\end{frame}
+
+\begin{frame}{这项工作的意义}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.31\textwidth}
+    \begin{block}{对神经生物学}
+      提出一个具体假说：右侧血清素调节和左侧谷氨酸输入可能给蘑菇体记忆环路提供左右分工，再通过 MBON/memory axis 影响下游选择。
+    \end{block}
+  \end{column}
+  \begin{column}{0.31\textwidth}
+    \begin{block}{对计算建模}
+      把“递质输入组成不对称”转成可运行、可统计、可消融的连接组传播实验，而不是只停留在网络图和描述性统计。
+    \end{block}
+  \end{column}
+  \begin{column}{0.31\textwidth}
+    \begin{block}{对论文叙事}
+      可以把原始 paper 从“发现递质侧化结构”升级成“递质侧化--连接组传播--行为预测--待湿实验验证”的完整故事。
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{主要限制与待补证据}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.0cm}X@{}}
+\toprule
+\textbf{限制} & \textbf{当前解释} \\
+\midrule
+不是 Eon 私有系统复刻 & 公开页面没有完整 DN-to-body 权重；当前实现的是公开可审计 surrogate。\\
+行为层还有代理成分 & 视频和轨迹由可解释控制器/代理层生成；统计结论只支持当前代理任务。\\
+MB 扰动未显著 & 这是当前最重要的负结果，说明行为控制器对侧化 readout 不够敏感，不能回避。\\
+递质预测有误差 & FlyWire 的 per-synapse 递质预测不是直接化学实验；血清素、谷氨酸结果需要用置换、SIMEX、deconvolution 和湿实验交叉验证。\\
+气味到 KC 的映射仍简化 & OCT/MCH sensory encoder 是公开数据约束的近似，不是完整受体到 PN 到 KC 的生理复刻。\\
+湿实验因果缺失 & 最终需要单侧神经操控、钙成像和真实行为学验证。\\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{后续计算工作}
+\small
+\begin{enumerate}
+  \item \textbf{把 MB--DN readout 接入控制器。} 现阶段 readout 主要用于解释和后验映射，下一步应让其参与在线控制。
+  \item \textbf{加强 MB 扰动对照。} 继续加入 degree-preserving random、matrix-level symmetrization、left-right swap 和 dose response。
+  \item \textbf{增加行为背景随机性。} 扩展 arena 初始位置、噪声、气味羽流和 trial 数量，以检验稳健性。
+  \item \textbf{校准 motor primitive。} 用真实 FlyGym rollout 或公开行为轨迹拟合 DN family 到低维动作的权重。
+  \item \textbf{明确写入负结果。} 负结果能够定义公开接口的边界，有助于增强论文的可证伪性。
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{后续湿实验验证}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.49\textwidth}
+    \begin{block}{行为学}
+      \begin{itemize}
+        \item OCT/MCH T-maze 或 VR 行为实验。
+        \item 糖奖励和电击惩罚交叉配对。
+        \item CS+ 左右位置 counterbalance。
+        \item 读出 choice index 和 early turning。
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{0.47\textwidth}
+    \begin{block}{神经操控/成像}
+      \begin{itemize}
+        \item 单侧血清素输入或谷氨酸输入操控，优先看 $\alpha'\beta'$。
+        \item 单侧 MBON/DAN/APL/DPM 抑制或激活。
+        \item DN 或 MBON 钙成像，比较左右 readout。
+        \item 验证 DNa/DNp42 等候选 DN 是否响应记忆条件。
+        \item 测试 right memory axis 是否更强影响右偏 DN 出口。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{汇报结构建议}
+\small
+\begin{block}{1. 先讲科学问题}
+先说明研究问题：左右 MB 结构不对称是否能传到功能出口并影响嗅觉记忆行为。视频放在中后段，作为实验可视化。
+\end{block}
+\begin{block}{2. 主结果按证据强弱排序}
+先讲结构侧化，再讲 MB--DN readout，再讲 OCT/MCH 行为显著，最后主动讲 MB 扰动未显著。
+\end{block}
+\begin{block}{3. 最后给出明确下一步}
+下一步聚焦两个任务：把 readout 接入在线控制器；用湿实验验证单侧 MBON/DAN/APL/DPM 和 DN 候选。
+\end{block}
+\end{frame}
+
+\begin{frame}{交付物在哪里}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{2.5cm}X@{}}
+\toprule
+\textbf{内容} & \textbf{绝对路径} \\
+\midrule
+项目 README & \url{/unify/ydchen/unidit/bio_fly/README.md} \\
+教师版说明 & \url{/unify/ydchen/unidit/bio_fly/docs/TEACHER_BRIEFING_CN.md} \\
+实现状态报告 & \url{/unify/ydchen/unidit/bio_fly/docs/PROJECT_IMPLEMENTATION_STATUS_CN.md} \\
+MB--DN 报告 & \url{/unify/ydchen/unidit/bio_fly/docs/MB_DN_MOTOR_READOUT_CN.md} \\
+论文草稿 & \url{/unify/ydchen/unidit/bio_fly/paper/NATURE_STYLE_DRAFT_CN.md} \\
+英文 paper PDF & \url{/unify/ydchen/unidit/bio_fly/paper/main_merged.pdf} \\
+中文 paper 解读 PDF & \url{/unify/ydchen/unidit/bio_fly/paper/neurotransmitter_lateralization_teacher_cn.pdf} \\
+OCT/MCH 视频 & \url{/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4} \\
+MB--DN 视频 & \url{/unify/ydchen/unidit/bio_fly/paper/video/mb_dn_motor_readout_summary.mp4} \\
+本 PPT & \url{/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf} \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+\begin{frame}{结论与展望}
+\small
+\begin{block}{当前可支持的结论}
+本项目已经建立了一个公开可复现的 FlyWire 连接组--功能传播--OCT/MCH 行为仿真框架；它支持“右侧血清素富集、左侧谷氨酸偏置的递质侧化可传播到记忆轴和 DN 出口”的新假说，并且验证了嗅觉记忆任务本身的奖励/惩罚方向。
+\end{block}
+\begin{alertblock}{当前尚不能支持}
+不能说已经完整复刻 Eon 私有赛博果蝇，也不能说已经证明连接组单独自动涌现完整行为，更不能把 MB 扰动视频当成真实递质侧化因果证据。
+\end{alertblock}
+\vspace{0.4em}
+\begin{center}
+\Large \blue{下一步关键问题：用单侧血清素/谷氨酸操控验证 $\alpha'\beta'$ 侧化是否真的改变记忆。}
+\end{center}
+\end{frame}
+
+\end{document}
