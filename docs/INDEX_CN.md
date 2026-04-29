@@ -20,6 +20,7 @@
 - `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_MIRROR_KINEMATICS_CN.md`：OCT/MCH 镜像摆放、早期转向动力学和 MB 扰动负结果正式报告。
 - `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`：OCT/MCH mirror-side 论文视频渲染说明，解释视频变量、轨迹尾迹、统计 inset、运行命令和严谨边界。
 - `/unify/ydchen/unidit/bio_fly/docs/MEETING_FEEDBACK_EXPERIMENTS_CN.md`：2026-04-29 生物老师会议反馈后的定向实验报告，包含 5-HT/Glu 分拆、DPM 光遗传协议扫描、180 度旋转控制、GRASP 靶点和群体 T-maze 行为指标。
+- `/unify/ydchen/unidit/bio_fly/docs/DPM_OPTOGENETIC_VALIDATION_CN.md`：DPM 光遗传仿真验证报告，包含 opsin/波长/频率/时长协议库、5-HT release pattern 预测、旋转控制、群体 T-maze 行为调节预测和湿实验推荐表。
 
 ## 当前关键输出
 
@@ -45,6 +46,12 @@
 - `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/group_behavior_predictions.csv`：群体 T-maze choice index 预测。
 - `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/grasp_priority_targets.csv`：GRASP 结构验证靶点优先级。
 - `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/figures`：会议反馈新增四张图。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/DPM_OPTOGENETIC_VALIDATION_CN.md`：DPM 光遗传完整输出报告。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_optogenetic_protocol_library.csv`：光遗传协议库。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_5ht_release_pattern_summary.csv`：5-HT release pattern 摘要。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_optogenetic_behavior_predictions.csv`：DPM 光遗传行为调节预测。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_wetlab_protocol_recommendations.csv`：湿实验推荐协议。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/videos/dpm_optogenetic_release_prediction.mp4`：DPM release pattern 机制视频。
 
 ## 论文目录
 
@@ -76,6 +83,7 @@
 - 本轮已新增四卡 `MBON/DAN/APL/DPM -> DN -> motor primitive` 直接读出，明确把缺失的 Eon DN-to-body 接口变成公开可审计的替代层。
 - 本轮已新增 OCT/MCH `assay_video_v2`，解决旧视频过于像“果蝇 + 蓝黄标签”的问题。
 - 本轮已新增会议反馈定向实验：Glu-left 当前是更强的广谱 memory-output 扰动，5-HT-right 更适合作为 DPM 光遗传和记忆巩固时间窗验证轴；GRASP 仍是结构证据硬红线。
+- 本轮已新增 DPM 光遗传仿真验证：推荐优先测试 `CsChrimson 617 nm` 或 `ReaChR 627 nm` 红光协议；成像证明和行为证明分开做，避免“成像破坏果蝇导致无法继续行为”的实验瓶颈。
 - 当前结果支持“蘑菇体左右结构侧化可能影响嗅觉记忆检索和行为偏置”的可检验假说。
 - OCT/MCH mirror-side `n=50` 早期动力学套件稳定复现奖励趋近和惩罚回避，但 MB 侧化扰动相对 WT 的行为差异仍未通过 FDR；这是需要写入论文边界的正式负结果。
 

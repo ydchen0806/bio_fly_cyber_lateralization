@@ -639,6 +639,59 @@ MB swapped & 100 & 0.87 & -0.002 & 1.0 & 左右交换没有显著反转行为。
 \end{columns}
 \end{frame}
 
+\begin{frame}{DPM 光遗传验证：先证明 release pattern}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.54\textwidth}
+    \includegraphics[width=\textwidth]{Fig_dpm_5ht_release_timecourses.png}
+  \end{column}
+  \begin{column}{0.42\textwidth}
+    \begin{block}{湿实验主读出}
+      \begin{itemize}
+        \item DPM-driver $>$ CsChrimson/ReaChR。
+        \item KC 或 MB compartment 表达 5-HT sensor / GCaMP。
+        \item 主指标：左右 release LI、peak dF/F、AUC。
+        \item 旋转 180 度后按脑侧注册；真侧化保持符号，成像伪影翻转。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{DPM 光遗传验证：再做群体行为证明}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.54\textwidth}
+    \includegraphics[width=\textwidth]{Fig_dpm_behavior_modulation_predictions.png}
+  \end{column}
+  \begin{column}{0.42\textwidth}
+    \begin{block}{当前最可操作的行为实验}
+      \begin{itemize}
+        \item 成像和行为分开做，不要求同一只果蝇完成两件事。
+        \item 群体 T-maze：OCT/MCH 反平衡、CS+ 左右镜像。
+        \item 最敏感预测：weak OCT / strong MCH conflict。
+        \item 617/627 nm 红光刺激 DPM，预测 choice-index delta 约 $+0.10$。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{DPM 光遗传验证：推荐协议和实验链}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.50\textwidth}
+    \includegraphics[width=\textwidth]{Fig_dpm_opsin_wavelength_protocol_space.png}
+  \end{column}
+  \begin{column}{0.46\textwidth}
+    \includegraphics[width=\textwidth]{Fig_dpm_wetlab_validation_design.png}
+  \end{column}
+\end{columns}
+\vspace{0.3em}
+\scriptsize
+推荐先测 `CsChrimson 617 nm, 40 Hz, 20 ms, 5 s, 0.1 mW/mm2` 或 `ReaChR 627 nm` 同参数；蓝光 ChR2 保留为 positive/control，不作为主行为实验。
+\end{frame}
+
 \begin{frame}{会议反馈后的新增实验：群体 T-maze 可观测指标}
 \small
 \begin{columns}[T,onlytextwidth]

@@ -589,3 +589,28 @@ early-decision assay 在更短时间窗内仍然保留同向效应：
 > Meeting-driven analyses separated the right-serotonin and left-glutamate axes into experimentally addressable hypotheses. Left glutamate-biased KC perturbation produced the stronger broad memory-output effect, whereas the right serotonin/DPM axis provides a more direct optogenetic and consolidation-window validation route. These simulations prioritize GRASP targets, DPM stimulation protocols and group-level T-maze observables, but do not replace direct structural validation of neurotransmitter-specific lateralization.
 
 中文解释为：会议反馈后，本文的叙事应从“仿真证明侧化导致行为”改为“结构统计发现侧化，连接组传播证明其具有功能可传播性，新增仿真把它转化为 GRASP、DPM 光遗传和群体 T-maze 的可检验预测”。这条链条更严谨，也更符合探索性 Nature 风格论文的证据分级。
+
+## 新增结果：DPM 光遗传仿真把“功能证明”和“行为证明”拆成两条湿实验路线
+
+进一步根据老师反馈，我们把最先应该研究的问题聚焦为：用仿真脑预测光遗传激活 DPM neuron 后，偏侧化果蝇会出现什么 5-HT 释放 pattern、下游激活 pattern，以及这种操控是否可能调节 OCT/MCH 行为。新增输出目录为 `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429`，代码为 `/unify/ydchen/unidit/bio_fly/src/bio_fly/dpm_optogenetic_validation.py`，一键脚本为 `/unify/ydchen/unidit/bio_fly/scripts/run_dpm_optogenetic_validation.py`。
+
+这个模块的关键设计是把证明拆成两方面。第一方面是功能成像证明：使用 `DPM-driver > red-shifted opsin`，在 KC 或 MB compartment 表达 5-HT sensor 或 GCaMP，读取左右 alpha' beta' MB compartment 的 release LI、peak dF/F 和 AUC。由于脑成像会破坏或强扰动果蝇，这一证明不要求同一只果蝇继续行为。第二方面是群体行为证明：在独立果蝇群体中做 OCT/MCH T-maze 或相机轨迹实验，在训练、巩固或测试窗口给 DPM 红光刺激，读取 choice index 和 approach margin。这样绕开了“同一只果蝇先测 NT 侧化再做行为”的瓶颈。
+
+仿真协议库覆盖 `ChR2_blue`、`ReaChR_red` 和 `CsChrimson_red`，波长为 `470/530/590/617/627/660 nm`，频率为 `1-40 Hz`，脉宽为 `5-50 ms`，时长为 `0.5-30 s`，光强为 `0.05-1.0 mW/mm2`。基于成人果蝇红光光遗传和视觉混杂控制，优先推荐 `CsChrimson_red_617nm_40Hz_20ms_5.0s_0.1mW` 或 `ReaChR_red_627nm_40Hz_20ms_5.0s_0.1mW`。这两个协议在模型中给出 peak brain-registered 5-HT release LI 约 `0.802`，同时保持较低 visual-confound 风险。
+
+DPM GPU 传播仍然显示强烈的左右方向性：`left_DPM_opto` 的 right laterality index 为 `-0.8334`，`right_DPM_opto` 为 `+0.8073`，主要招募 KC、KCa'b' 记忆巩固区、MBON、APL 和 DAN readout。释放曲线进一步把这个静态传播变成时间序列预测：`left_release_au`、`right_release_au`、`brain_registered_release_li` 和 `image_li_after_180deg_rotation`。如果是真实脑侧偏侧化，果蝇水平旋转 180 度后按脑侧注册的 LI 应保持符号；如果是成像角度伪影，图像坐标符号会翻转。
+
+行为层预测不是同一只果蝇的成像-行为关联，而是独立群体的可观测效应方向。最敏感条件是 `weak_oct_strong_mch_conflict`，预测 DPM 红光刺激使 choice-index delta 约 `+0.104`；普通 reward 条件约 `+0.078`；shock 条件约 `-0.065`，可解释为测试期 DPM 激活可能减弱 aversive expression 或增加 state noise。这个结果建议真实行为实验优先做弱 CS+ / 强 CS- 冲突和 delayed memory window，而不是只做容易饱和的普通 OCT/MCH choice rate。
+
+新增图表和视频包括：
+
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_dpm_opsin_wavelength_protocol_space.png`：opsin 波长选择和红光优先理由。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_dpm_downstream_roi_heatmap.png`：DPM 传播到 KC、KCa'b'、MBON、APL、DAN 等 ROI 的 readout。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_dpm_5ht_release_timecourses.png`：预测 5-HT release timecourse 和 release LI。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_dpm_behavior_modulation_predictions.png`：群体行为 choice-index delta 预测。
+- `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_dpm_wetlab_validation_design.png`：成像证明、旋转控制、群体行为证明和 GRASP 结构验证的实验链。
+- `/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4`：DPM 光遗传 release pattern 机制视频。
+
+建议写入论文的严谨表述：
+
+> We therefore separated two experimentally tractable validation routes. DPM optogenetic imaging tests whether model-predicted right-biased 5-HT release survives brain-side registration and 180-degree rotation controls, whereas independent group T-maze experiments test whether the same DPM stimulation protocols modulate OCT/MCH memory choice. This design avoids requiring destructive neurotransmitter imaging and behaviour in the same fly, while preserving a falsifiable link between the connectome model and wet-lab readouts.

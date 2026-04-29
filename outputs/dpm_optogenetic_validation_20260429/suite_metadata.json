@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-04-29T09:24:54",
+  "output_dir": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429",
+  "devices": [
+    "cuda:0",
+    "cuda:1"
+  ],
+  "report": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/DPM_OPTOGENETIC_VALIDATION_CN.md",
+  "tables": {
+    "protocols": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_optogenetic_protocol_library.csv",
+    "roi": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_downstream_roi_summary.csv",
+    "timecourses": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_5ht_release_timecourses.csv",
+    "release_summary": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_5ht_release_pattern_summary.csv",
+    "behavior": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_optogenetic_behavior_predictions.csv",
+    "wetlab": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_wetlab_protocol_recommendations.csv"
+  },
+  "figures": {
+    "opsin": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/figures/Fig_dpm_opsin_wavelength_protocol_space.png",
+    "roi": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/figures/Fig_dpm_downstream_roi_heatmap.png",
+    "release": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/figures/Fig_dpm_5ht_release_timecourses.png",
+    "behavior": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/figures/Fig_dpm_behavior_modulation_predictions.png",
+    "design": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/figures/Fig_dpm_wetlab_validation_design.png"
+  },
+  "video": "/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/videos/dpm_optogenetic_release_prediction.mp4"
+}

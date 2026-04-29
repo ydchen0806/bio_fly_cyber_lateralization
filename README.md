@@ -43,6 +43,18 @@
 - `/unify/ydchen/unidit/bio_fly/outputs/meeting_feedback_20260429/tables/grasp_priority_targets.csv`：GRASP 结构验证靶点。优先验证 right DPM/5-HT input -> right `KCa'b'`，并用 left Glu input -> left `KCa'b'` 作为相反方向 positive control。
 - `/unify/ydchen/unidit/bio_fly/paper/figures/Fig_meeting_double_dissociation_heatmap.png`、`/unify/ydchen/unidit/bio_fly/paper/figures/Fig_dpm_optogenetic_protocol_predictions.png`、`/unify/ydchen/unidit/bio_fly/paper/figures/Fig_group_behavior_observable_predictions.png`、`/unify/ydchen/unidit/bio_fly/paper/figures/Fig_validation_logic_after_meeting.png`：新增 paper/PPT 共用图。
 
+2026-04-29 进一步新增“DPM 光遗传仿真验证”完整套件，专门回答“怎样用仿真指导湿实验验证 5-HT 侧化和行为调节”：
+
+- `/unify/ydchen/unidit/bio_fly/src/bio_fly/dpm_optogenetic_validation.py`：DPM 光遗传验证模块，包含 opsin/波长/频率/脉宽/时长/光强协议库、GPU0/1 DPM signed propagation、5-HT release timecourse、下游 ROI readout、群体行为调节预测和湿实验推荐表。
+- `/unify/ydchen/unidit/bio_fly/scripts/run_dpm_optogenetic_validation.py`：一键运行脚本。推荐命令：`CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python /unify/ydchen/unidit/bio_fly/scripts/run_dpm_optogenetic_validation.py --devices cuda:0 cuda:1`。
+- `/unify/ydchen/unidit/bio_fly/docs/DPM_OPTOGENETIC_VALIDATION_CN.md`：完整中文报告，明确把验证拆成两条链：成像证明 release pattern，群体 T-maze 证明行为可调节；两者不要求在同一只果蝇上完成。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_optogenetic_protocol_library.csv`：光遗传协议库，覆盖 `ChR2_blue`、`ReaChR_red`、`CsChrimson_red`，波长 `470/530/590/617/627/660 nm`，频率 `1-40 Hz`，脉宽 `5-50 ms`，时长 `0.5-30 s` 和光强 `0.05-1.0 mW/mm2`。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_5ht_release_pattern_summary.csv`：5-HT release pattern 预测。最高优先级协议包括 `CsChrimson_red_617nm_40Hz_20ms_5.0s_0.1mW` 和 `ReaChR_red_627nm_40Hz_20ms_5.0s_0.1mW`，预测 peak brain-registered release LI 约 `0.802`。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_optogenetic_behavior_predictions.csv`：DPM 光遗传群体行为预测。最敏感条件是 `weak_oct_strong_mch_conflict`，预测 DPM 红光刺激使 choice-index delta 约 `+0.104`；普通 reward 条件约 `+0.078`，shock 条件约 `-0.065`。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/tables/dpm_wetlab_protocol_recommendations.csv`：可直接给湿实验老师讨论的实验推荐表，包含遗传设计、光刺激参数、主读出、关键对照和预期结果。
+- `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429/videos/dpm_optogenetic_release_prediction.mp4` 和 `/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4`：DPM 光遗传 release pattern 机制视频。
+- 关键严谨边界：这套仿真不声称已经测到真实 5-HT 释放；它提供的是基于 FlyWire DPM propagation、opsin action spectrum 先验和 OCT/MCH 行为代理的可检验预测。结构硬证据仍需 GRASP/split-GFP 或等价湿实验验证。
+
 本轮重新生成的 paper 级视频入口：
 
 - `/unify/ydchen/unidit/bio_fly/paper/video/food_memory_cs_plus_left.mp4`：新版 assay-scene 视频，CS+ 食物/糖奖励气味在左侧，CS- 诱饵气味在右侧。
