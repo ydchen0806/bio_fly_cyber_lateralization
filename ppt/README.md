@@ -6,7 +6,7 @@
 
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.tex`：中文 Beamer PPT 源码。
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`：编译后的汇报 PDF。
-- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.md`：按 19 页逐页撰写的中文演讲稿，约 20 分钟汇报节奏。
+- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.md`：按 20 页逐页撰写的中文演讲稿，约 20 分钟汇报节奏。
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.tex`：演讲稿 PDF 的 LaTeX 包装源码。
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.pdf`：编译后的演讲稿 PDF。
 - `/unify/ydchen/unidit/bio_fly/ppt/figures`：PPT 使用的论文级图表素材。
@@ -32,7 +32,7 @@ latexmk -c cyber_fly_teacher_report.tex
 已在本机完成 XeLaTeX 编译：
 
 - 输出 PDF：`/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`
-- 页数：`19`
+- 页数：`20`
 - 文件大小：约 `2.7 MB`
 - 格式检查：LaTeX 日志中未发现 `LaTeX Error`、`Package Error`、`Undefined control sequence` 或 `Fatal error`；仅有 1 处 `0.5567pt` 的轻微 `Overfull vbox`，未造成可见重叠。
 - 日志中仍有 beamer/ctex 导航元信息造成的 `Missing character ... nullfont` 提示；它们未造成可见文字缺失，不影响 PDF 使用。
@@ -48,6 +48,7 @@ latexmk -c cyber_fly_teacher_report.tex
 
 - 标题改为明确科学问题：`从果蝇蘑菇体递质侧化到可验证的记忆行为假说`。
 - 第二页直接给出汇报结构、当前最稳发现和证据边界。
+- 新增“赛博果蝇代理仿真框架与证据边界”页，解释这里的代理仿真不是 Eon 私有闭环系统复刻，而是 FlyWire 连接组、递质 seed、3-hop signed graph propagation、readout、行为代理和视频渲染组成的可复查计算流程。
 - 删除独立名词解释页；所有名词在对应实验页内就地解释，例如 5-HT/Glu、KC、DPM、OCT/MCH、CS+/CS-、DN 和 laterality index。
 - 每个核心结果前均加入实验页：数据来源、对象、方法、控制、统计指标和结论获得方式。
 - 参考文献不再每页都放，只保留在标题、FlyWire 数据、蘑菇体结构、连接组传播、DPM 光遗传、OCT/MCH 行为、湿实验验证和核心参考页。
@@ -64,11 +65,13 @@ latexmk -c cyber_fly_teacher_report.tex
 - 结果 4 已明确 `release pattern` 是模型预测的释放/读出时间过程，不是真实湿实验已经测到的 5-HT。
 - 负结果页已补充 MB 扰动的具体操作：左/右 MB 静默、左右对称化、左右交换，并解释 FDR q=1.0 的意义。
 - 湿实验验证路径已改写为结构证明、功能证明和行为证明三条路线，说明每条路线具体测什么、怎么排除伪影。
-- 新增逐页演讲稿，按 19 页 PPT 撰写约 20 分钟中文汇报内容。
+- 新增逐页演讲稿，按 20 页 PPT 撰写约 20 分钟中文汇报内容。
 - 四卡传播仿真页保留核心结论：右侧血清素 KC seed 和左侧谷氨酸 KC seed 相对同侧随机 KC 对照，显著改变 memory axis、DAN、APL、DPM、MBON/MBIN 和左右读出，FDR q=0.038。
 - 明确加入最重要的负结果：MB left/right silencing、symmetrization、swap 与 WT 相比当前均未显著改变行为，主要 FDR q=1.0。
 - 保留“当前风险”和“下一步计划”两页，区分计算实验补强和湿实验验证。
 - 新增“赛博果蝇可视化结果”页，嵌入 DPM 光遗传预测、OCT/MCH 行为代理和多模态代理演示的关键帧，并在页内标出可点击/可打开的视频绝对路径。
+- 在 DPM、OCT/MCH 和 DN/motor bridge 相关结果页中直接加入对应视频截图和简短 setting/result 说明，避免视频只集中在单独页面。
+- 湿实验验证页改为“目的、设计和风险”，说明湿实验用于把仿真假说转成结构、功能、行为三条证据，并列出成像角度伪影、NT prediction 非直接测量、成像后不能继续行为、群体 T-maze 无法知道单只侧化程度等 concern。
 - 视频页明确说明视频用于展示和检查，统计证据来自 n=100 mirror-side trial、连接组传播和显著性检验，而不是视频本身。
 - 新增独立文档 `IMAGE_PROMPTS_FOR_GROUP_MEETING.md`，用于生成更像论文示意图的机制图、DPM 光遗传设计图、OCT/MCH 行为实验图和证据链图。
 
@@ -78,15 +81,16 @@ latexmk -c cyber_fly_teacher_report.tex
 
 1. 标题页提出科学问题：左右蘑菇体是否存在可传播到记忆环路的递质侧化。
 2. 汇报结构页给出四个问题和当前结论层级。
-3. 实验 1 说明 FlyWire 结构统计怎么做，结果 1 展示 KC 输入 5-HT 右偏、Glu 左偏。
-4. 实验 2 说明连接组传播和随机对照，并单独解释传播指标；结果 2 展示侧化 seed 可到达 memory axis、DAN、APL、DPM、MBON/MBIN。
-5. 实验 3 说明为什么检查 DN/motor bridge，结果 3 展示 MBON/memory axis 到 DN 出口的强度和侧向偏置。
-6. 实验 4 说明 DPM 光遗传仿真设置，结果 4 展示推荐红光协议和 release pattern。
-7. 实验 5 说明 OCT/MCH 行为代理和 mirror-side 设计，结果 5 展示奖励、惩罚、conflict 条件方向稳定。
-8. 赛博果蝇可视化页展示 DPM、OCT/MCH 和多模态代理视频关键帧及绝对路径。
-9. 实验 6 说明视频渲染的用途和边界。
-10. 负结果页主动展示 MB 扰动尚未产生显著行为差异。
-11. 最后给出湿实验验证路径、风险、下一步和核心结论。
+3. 代理仿真框架页解释“赛博果蝇代理”是什么、可靠性边界在哪里。
+4. 实验 1 说明 FlyWire 结构统计怎么做，结果 1 展示 KC 输入 5-HT 右偏、Glu 左偏。
+5. 实验 2 说明连接组传播和随机对照，并单独解释传播指标；结果 2 展示侧化 seed 可到达 memory axis、DAN、APL、DPM、MBON/MBIN。
+6. 实验 3 说明为什么检查 DN/motor bridge，结果 3 展示 MBON/memory axis 到 DN 出口的强度和侧向偏置，并加入多模态代理视频截图。
+7. 实验 4 说明 DPM 光遗传仿真设置，结果 4 展示推荐红光协议、release pattern 和 DPM 视频截图。
+8. 实验 5 说明 OCT/MCH 行为代理和 mirror-side 设计，结果 5 展示奖励、惩罚、conflict 条件方向稳定，并加入 OCT/MCH 视频截图。
+9. 赛博果蝇可视化页展示 DPM、OCT/MCH 和多模态代理视频关键帧及绝对路径。
+10. 实验 6 说明视频渲染的用途和边界。
+11. 负结果页主动展示 MB 扰动尚未产生显著行为差异。
+12. 最后给出湿实验验证路径、风险、下一步和核心结论。
 
 ## 严谨表述边界
 

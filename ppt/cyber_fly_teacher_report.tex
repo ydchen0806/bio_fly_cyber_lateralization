@@ -64,8 +64,8 @@
 \begin{frame}
   \titlepage
   \vspace{-0.6em}
-  \begin{block}{科学问题}
-    果蝇左右脑蘑菇体是否只是镜像结构，还是存在可传播到记忆环路的递质侧化？本项目用 FlyWire 连接组和公开可审计的赛博果蝇代理模型，将“右侧 5-HT 富集、左侧 Glu 偏置”的结构发现推进到 DPM 光遗传和 OCT/MCH 行为实验预测。
+\begin{block}{科学问题}
+    果蝇左右脑蘑菇体是否只是镜像结构，还是存在可传播到记忆环路的递质侧化？本项目用 FlyWire 连接组约束的透明赛博果蝇代理仿真框架，将“右侧 5-HT 富集、左侧 Glu 偏置”的结构发现推进到 DPM 光遗传和 OCT/MCH 行为实验预测。
   \end{block}
   \refs{FlyWire: Dorkenwald et al., Nature 2024; Schlegel et al., Nature 2024. Mushroom body learning circuit: Aso et al., eLife 2014; Modi et al., Annu. Rev. Neurosci. 2020.}
 \end{frame}
@@ -89,6 +89,30 @@
         \item \orange{结构发现强}：5-HT 右偏，Glu 左偏，$\alpha'\beta'$ 最强。
         \item \orange{传播结果支持功能相关性}：readout 到 DAN、APL、DPM、MBON/MBIN。
         \item \orange{行为代理可用但有限}：OCT/MCH 方向稳定，MB 扰动未显著。
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{赛博果蝇代理仿真框架与证据边界}
+\small
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.50\textwidth}
+    \begin{block}{这里的“赛博果蝇代理”是什么}
+      \begin{itemize}
+        \item 不是 Eon 私有闭环系统的逐参数复刻。
+        \item 是公开可复查的计算流程：FlyWire 连接组 $\rightarrow$ 递质侧化 seed $\rightarrow$ 3-hop signed graph propagation $\rightarrow$ memory/DPM/DN readout $\rightarrow$ OCT/MCH 行为代理和视频渲染。
+        \item 代码、参数、随机对照、统计检验和输出文件都在项目目录中，可逐步审计。
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{0.46\textwidth}
+    \begin{block}{可靠性边界}
+      \begin{itemize}
+        \item \orange{较可靠}：结构统计和连接组传播，因为依赖公开连接组和透明图算法。
+        \item \orange{预测性质}：DPM 光遗传 release pattern 和 OCT/MCH 行为代理，需要湿实验验证。
+        \item \red{不能声称}：连接组单独自动涌现完整果蝇行为，或已经完整复刻 Eon 系统。
       \end{itemize}
     \end{block}
   \end{column}
@@ -234,13 +258,13 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \end{columns}
 \end{frame}
 
-\begin{frame}{结果 3：MBON/memory axis 可到达 DN 出口（赛博果蝇仿真）}
+\begin{frame}{结果 3：MB readout 可到达 DN 出口（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
-  \begin{column}{0.50\textwidth}
+  \begin{column}{0.42\textwidth}
     \includegraphics[width=\textwidth]{Fig_mb_dn_laterality_index.png}
   \end{column}
-  \begin{column}{0.46\textwidth}
+  \begin{column}{0.33\textwidth}
     \begin{tabular}{@{}lrrr@{}}
     \toprule
     \textbf{条件} & \textbf{DN数} & \textbf{abs mass} & \textbf{LI}\\
@@ -255,6 +279,13 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
     \vspace{0.5em}
     \begin{block}{解释}
       left MBON 总响应更强；right MBON/right memory axis 的右偏更明显。强度和侧向偏置是两个不同读出。
+    \end{block}
+  \end{column}
+  \begin{column}{0.21\textwidth}
+    \includegraphics[width=\textwidth]{Fig_cyberfly_multimodal_video_frame.png}
+    \vspace{0.3em}
+    \begin{block}{对应视频}
+      多模态代理展示视觉、食物和梳理等交互；这里只作为 motor bridge 的直观入口。
     \end{block}
   \end{column}
 \end{columns}
@@ -288,14 +319,19 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \refs{DPM and memory: Yu et al., Cell 2005; Keene and Waddell, Nat. Rev. Neurosci. 2007. CsChrimson: Klapoetke et al., Nat. Methods 2014. ReaChR: Lin et al., Nat. Neurosci. 2013.}
 \end{frame}
 
-\begin{frame}{结果 4：DPM 红光协议与 release pattern（赛博果蝇仿真）}
+\begin{frame}{结果 4：DPM 红光协议与释放预测（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
-  \begin{column}{0.50\textwidth}
+  \begin{column}{0.42\textwidth}
     \includegraphics[width=\textwidth]{Fig_dpm_optogenetic_protocol_predictions.png}
   \end{column}
-  \begin{column}{0.46\textwidth}
+  \begin{column}{0.36\textwidth}
     \includegraphics[width=\textwidth]{Fig_dpm_5ht_release_timecourses.png}
+  \end{column}
+  \begin{column}{0.18\textwidth}
+    \href{run:/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4}{\includegraphics[width=\textwidth]{Fig_dpm_release_video_frame.png}}
+    \vspace{0.2em}
+    \tiny 视频：\url{/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4}
   \end{column}
 \end{columns}
 \vspace{0.2em}
@@ -334,13 +370,13 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \refs{Classical fly olfactory conditioning: Tully and Quinn, J. Comp. Physiol. A 1985; Tempel et al., PNAS 1983. MB valence readout: Aso et al., eLife 2014.}
 \end{frame}
 
-\begin{frame}{结果 5：OCT/MCH 代理能稳定表达奖励和惩罚方向（赛博果蝇仿真）}
+\begin{frame}{结果 5：OCT/MCH 代理表达奖惩方向（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
-  \begin{column}{0.55\textwidth}
+  \begin{column}{0.48\textwidth}
     \includegraphics[width=\textwidth]{Fig_oct_mch_formal_suite.png}
   \end{column}
-  \begin{column}{0.41\textwidth}
+  \begin{column}{0.28\textwidth}
     \begin{tabular}{@{}lcc@{}}
     \toprule
     \textbf{条件} & \textbf{选择率} & \textbf{FDR q}\\
@@ -356,10 +392,17 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
       行为层能表达基本 valence memory。weak OCT / strong MCH conflict 是检测 DPM/5-HT 轴小效应的优先条件。
     \end{block}
   \end{column}
+  \begin{column}{0.20\textwidth}
+    \href{run:/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4}{\includegraphics[width=\textwidth]{Fig_oct_mch_video_midframe.png}}
+    \vspace{0.25em}
+    \begin{block}{对应视频}
+      气味杯、羽流、奖励/电击、轨迹和统计 inset。
+    \end{block}
+  \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}{赛博果蝇可视化结果：关键视频入口（赛博果蝇仿真）}
+\begin{frame}{关键视频入口（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.32\textwidth}
@@ -442,22 +485,22 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \end{block}
 \end{frame}
 
-\begin{frame}{湿实验验证路径}
+\begin{frame}{湿实验验证路径：目的、设计和风险}
 \small
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.32\textwidth}
-    \begin{block}{结构证明}
-      GRASP / split-GFP 检查特定神经元之间是否有真实接触。目标是验证右侧 5-HT/DPM 到右侧 $\alpha'\beta'$ KC、左侧 Glu 到左侧 $\alpha'\beta'$ KC 是否更强。
+    \begin{block}{目的}
+      仿真只能生成可检验假说；湿实验要证明结构侧化是否真实存在、DPM 激活是否产生脑侧 readout 差异、群体行为是否按预测方向改变。
     \end{block}
   \end{column}
   \begin{column}{0.32\textwidth}
-    \begin{block}{功能证明}
-      DPM-driver $>$ CsChrimson/ReaChR，用红光激活 DPM；KC 或 MB compartment 表达 5-HT sensor / GCaMP，记录左右 readout。180 度旋转用于排除成像角度伪影。
+    \begin{block}{设计思路}
+      结构：GRASP/split-GFP 验证侧化接触。功能：DPM-driver $>$ CsChrimson/ReaChR，KC/MB 表达 5-HT sensor 或 GCaMP，并做 180 度旋转控制。行为：OCT/MCH T-maze，CS+ 左右平衡，测试 delayed/conflict 条件。
     \end{block}
   \end{column}
   \begin{column}{0.32\textwidth}
-    \begin{block}{行为证明}
-      独立群体做 OCT/MCH T-maze；CS+ 左右平衡；比较有无 DPM 红光刺激时 delayed/conflict 条件的 choice index 是否按仿真方向改变。
+    \begin{block}{主要 concern}
+      成像角度可能造成伪侧化；NT prediction 不是直接化学测量；成像后的果蝇不能继续做行为；群体 T-maze 不能知道单只果蝇的侧化程度。因此需要结构、功能、行为三条证据相互支撑。
     \end{block}
   \end{column}
 \end{columns}
@@ -500,7 +543,7 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 果蝇蘑菇体 KC 输入存在稳定递质侧化：右侧更偏 5-HT，左侧更偏 Glu，最强在与记忆巩固相关的 $\alpha'\beta'$ 区。
 \end{block}
 \begin{block}{方法贡献}
-公开可审计的赛博果蝇代理模型将该结构发现推进到连接组传播、DPM 光遗传预测和 OCT/MCH 行为实验设计。
+FlyWire 连接组约束的透明赛博果蝇代理仿真框架，将该结构发现推进到连接组传播、DPM 光遗传预测和 OCT/MCH 行为实验设计。
 \end{block}
 \begin{alertblock}{边界}
 当前还不能说连接组单独涌现完整行为，也不能说 MB 侧化已经被真实行为因果证明。下一步需要 DPM 成像、GRASP/split-GFP 和群体行为完成闭环。
