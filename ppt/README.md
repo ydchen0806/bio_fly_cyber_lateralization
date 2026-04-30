@@ -10,6 +10,9 @@
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.tex`：演讲稿 PDF 的 LaTeX 包装源码。
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.pdf`：编译后的演讲稿 PDF。
 - `/unify/ydchen/unidit/bio_fly/ppt/figures`：PPT 使用的论文级图表素材。
+- `/unify/ydchen/unidit/bio_fly/ppt/video_dpm_optogenetic_release_prediction.mp4`：PPT 内可点击播放的 DPM 光遗传预测视频。
+- `/unify/ydchen/unidit/bio_fly/ppt/video_oct_mch_assay_v2_key_conditions.mp4`：PPT 内可点击播放的 OCT/MCH 行为代理视频。
+- `/unify/ydchen/unidit/bio_fly/ppt/video_eon_multimodal_reproduction_summary.mp4`：PPT 内可点击播放的多模态代理演示视频。
 - `/unify/ydchen/unidit/bio_fly/ppt/IMAGE_PROMPTS_FOR_GROUP_MEETING.md`：可交给 GPT Image 生成组会示意图的详细 prompt。
 
 ## 编译命令
@@ -71,6 +74,7 @@ latexmk -c cyber_fly_teacher_report.tex
 - 保留“当前风险”和“下一步计划”两页，区分计算实验补强和湿实验验证。
 - 新增“赛博果蝇可视化结果”页，嵌入 DPM 光遗传预测、OCT/MCH 行为代理和多模态代理演示的关键帧，并在页内标出可点击/可打开的视频绝对路径。
 - 在 DPM、OCT/MCH 和 DN/motor bridge 相关结果页中直接加入对应视频截图和简短 setting/result 说明，避免视频只集中在单独页面。
+- 视频 mp4 已复制到 PPT 同目录，并用 Beamer `multimedia` 生成可点击视频入口；在支持外部播放器的 PDF 阅读器中点击截图即可播放。若阅读器屏蔽视频注释，可直接打开同目录下的 `video_*.mp4` 文件。
 - 湿实验验证页改为“目的、设计和风险”，说明湿实验用于把仿真假说转成结构、功能、行为三条证据，并列出成像角度伪影、NT prediction 非直接测量、成像后不能继续行为、群体 T-maze 无法知道单只侧化程度等 concern。
 - 视频页明确说明视频用于展示和检查，统计证据来自 n=100 mirror-side trial、连接组传播和显著性检验，而不是视频本身。
 - 新增独立文档 `IMAGE_PROMPTS_FOR_GROUP_MEETING.md`，用于生成更像论文示意图的机制图、DPM 光遗传设计图、OCT/MCH 行为实验图和证据链图。
@@ -128,3 +132,11 @@ PPT 中刻意避免以下过度声称：
 - `/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4`：DPM 光遗传激活后 5-HT/KC readout release pattern 的动态展示。
 - `/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4`：OCT/MCH 关键行为条件的视频展示，包含气味杯、气味羽流、糖奖励/电击、轨迹和统计 inset。
 - `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`：视觉、食物和梳理等多模态代理演示，用于说明当前代理层覆盖的环境交互类型。
+
+PPT PDF 实际调用的是同目录下的本地副本：
+
+- `/unify/ydchen/unidit/bio_fly/ppt/video_dpm_optogenetic_release_prediction.mp4`
+- `/unify/ydchen/unidit/bio_fly/ppt/video_oct_mch_assay_v2_key_conditions.mp4`
+- `/unify/ydchen/unidit/bio_fly/ppt/video_eon_multimodal_reproduction_summary.mp4`
+
+注意：PDF 视频播放依赖阅读器支持。Adobe Acrobat、部分 Linux PDF 阅读器更可能支持点击调用外部播放器；浏览器 PDF 预览、macOS Preview、Overleaf 预览通常会禁用或忽略视频播放。
