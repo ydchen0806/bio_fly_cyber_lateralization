@@ -117,6 +117,30 @@ Do not overcomplicate with all neuron names. Keep only KC, 5-HT input, Glu input
 Use a clean white background and restrained colors.
 ```
 
+## Prompt 6: Experiment-to-result slide template
+
+```text
+Create a professional group-meeting slide schematic that visually separates an experiment design from its result.
+
+Canvas: 16:9 landscape, white background, suitable for a PhD neuroscience/computational biology presentation.
+Layout:
+Left half titled conceptually "Experiment design" but keep final text minimal. Show a data source icon for FlyWire connectome, a simplified mushroom body circuit, seed neurons highlighted by side, and small control icons for random seeds, mirror-side design, and 180-degree rotation control.
+Right half titled conceptually "Measured readout" but keep final text minimal. Show a compact heatmap, a time-course trace, and a choice-index bar chart as abstract placeholders. Use arrows to connect the design elements to the corresponding readouts.
+
+Scientific content:
+The design should communicate that the study first quantifies left-right neurotransmitter composition in KC inputs, then propagates side-specific seeds through a connectome graph, then tests DPM optogenetic protocols and OCT/MCH behavior predictions.
+It should also show explicit controls: same-size random KC seeds, left/right mirror-side balancing, and camera-versus-brain-side registration.
+
+Style:
+Nature/Cell Methods schematic style, clean vector-like line art, no cartoon speech bubbles, no AI chat aesthetic.
+Use restrained consistent colors:
+serotonin/right = warm orange-red,
+glutamate/left = blue-cyan,
+neutral connectome = gray,
+statistical controls = dark green.
+Do not invent exact p-values, sample sizes, or numerical values. Leave room for LaTeX labels and real data panels to be placed on top in the final PPT.
+```
+
 ## Recommended usage in the PPT
 
 - Prompt 1 can replace the current TikZ flowchart slide.
@@ -124,4 +148,4 @@ Use a clean white background and restrained colors.
 - Prompt 3 can replace the OCT/MCH video-frame-only slide when a cleaner conceptual assay figure is needed.
 - Prompt 4 can be used as the final summary or risk-boundary slide.
 - Prompt 5 can be used near the first result slide to make the biological mechanism more intuitive.
-
+- Prompt 6 can be used to replace simple method-flow pages when the PPT needs a more mature “experiment first, result second” visual language.

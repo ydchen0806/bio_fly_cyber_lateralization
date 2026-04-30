@@ -28,22 +28,24 @@ latexmk -c cyber_fly_teacher_report.tex
 已在本机完成 XeLaTeX 编译：
 
 - 输出 PDF：`/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`
-- 页数：`19`
-- 文件大小：约 `2.6 MB`
-- 格式检查：LaTeX 日志中未发现 `Overfull`、`LaTeX Error`、`Package Error`、`Undefined control sequence` 或 `Fatal error`。
+- 页数：`17`
+- 文件大小：约 `1.9 MB`
+- 格式检查：LaTeX 日志中未发现 `LaTeX Error`、`Package Error`、`Undefined control sequence` 或 `Fatal error`；仅有 1 处 `0.5567pt` 的轻微 `Overfull vbox`，未造成可见重叠。
 - 日志中仍有窄列表格里的英文短语断行提示，以及 beamer/ctex 导航元信息造成的 `Missing character ... nullfont` 提示；它们未造成可见文字缺失，不影响 PDF 使用。
-- 渲染检查：使用 Ghostscript 将 PDF 渲染为 PNG，确认新增术语页、递质侧化主发现页、结构热图页、四卡传播仿真页、中文路径表和英文 paper reader guide 均能正常显示。
-- 人工抽查：名词说明页、血清素/谷氨酸侧化页、四卡传播仿真页、OCT/MCH 统计页、MB 扰动负结果页、隐患页、补充实验页和 take-home message 页可以正常显示。
+- 渲染检查：使用 Ghostscript 将 PDF 渲染为 PNG，确认标题页、实验设计页、递质侧化主发现页、连接组传播页、DPM 光遗传页、OCT/MCH 行为页、视频渲染页、MB 扰动负结果页和验证路径页均能正常显示。
+- 人工抽查：结构热图、传播热图、DN laterality 图、DPM 协议图、OCT/MCH 统计图和视频帧页没有发现明显文字/图表重叠。
 
 日志中仍有 `fontspec` 的 WenQuanYi 字体 `Script CJK` 提示，以及 beamer/ctex 生成导航元信息时的 `Missing character ... nullfont` 提示。它们未导致编译失败，也未在抽查页面中造成可见文字缺失；当前 PDF 可用于汇报。
 
 ## 二次改稿说明
 
-用户反馈上一版“AI 味太重，发现和结论没有说清楚”，后续又要求压缩成组会汇报版本。本版已改成面向真实组会汇报的精简叙事结构：
+用户反馈上一版“不像博士生组会汇报，像对话稿”，并明确要求每一个结果前面先加一页实验设计，说明做了什么、怎么拿到结论、指标是什么，同时不要单独放名词解释页。本版已改成面向真实组会汇报的“实验设计 -> 结果结论”结构：
 
-- 标题改为明确科学问题：`赛博果蝇能否把左右脑递质侧化变成可验证的记忆假说？`
-- 第二页直接给出当前最稳的发现和风险，不再只做泛泛摘要。
-- 开场名词说明被压缩为一页，解释 MB、KC、5-HT、Glu、DAN、MBON、APL、DPM、CS+/CS-、OCT/MCH 和 laterality index。
+- 标题改为明确科学问题：`从果蝇蘑菇体递质侧化到可验证的记忆行为假说`。
+- 第二页直接给出汇报结构、当前最稳发现和证据边界。
+- 删除独立名词解释页；所有名词在对应实验页内就地解释，例如 5-HT/Glu、KC、DPM、OCT/MCH、CS+/CS-、DN 和 laterality index。
+- 每个核心结果前均加入实验页：数据来源、对象、方法、控制、统计指标和结论获得方式。
+- 每个实验页或结果页底部加入真实参考文献短引，说明方法和生物学设定的合理性。
 - 主体现在以用户原始 paper 的主发现为核心：右侧血清素富集、左侧谷氨酸偏置，并强调最强位置是 $\alpha'\beta'$ 记忆巩固相关亚区。
 - 主体按组会逻辑展开：研究设计、数据和实验条件、递质侧化结构结果、赛博果蝇传播结果、DPM 光遗传预测、OCT/MCH 行为结果、视频可视化、负结果、湿实验验证、风险和下一步。
 - 每个关键实验都说明“怎么做、看什么指标、发现什么、不能过度解释什么”。
@@ -57,14 +59,16 @@ latexmk -c cyber_fly_teacher_report.tex
 
 这份汇报面向不熟悉生物学或 AI 仿真的老师，按下面逻辑组织：
 
-1. 先给结论和必要名词，让非生物背景老师能快速进入问题。
-2. 讲研究设计和实验条件，明确什么是结构统计、什么是赛博果蝇传播、什么是行为代理。
-3. 展示结构结果：KC 输入中血清素系统性右偏，谷氨酸多数左偏，最强在 $\alpha'\beta'$。
-4. 展示仿真结果：右侧血清素 KC 和左侧谷氨酸 KC 能传播到 memory axis、DAN、APL、DPM、MBON/MBIN。
-5. 展示 DPM 光遗传预测：617/627 nm 红光协议、release pattern 和 180 度旋转控制。
-6. 展示 OCT/MCH 行为结果：奖励、惩罚、conflict 条件方向稳定。
-7. 主动展示 MB 扰动负结果，说明当前行为代理还不能证明真实行为因果。
-8. 最后给出湿实验验证路径、风险和下一步计划。
+1. 标题页提出科学问题：左右蘑菇体是否存在可传播到记忆环路的递质侧化。
+2. 汇报结构页给出四个问题和当前结论层级。
+3. 实验 1 说明 FlyWire 结构统计怎么做，结果 1 展示 KC 输入 5-HT 右偏、Glu 左偏。
+4. 实验 2 说明连接组传播和随机对照，结果 2 展示侧化 seed 可到达 memory axis、DAN、APL、DPM、MBON/MBIN。
+5. 实验 3 说明为什么检查 DN/motor bridge，结果 3 展示 MBON/memory axis 到 DN 出口的强度和侧向偏置。
+6. 实验 4 说明 DPM 光遗传仿真设置，结果 4 展示推荐红光协议和 release pattern。
+7. 实验 5 说明 OCT/MCH 行为代理和 mirror-side 设计，结果 5 展示奖励、惩罚、conflict 条件方向稳定。
+8. 实验 6 说明视频渲染的用途和边界。
+9. 负结果页主动展示 MB 扰动尚未产生显著行为差异。
+10. 最后给出湿实验验证路径、风险、下一步和核心结论。
 
 ## 严谨表述边界
 
