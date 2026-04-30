@@ -6,6 +6,9 @@
 
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.tex`：中文 Beamer PPT 源码。
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`：编译后的汇报 PDF。
+- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.md`：按 19 页逐页撰写的中文演讲稿，约 20 分钟汇报节奏。
+- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.tex`：演讲稿 PDF 的 LaTeX 包装源码。
+- `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.pdf`：编译后的演讲稿 PDF。
 - `/unify/ydchen/unidit/bio_fly/ppt/figures`：PPT 使用的论文级图表素材。
 - `/unify/ydchen/unidit/bio_fly/ppt/IMAGE_PROMPTS_FOR_GROUP_MEETING.md`：可交给 GPT Image 生成组会示意图的详细 prompt。
 
@@ -14,6 +17,7 @@
 ```bash
 cd /unify/ydchen/unidit/bio_fly/ppt
 latexmk -xelatex -interaction=nonstopmode -halt-on-error cyber_fly_teacher_report.tex
+latexmk -xelatex -interaction=nonstopmode -halt-on-error cyber_fly_teacher_report_speaker_notes.tex
 ```
 
 清理 LaTeX 中间文件：
@@ -34,6 +38,7 @@ latexmk -c cyber_fly_teacher_report.tex
 - 日志中仍有 beamer/ctex 导航元信息造成的 `Missing character ... nullfont` 提示；它们未造成可见文字缺失，不影响 PDF 使用。
 - 渲染检查：使用 Ghostscript 将 PDF 渲染为 PNG，确认标题页、实验设计页、递质侧化主发现页、连接组传播页、DPM 光遗传页、OCT/MCH 行为页、视频渲染页、MB 扰动负结果页和验证路径页均能正常显示。
 - 人工抽查：结构热图、传播热图、连接组指标解释页、DN laterality 图、DPM 协议图、OCT/MCH 统计图、赛博果蝇视频关键帧页和视频渲染页没有发现明显文字/图表重叠。
+- 演讲稿 PDF 已编译：`/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report_speaker_notes.pdf`，共 `8` 页；内容来自同目录下的 Markdown 讲稿。
 
 日志中仍有 `fontspec` 的 WenQuanYi 字体 `Script CJK` 提示，以及 beamer/ctex 生成导航元信息时的 `Missing character ... nullfont` 提示。它们未导致编译失败，也未在抽查页面中造成可见文字缺失；当前 PDF 可用于汇报。
 
@@ -51,6 +56,15 @@ latexmk -c cyber_fly_teacher_report.tex
 - 主体按组会逻辑展开：研究设计、数据和实验条件、递质侧化结构结果、赛博果蝇传播结果、DPM 光遗传预测、OCT/MCH 行为结果、视频可视化、负结果、湿实验验证、风险和下一步。
 - 每个关键实验都说明“怎么做、看什么指标、发现什么、不能过度解释什么”。
 - 新增“实验 2 指标解读”页，面向 0 生物基础的计算机研究者解释 `memory axis mass`、`abs mass`、`response laterality`、`empirical p` 和 `FDR q` 的计算含义与用途。
+- 按用户反馈移除“给计算机背景老师的读法”“一句话”等不适合正式组会的页面措辞，改为正式标题 `实验 2：传播读出指标与统计检验（赛博果蝇仿真）`。
+- 实验 2 已补充图传播算法：构建 signed weighted graph、初始化 seed vector、使用归一化连接矩阵做 3-hop propagation、与同侧随机 KC null distribution 比较。
+- 实验 3 已补充 MB readout 到 DN/motor bridge 的仿真流程，并明确 DN 是大脑到运动出口的接口，motor primitive 是透明 heuristic，不是 Eon 私有 DN-to-body 权重。
+- 所有通过仿真代理完成的实验页和结果页均在标题中标注 `（赛博果蝇仿真）`。
+- 实验 4 已补充 DPM、光遗传、opsin、CsChrimson/ReaChR、pulse/train、5-HT/KC readout 和 180 度旋转控制的解释。
+- 结果 4 已明确 `release pattern` 是模型预测的释放/读出时间过程，不是真实湿实验已经测到的 5-HT。
+- 负结果页已补充 MB 扰动的具体操作：左/右 MB 静默、左右对称化、左右交换，并解释 FDR q=1.0 的意义。
+- 湿实验验证路径已改写为结构证明、功能证明和行为证明三条路线，说明每条路线具体测什么、怎么排除伪影。
+- 新增逐页演讲稿，按 19 页 PPT 撰写约 20 分钟中文汇报内容。
 - 四卡传播仿真页保留核心结论：右侧血清素 KC seed 和左侧谷氨酸 KC seed 相对同侧随机 KC 对照，显著改变 memory axis、DAN、APL、DPM、MBON/MBIN 和左右读出，FDR q=0.038。
 - 明确加入最重要的负结果：MB left/right silencing、symmetrization、swap 与 WT 相比当前均未显著改变行为，主要 FDR q=1.0。
 - 保留“当前风险”和“下一步计划”两页，区分计算实验补强和湿实验验证。

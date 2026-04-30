@@ -144,34 +144,35 @@
 \refs{Mushroom body architecture: Aso et al., eLife 2014; adult MB connectome: Li et al., eLife 2020; memory consolidation relevance: Krashes et al., Neuron 2007.}
 \end{frame}
 
-\begin{frame}{实验 2：连接组传播检验功能可达性}
+\begin{frame}{实验 2：连接组传播算法与功能可达性（赛博果蝇仿真）}
 \small
 \begin{columns}[T,onlytextwidth]
-  \begin{column}{0.46\textwidth}
-    \begin{block}{实验设计}
+  \begin{column}{0.51\textwidth}
+    \begin{block}{图传播算法}
       \begin{itemize}
-        \item 把连接组看成一个有向加权图：节点是神经元，边是突触连接强度。
-        \item Seed 1：右侧 5-HT-rich KC，代表“右侧血清素富集输入”。
-        \item Seed 2：左侧 Glu-rich KC，代表“左侧谷氨酸富集输入”。
-        \item 对照：同侧、同数量随机 KC，判断结果是不是随便选一批 KC 都会出现。
-        \item 传播：最多走 3 个突触层级，近似“上游差异能否传到下游记忆环路”。
+        \item 构图：神经元为节点，突触数/连接强度为边权，兴奋/抑制符号进入 signed weight。
+        \item 初始化：把右 5-HT-rich KC 或左 Glu-rich KC 设为 seed vector $x_0$。
+        \item 传播：$x_{t+1}=\hat{A}^{T}x_t$，最多 3 hop；$\hat{A}$ 是归一化连接矩阵。
+        \item 汇总：对每个 hop 的响应求和，得到各下游脑区的 response mass。
+        \item 对照：同侧、同数量随机 KC 重复传播，形成 null distribution。
       \end{itemize}
     \end{block}
   \end{column}
-  \begin{column}{0.50\textwidth}
-    \begin{block}{为什么这个实验有用}
+  \begin{column}{0.45\textwidth}
+    \begin{block}{方法合理性}
       \begin{itemize}
-        \item 如果 seed 只影响 KC 自己，说明结构侧化可能只是局部统计现象。
-        \item 如果 seed 能传播到 DAN、APL、DPM、MBON/MBIN，说明它可能影响奖励、惩罚、记忆维持和行为输出。
-        \item 这里验证的是\orange{功能可达性}，不是证明真实行为已经发生。
+        \item 这不是“环境里随机游走”，而是在真实连接组图上的加权信号传播。
+        \item 逻辑类似网络扩散/图传播：先问结构差异能不能到达目标模块。
+        \item 如果到达 DAN、APL、DPM、MBON/MBIN，才有资格讨论学习、记忆维持和输出读出。
+        \item 结论边界：证明功能可达性，不等于证明真实神经放电或真实行为。
       \end{itemize}
     \end{block}
   \end{column}
 \end{columns}
-\refs{Graph-based connectome analysis is consistent with large-scale connectomics practice: Scheffer et al., eLife 2020; Dorkenwald et al., Nature 2024. MB circuit readouts: Aso et al., eLife 2014; Li et al., eLife 2020.}
+\refs{Weighted connectome graph analyses are standard in large-scale connectomics; see Scheffer et al., eLife 2020; Dorkenwald et al., Nature 2024. MB circuit readouts: Aso et al., eLife 2014; Li et al., eLife 2020.}
 \end{frame}
 
-\begin{frame}{实验 2 指标解读：给计算机背景老师的读法}
+\begin{frame}{实验 2：传播读出指标与统计检验（赛博果蝇仿真）}
 \small
 \begin{tabularx}{\textwidth}{@{}p{3.0cm}p{4.2cm}X@{}}
 \toprule
@@ -185,12 +186,12 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \bottomrule
 \end{tabularx}
 \vspace{0.4em}
-\begin{block}{一句话}
-这页的所有指标都在回答同一个问题：\blue{左右递质侧化是否能通过真实连接组传到记忆和行为相关模块，并且比随机对照更强。}
+\begin{block}{判定标准}
+只有当侧化 seed 的读出超过同侧随机 KC 对照，并经过 FDR 校正后仍显著，才作为后续 DPM 光遗传或行为实验的优先候选。
 \end{block}
 \end{frame}
 
-\begin{frame}{结果 2：侧化 seed 能传播到记忆相关 readout}
+\begin{frame}{结果 2：侧化 seed 能传播到记忆相关 readout（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.58\textwidth}
@@ -211,28 +212,29 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \end{columns}
 \end{frame}
 
-\begin{frame}{实验 3：MB readout 到 DN/motor bridge}
+\begin{frame}{实验 3：MB readout 到 DN/motor bridge（赛博果蝇仿真）}
 \small
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.48\textwidth}
-    \begin{block}{为什么做这个实验}
-      只证明 KC 到 MB readout 还不够。行为必须经过下行神经元（descending neurons, DN）或其它运动出口。因此我们检查 MBON/DAN/APL/DPM 是否能在连接组传播中到达 DN family。
+    \begin{block}{为什么要接到 DN}
+      DAN、APL、DPM、MBON 还主要是脑内学习/记忆模块。若要解释行为，信号最终需要到达 descending neurons（DN，下行神经元）或其它运动出口。DN 可以理解成“大脑给身体发命令”的接口。
     \end{block}
   \end{column}
   \begin{column}{0.48\textwidth}
-    \begin{block}{方法}
+    \begin{block}{仿真流程}
       \begin{itemize}
         \item Seed：left/right/bilateral MBON、DAN、APL/DPM、memory axis。
-        \item 传播：FlyWire signed propagation。
+        \item 仍在 FlyWire signed graph 上做多跳传播。
+        \item 只统计落到 DN annotation 的响应。
         \item 输出：DN 数量、absolute mass、signed mass、laterality index。
-        \item motor primitive 是透明 heuristic，不是 Eon 私有 DN-to-body 权重。
+        \item motor primitive 只是透明 heuristic，不是 Eon 私有 DN-to-body 权重。
       \end{itemize}
     \end{block}
   \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}{结果 3：MBON/memory axis 可到达 DN 出口}
+\begin{frame}{结果 3：MBON/memory axis 可到达 DN 出口（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.50\textwidth}
@@ -258,24 +260,27 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \end{columns}
 \end{frame}
 
-\begin{frame}{实验 4：DPM 光遗传仿真验证}
+\begin{frame}{实验 4：DPM 光遗传仿真验证（赛博果蝇仿真）}
 \small
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.48\textwidth}
-    \begin{block}{实验动机}
-      DPM 是投射到蘑菇体的调制神经元，和嗅觉记忆稳定性相关。若结构侧化有功能意义，DPM 激活后应产生可测的左右 5-HT/KC readout 差异。
-    \end{block}
-    \begin{block}{湿实验可做性}
-      DPM-driver 表达 CsChrimson 或 ReaChR；KC 或 MB compartment 表达 5-HT sensor / GCaMP。
+    \begin{block}{术语和实验含义}
+      \begin{itemize}
+        \item DPM：投射到蘑菇体的调制神经元，和嗅觉记忆稳定性相关。
+        \item 光遗传：让特定神经元表达感光蛋白，再用光控制其活性。
+        \item Opsin：感光蛋白；CsChrimson/ReaChR 对红光敏感。
+        \item 5-HT/KC readout：预测 KC 区域接收到的血清素相关读出。
+      \end{itemize}
     \end{block}
   \end{column}
   \begin{column}{0.48\textwidth}
     \begin{block}{仿真设置}
       \begin{itemize}
         \item Seed：left/right DPM。
-        \item Opsin：CsChrimson、ReaChR、ChR2。
-        \item 参数：波长、频率、脉宽、时长、光强。
-        \item 控制：180 度旋转后按脑侧注册。
+        \item 扫描：opsin、波长、频率、脉宽、时长、光强。
+        \item Pulse：单次光刺激宽度；train：连续刺激序列。
+        \item 控制：180 度旋转后按脑侧注册，区分脑侧偏向和相机角度伪影。
+        \item 湿实验对应：DPM-driver $>$ CsChrimson/ReaChR，加 5-HT sensor 或 GCaMP 成像。
       \end{itemize}
     \end{block}
   \end{column}
@@ -283,7 +288,7 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \refs{DPM and memory: Yu et al., Cell 2005; Keene and Waddell, Nat. Rev. Neurosci. 2007. CsChrimson: Klapoetke et al., Nat. Methods 2014. ReaChR: Lin et al., Nat. Neurosci. 2013.}
 \end{frame}
 
-\begin{frame}{结果 4：DPM 红光协议与 release pattern}
+\begin{frame}{结果 4：DPM 红光协议与 release pattern（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.50\textwidth}
@@ -294,12 +299,15 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
   \end{column}
 \end{columns}
 \vspace{0.2em}
+\begin{block}{怎么读图}
+左侧图是在不同 opsin/波长/频率/脉宽下预测 DPM 激活强度，右侧图是红光开始后左右 5-HT/KC readout 的时间曲线。这里的 release pattern 是\orange{模型预测的释放/读出时间过程}，不是已经测到的真实 5-HT。
+\end{block}
 \begin{block}{结论}
-推荐从 CsChrimson 617 nm 或 ReaChR 627 nm、40 Hz、20 ms pulse、5 s train 开始。模型预测 DPM 激活后脑侧注册的 5-HT/KC readout 保持右偏，top protocol 的 peak LI 约 0.80。
+优先测试 CsChrimson 617 nm 或 ReaChR 627 nm、40 Hz、20 ms pulse、5 s train。模型预测 DPM 激活后，按脑侧注册的 5-HT/KC readout 保持右偏，top protocol 的 peak LI 约 0.80。
 \end{block}
 \end{frame}
 
-\begin{frame}{实验 5：OCT/MCH 群体行为代理}
+\begin{frame}{实验 5：OCT/MCH 群体行为代理（赛博果蝇仿真）}
 \small
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.49\textwidth}
@@ -326,7 +334,7 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \refs{Classical fly olfactory conditioning: Tully and Quinn, J. Comp. Physiol. A 1985; Tempel et al., PNAS 1983. MB valence readout: Aso et al., eLife 2014.}
 \end{frame}
 
-\begin{frame}{结果 5：OCT/MCH 代理能稳定表达奖励和惩罚方向}
+\begin{frame}{结果 5：OCT/MCH 代理能稳定表达奖励和惩罚方向（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.55\textwidth}
@@ -351,7 +359,7 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \end{columns}
 \end{frame}
 
-\begin{frame}{赛博果蝇可视化结果：关键视频入口}
+\begin{frame}{赛博果蝇可视化结果：关键视频入口（赛博果蝇仿真）}
 \scriptsize
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.32\textwidth}
@@ -382,7 +390,7 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{实验 6：OCT/MCH 视频渲染展示了哪些实验要素}
+\begin{frame}{实验 6：OCT/MCH 视频渲染展示了哪些实验要素（赛博果蝇仿真）}
 \small
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.63\textwidth}
@@ -404,22 +412,34 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \end{columns}
 \end{frame}
 
-\begin{frame}{负结果：MB 扰动尚未产生显著行为差异}
+\begin{frame}{负结果：MB 扰动尚未产生显著行为差异（赛博果蝇仿真）}
 \scriptsize
-\begin{tabularx}{\textwidth}{@{}lrrrrX@{}}
-\toprule
-\textbf{扰动条件} & \textbf{n} & \textbf{选择率} & \textbf{$\Delta$margin} & \textbf{q} & \textbf{解释} \\
-\midrule
-left MB silenced & 100 & 0.89 & +0.032 & 1.0 & 与 WT 相比没有显著降低接近。\\
-right MB silenced & 100 & 0.89 & +0.039 & 1.0 & 与 WT 相比没有显著改变选择。\\
-MB symmetrized & 100 & 0.89 & +0.027 & 1.0 & 对称化没有产生预期行为下降。\\
-MB swapped & 100 & 0.87 & -0.002 & 1.0 & 左右交换没有显著反转行为。\\
-\bottomrule
-\end{tabularx}
-\vspace{0.45em}
-\begin{alertblock}{解释}
-当前结果支持“结构侧化可传播到功能 readout”，但不能直接证明“MB 侧化已经改变真实果蝇行为”。这一定要作为边界条件写入论文。
-\end{alertblock}
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.58\textwidth}
+    \begin{tabularx}{\textwidth}{@{}lrrr@{}}
+    \toprule
+    \textbf{扰动条件} & \textbf{n} & \textbf{选择率} & \textbf{FDR q}\\
+    \midrule
+    left MB silenced & 100 & 0.89 & 1.0\\
+    right MB silenced & 100 & 0.89 & 1.0\\
+    MB symmetrized & 100 & 0.89 & 1.0\\
+    MB swapped & 100 & 0.87 & 1.0\\
+    \bottomrule
+    \end{tabularx}
+  \end{column}
+  \begin{column}{0.38\textwidth}
+    \begin{block}{我们做了什么}
+      在行为代理中分别模拟左/右 MB 静默、左右对称化、左右交换，再与 WT 对照比较。
+    \end{block}
+    \begin{alertblock}{结果含义}
+      四种扰动都没有通过 FDR 校正；因此不能声称 MB 侧化已经导致真实行为改变。
+    \end{alertblock}
+  \end{column}
+\end{columns}
+\vspace{0.35em}
+\begin{block}{为什么这个负结果重要}
+它说明当前行为代理还不够敏感，或者 MB 侧化对 OCT/MCH 选择的影响需要更强的 DN/motor 闭环、剂量响应或真实湿实验验证。
+\end{block}
 \end{frame}
 
 \begin{frame}{湿实验验证路径}
@@ -427,17 +447,17 @@ MB swapped & 100 & 0.87 & -0.002 & 1.0 & 左右交换没有显著反转行为。
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.32\textwidth}
     \begin{block}{结构证明}
-      GRASP / split-GFP 验证右侧 DPM/5-HT 到右侧 $\alpha'\beta'$ KC，以及左侧 Glu 到左侧 $\alpha'\beta'$ KC。
+      GRASP / split-GFP 检查特定神经元之间是否有真实接触。目标是验证右侧 5-HT/DPM 到右侧 $\alpha'\beta'$ KC、左侧 Glu 到左侧 $\alpha'\beta'$ KC 是否更强。
     \end{block}
   \end{column}
   \begin{column}{0.32\textwidth}
     \begin{block}{功能证明}
-      DPM-driver $>$ CsChrimson/ReaChR；KC 或 MB compartment 表达 5-HT sensor / GCaMP；做 180 度旋转控制。
+      DPM-driver $>$ CsChrimson/ReaChR，用红光激活 DPM；KC 或 MB compartment 表达 5-HT sensor / GCaMP，记录左右 readout。180 度旋转用于排除成像角度伪影。
     \end{block}
   \end{column}
   \begin{column}{0.32\textwidth}
     \begin{block}{行为证明}
-      独立群体做 OCT/MCH T-maze；重点测试 delayed/conflict 条件下红光 DPM stimulation 对 choice index 的改变。
+      独立群体做 OCT/MCH T-maze；CS+ 左右平衡；比较有无 DPM 红光刺激时 delayed/conflict 条件的 choice index 是否按仿真方向改变。
     \end{block}
   \end{column}
 \end{columns}
