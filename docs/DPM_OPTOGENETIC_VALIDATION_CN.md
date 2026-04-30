@@ -228,6 +228,15 @@ CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python \
 4. 180 度旋转控制说明必须区分真实脑侧化和成像角度伪影。
 5. 在行为层面，最敏感的验证条件不是普通强刺激，而是 `weak OCT / strong MCH conflict`，预测 `choice_index_delta` 约 `+0.104`。
 
+这里补一句实现细节，避免把它误读成机器学习拟合结果：
+
+- 行为预测不是训练出来的模型，而是把 `DPM` 连接组传播强度和左右偏侧指数，映射到 OCT/MCH 基线行为上的规则模型。
+- 代码里先从 `release_auc_au_s` 归一化出 `release_drive`，再从 `peak_brain_registered_li` 归一化出 `li_drive`。
+- 冲突条件用 `predicted_delta = 0.10 * release_drive * li_drive`。
+- 最后把 `predicted_choice` 与 `base_choice` 的差异乘以 2，得到 `predicted_choice_index_delta`。
+
+因此 `+0.104` 的含义是“模型预测的 choice index 增量”，不是湿实验已经测到的显著性差异。
+
 这就是我们目前“仿真做了什么、发现了什么、下一步怎么用湿实验验证”的完整逻辑。
 
 ## 文献依据

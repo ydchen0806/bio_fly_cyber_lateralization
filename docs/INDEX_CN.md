@@ -22,6 +22,7 @@
 - `/unify/ydchen/unidit/bio_fly/docs/OCT_MCH_ASSAY_VIDEO_RENDERING_CN.md`：OCT/MCH mirror-side 论文视频渲染说明，解释视频变量、轨迹尾迹、统计 inset、运行命令和严谨边界。
 - `/unify/ydchen/unidit/bio_fly/docs/MEETING_FEEDBACK_EXPERIMENTS_CN.md`：2026-04-29 生物老师会议反馈后的定向实验报告，包含 5-HT/Glu 分拆、DPM 光遗传协议扫描、180 度旋转控制、GRASP 靶点和群体 T-maze 行为指标。
 - `/unify/ydchen/unidit/bio_fly/docs/DPM_OPTOGENETIC_VALIDATION_CN.md`：DPM 光遗传仿真验证报告，包含 opsin/波长/频率/时长协议库、5-HT release pattern 预测、旋转控制、群体 T-maze 行为调节预测和湿实验推荐表。
+- `/unify/ydchen/unidit/bio_fly/paper/FIGURE_PROMPTS_EN.md`：英文文生图 prompt 文档，按论文每张图拆分成 GPT Image 2 可直接使用的详细提示词。
 
 ## 如果只想看“我们到底做了什么仿真”
 
@@ -82,6 +83,7 @@ CUDA_VISIBLE_DEVICES=0,1 /unify/ydchen/unidit/bio_fly/env/bin/python \
 
 - `/unify/ydchen/unidit/bio_fly/paper/NATURE_STYLE_DRAFT_CN.md`：中文 Nature 风格结果叙事草稿。
 - `/unify/ydchen/unidit/bio_fly/paper/main_merged.tex`：LaTeX 主文稿。
+- `/unify/ydchen/unidit/bio_fly/paper/main_merged0601.tex`：当前重构后的主文稿，已去掉拓扑主线，改为结构-传播-验证故事。
 - `/unify/ydchen/unidit/bio_fly/paper/figures`：论文图。
 - `/unify/ydchen/unidit/bio_fly/paper/video`：论文补充视频。
 

@@ -22,7 +22,7 @@ cd /unify/ydchen/unidit/bio_fly/ppt
 latexmk -c cyber_fly_teacher_report.tex
 ```
 
-## 2026-04-27 编译检查结果
+## 编译检查结果
 
 已在本机完成 XeLaTeX 编译：
 
@@ -36,7 +36,7 @@ latexmk -c cyber_fly_teacher_report.tex
 
 日志中仍有 `fontspec` 的 WenQuanYi 字体 `Script CJK` 提示，以及 beamer/ctex 生成导航元信息时的 `Missing character ... nullfont` 提示。它们未导致编译失败，也未在抽查页面中造成可见文字缺失；当前 PDF 可用于汇报。
 
-## 2026-04-27 二次改稿说明
+## 二次改稿说明
 
 用户反馈上一版“AI 味太重，发现和结论没有说清楚”。本版已改成面向真实组会汇报的叙事结构：
 

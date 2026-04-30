@@ -198,6 +198,43 @@ LI 大于 0 表示右侧更强，LI 小于 0 表示左侧更强。
 - `/unify/ydchen/unidit/bio_fly/docs/DPM_OPTOGENETIC_VALIDATION_CN.md`
 - `/unify/ydchen/unidit/bio_fly/outputs/dpm_optogenetic_validation_20260429`
 
+#### 仿真 5 里“行为预测”到底是怎么来的
+
+这里要特别讲清楚：`weak OCT / strong MCH conflict` 那个 `choice index +0.104` 不是训练出来的机器学习模型，也不是湿实验已经测到的结果，而是一个**规则映射模型**。
+
+它的输入有三类：
+
+1. **DPM 传播强度**：先从连接组传播里算出 DPM 激活后总共能带来多强的下游释放，记成 `release_auc_au_s`。
+2. **左右偏侧强度**：再看这个释放是否真的更偏右，记成 `peak_brain_registered_li`。
+3. **OCT/MCH 基线行为**：从已经整理好的 OCT/MCH 群体行为表里，取每个条件的基础 choice rate 和 approach margin。
+
+然后模型按很简单的规则把神经侧化映射到行为：
+
+- 对普通奖励条件，DPM 激活会让 choice rate 小幅上升。
+- 对普通惩罚条件，DPM 激活会让 choice rate 小幅下降。
+- 对 **weak OCT / strong MCH conflict** 条件，模型认为最容易看到侧化效应，所以给最大的正向权重。
+
+具体到代码里，冲突条件用的是：
+
+`predicted_delta = 0.10 * release_drive * li_drive`
+
+其中：
+
+- `release_drive = clip(release_auc_au_s / 18.0, 0, 1)`
+- `li_drive = clip(peak_brain_registered_li, 0, 1)`
+
+最后再把这个 delta 加回到基础 choice rate 上，并转成 choice index：
+
+`predicted_choice_index_delta = 2 * (predicted_choice - base_choice)`
+
+所以这次的 `+0.104` 可以直接理解成：
+
+- 基础选择率约 `0.88`
+- 模型预测激活后变成约 `0.9319`
+- 因此 choice index 增量约 `0.1038`
+
+这类结果的作用是**给湿实验挑最值得做的条件**，不是直接替代真实实验结论。
+
 ## 4. 我们发现了什么
 
 当前最稳的发现分三层。
