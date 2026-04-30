@@ -7,6 +7,7 @@
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.tex`：中文 Beamer PPT 源码。
 - `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`：编译后的汇报 PDF。
 - `/unify/ydchen/unidit/bio_fly/ppt/figures`：PPT 使用的论文级图表素材。
+- `/unify/ydchen/unidit/bio_fly/ppt/IMAGE_PROMPTS_FOR_GROUP_MEETING.md`：可交给 GPT Image 生成组会示意图的详细 prompt。
 
 ## 编译命令
 
@@ -27,7 +28,7 @@ latexmk -c cyber_fly_teacher_report.tex
 已在本机完成 XeLaTeX 编译：
 
 - 输出 PDF：`/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf`
-- 页数：`34`
+- 页数：`19`
 - 文件大小：约 `2.6 MB`
 - 格式检查：LaTeX 日志中未发现 `Overfull`、`LaTeX Error`、`Package Error`、`Undefined control sequence` 或 `Fatal error`。
 - 日志中仍有窄列表格里的英文短语断行提示，以及 beamer/ctex 导航元信息造成的 `Missing character ... nullfont` 提示；它们未造成可见文字缺失，不影响 PDF 使用。
@@ -38,33 +39,32 @@ latexmk -c cyber_fly_teacher_report.tex
 
 ## 二次改稿说明
 
-用户反馈上一版“AI 味太重，发现和结论没有说清楚”。本版已改成面向真实组会汇报的叙事结构：
+用户反馈上一版“AI 味太重，发现和结论没有说清楚”，后续又要求压缩成组会汇报版本。本版已改成面向真实组会汇报的精简叙事结构：
 
-- 标题改为明确科学问题：`左右脑神经递质侧化能否影响果蝇记忆？`
-- 第二页直接给出当前最稳的结论，不再只做泛泛摘要。
-- 新增开场名词说明，解释神经递质、血清素、谷氨酸、多巴胺、GABA、ACh、OCT 气味、MCH 气味、MB、KC、MBON、DAN、APL、DPM、DN、Cohen's d、FDR q 和 laterality index。
+- 标题改为明确科学问题：`赛博果蝇能否把左右脑递质侧化变成可验证的记忆假说？`
+- 第二页直接给出当前最稳的发现和风险，不再只做泛泛摘要。
+- 开场名词说明被压缩为一页，解释 MB、KC、5-HT、Glu、DAN、MBON、APL、DPM、CS+/CS-、OCT/MCH 和 laterality index。
 - 主体现在以用户原始 paper 的主发现为核心：右侧血清素富集、左侧谷氨酸偏置，并强调最强位置是 $\alpha'\beta'$ 记忆巩固相关亚区。
-- 主体按证据链展开：递质侧化结构统计、递质 seed 四卡连接组传播、MB--DN 连接组传播、OCT/MCH 行为仿真、MB 侧化扰动、视频可视化。
+- 主体按组会逻辑展开：研究设计、数据和实验条件、递质侧化结构结果、赛博果蝇传播结果、DPM 光遗传预测、OCT/MCH 行为结果、视频可视化、负结果、湿实验验证、风险和下一步。
 - 每个关键实验都说明“怎么做、看什么指标、发现什么、不能过度解释什么”。
-- 新增四卡传播仿真页：右侧血清素 KC seed 和左侧谷氨酸 KC seed 相对同侧随机 KC 对照，显著改变 memory axis、DAN、APL、DPM、MBON/MBIN 和左右读出，FDR q=0.038。
+- 四卡传播仿真页保留核心结论：右侧血清素 KC seed 和左侧谷氨酸 KC seed 相对同侧随机 KC 对照，显著改变 memory axis、DAN、APL、DPM、MBON/MBIN 和左右读出，FDR q=0.038。
 - 明确加入最重要的负结果：MB left/right silencing、symmetrization、swap 与 WT 相比当前均未显著改变行为，主要 FDR q=1.0。
-- 新增“当前隐患”和“还必须补什么”两组 slides，区分计算实验补强和湿实验验证。
+- 保留“当前风险”和“下一步计划”两页，区分计算实验补强和湿实验验证。
 - 视频页明确说明视频用于展示和检查，统计证据来自 n=100 mirror-side trial，而不是视频本身。
+- 新增独立文档 `IMAGE_PROMPTS_FOR_GROUP_MEETING.md`，用于生成更像论文示意图的机制图、DPM 光遗传设计图、OCT/MCH 行为实验图和证据链图。
 
 ## PPT 内容结构
 
 这份汇报面向不熟悉生物学或 AI 仿真的老师，按下面逻辑组织：
 
-1. 先解释名词：神经递质、递质侧化、血清素、谷氨酸、OCT/MCH 气味、蘑菇体和统计量。
-2. 明确原始 paper 主发现：KC 输入中血清素系统性右偏，谷氨酸多数左偏，最强在 $\alpha'\beta'$。
-3. 展示递质侧化结构证据：Cohen's d 热图、FDR 显著性和效应量。
-4. 解释为什么这和记忆有关：$\alpha'\beta'$ 与记忆巩固相关，而该亚区递质侧化最强。
-5. 展示递质 seed 四卡传播仿真：右侧血清素 KC 和左侧谷氨酸 KC 不是随机 KC 的等价替代。
-6. 展示结构侧化审计和 MB--DN 读出：MBON/memory axis 可到达 DN，right MBON/right memory axis 读出更右偏。
-7. 展示 OCT/MCH 正式统计：OCT+sucrose、MCH+sucrose、OCT+shock、weak OCT/strong MCH conflict 均按预期显著。
-8. 主动展示 MB 扰动负结果：当前行为代理尚不能显著区分 left/right MB perturbation。
-9. 说明视频的意义和边界：视频让实验可读，不替代统计。
-10. 最后给出意义、隐患、计算实验补充、湿实验验证和组会汇报建议。
+1. 先给结论和必要名词，让非生物背景老师能快速进入问题。
+2. 讲研究设计和实验条件，明确什么是结构统计、什么是赛博果蝇传播、什么是行为代理。
+3. 展示结构结果：KC 输入中血清素系统性右偏，谷氨酸多数左偏，最强在 $\alpha'\beta'$。
+4. 展示仿真结果：右侧血清素 KC 和左侧谷氨酸 KC 能传播到 memory axis、DAN、APL、DPM、MBON/MBIN。
+5. 展示 DPM 光遗传预测：617/627 nm 红光协议、release pattern 和 180 度旋转控制。
+6. 展示 OCT/MCH 行为结果：奖励、惩罚、conflict 条件方向稳定。
+7. 主动展示 MB 扰动负结果，说明当前行为代理还不能证明真实行为因果。
+8. 最后给出湿实验验证路径、风险和下一步计划。
 
 ## 严谨表述边界
 
