@@ -164,7 +164,9 @@ conflict 条件下选择率也比较高，q 值显著。这个条件值得关注
 
 右边是多模态代理演示，对应路径是 `/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4`。它包括视觉、食物、梳理等任务，用于说明当前代理层覆盖了哪些环境交互类型。
 
-为了汇报时方便播放，我已经把这三个视频复制到 PPT 同目录，并在 PDF 里把截图做成可点击的视频入口。实际文件名分别是 `video_dpm_optogenetic_release_prediction.mp4`、`video_oct_mch_assay_v2_key_conditions.mp4` 和 `video_eon_multimodal_reproduction_summary.mp4`。如果 PDF 阅读器允许外部播放器，点击截图就会直接打开视频；如果阅读器屏蔽该功能，可以在同目录手动打开这些 mp4。
+为了汇报时方便播放，这三个视频已经用 `media9/RichMedia` 直接嵌入到 PDF 里面，不需要在 PPT 目录额外携带 `video_*.mp4`。点击截图时，如果 PDF 阅读器支持 RichMedia，就会在当前页播放内嵌视频；如果阅读器不支持，页面仍会显示关键帧截图，但不会原位播放。
+
+这里有一个技术限制需要提前说明：浏览器 PDF 预览、macOS Preview 和 Overleaf 预览通常会禁用 PDF 内嵌视频；Adobe Acrobat 更可能支持播放。源视频仍保存在 `/unify/ydchen/unidit/bio_fly/paper/video/`，用于项目复现和后续重新编译，但汇报用的 `/unify/ydchen/unidit/bio_fly/ppt/cyber_fly_teacher_report.pdf` 本身已经包含视频资源。
 
 这些视频主要服务于汇报和直观理解，不是显著性证据本身。真正的统计证据仍来自 n=100 trial、连接组传播和显著性检验。
 

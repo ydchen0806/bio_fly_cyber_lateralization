@@ -12,7 +12,7 @@
 \usepackage{xcolor}
 \usepackage{xurl}
 \usepackage{hyperref}
-\usepackage{multimedia}
+\usepackage{media9}
 \usetikzlibrary{positioning,arrows.meta}
 \hypersetup{unicode=true}
 
@@ -53,7 +53,15 @@
 \newcommand{\orange}[1]{\textcolor{FlyOrange}{\textbf{#1}}}
 \newcommand{\red}[1]{\textcolor{FlyRed}{\textbf{#1}}}
 \newcommand{\refs}[1]{\vfill{\tiny\textcolor{FlyDark}{#1}}}
-\newcommand{\videothumb}[3]{\movie[externalviewer,showcontrols]{\includegraphics[width=#1]{#2}}{#3}}
+\newcommand{\embeddedvideo}[5]{%
+  \includemedia[
+    width=#1,
+    height=#2,
+    activate=onclick,
+    addresource=#4,
+    flashvars={source=#5&autoPlay=true&loop=false}
+  ]{\includegraphics[width=#1,height=#2,keepaspectratio]{#3}}{VPlayer.swf}%
+}
 
 \title[赛博果蝇组会汇报]{从果蝇蘑菇体递质侧化到可验证的记忆行为假说}
 \subtitle{结构统计、连接组传播、DPM 光遗传预测与 OCT/MCH 行为验证}
@@ -284,7 +292,7 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
     \end{block}
   \end{column}
   \begin{column}{0.21\textwidth}
-    \videothumb{\textwidth}{Fig_cyberfly_multimodal_video_frame.png}{video_eon_multimodal_reproduction_summary.mp4}
+    \embeddedvideo{\textwidth}{0.78in}{Fig_cyberfly_multimodal_video_frame.png}{/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4}{eon_multimodal_reproduction_summary.mp4}
     \vspace{0.3em}
     \begin{block}{对应视频}
       多模态代理展示视觉、食物和梳理等交互；这里只作为 motor bridge 的直观入口。
@@ -331,9 +339,9 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
     \includegraphics[width=\textwidth]{Fig_dpm_5ht_release_timecourses.png}
   \end{column}
   \begin{column}{0.18\textwidth}
-    \videothumb{\textwidth}{Fig_dpm_release_video_frame.png}{video_dpm_optogenetic_release_prediction.mp4}
+    \embeddedvideo{\textwidth}{0.58in}{Fig_dpm_release_video_frame.png}{/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4}{dpm_optogenetic_release_prediction.mp4}
     \vspace{0.2em}
-    \tiny 点击截图播放：\url{video_dpm_optogenetic_release_prediction.mp4}
+    \tiny 点击截图播放内嵌视频
   \end{column}
 \end{columns}
 \vspace{0.2em}
@@ -395,7 +403,7 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
     \end{block}
   \end{column}
   \begin{column}{0.20\textwidth}
-    \videothumb{\textwidth}{Fig_oct_mch_video_midframe.png}{video_oct_mch_assay_v2_key_conditions.mp4}
+    \embeddedvideo{\textwidth}{0.58in}{Fig_oct_mch_video_midframe.png}{/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4}{oct_mch_assay_v2_key_conditions.mp4}
     \vspace{0.25em}
     \begin{block}{对应视频}
       点击截图播放；展示气味杯、羽流、奖励/电击、轨迹和统计 inset。
@@ -408,30 +416,30 @@ FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/
 \scriptsize
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.32\textwidth}
-    \videothumb{\textwidth}{Fig_dpm_release_video_frame.png}{video_dpm_optogenetic_release_prediction.mp4}
+    \embeddedvideo{\textwidth}{1.05in}{Fig_dpm_release_video_frame.png}{/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4}{dpm_optogenetic_release_prediction.mp4}
     \vspace{0.2em}
     \textbf{DPM 光遗传预测}\\
     红光刺激后，模型输出左右 5-HT/KC readout 的时间过程。\\
-    \tiny\url{video_dpm_optogenetic_release_prediction.mp4}
+    \tiny 已内嵌：DPM release video
   \end{column}
   \begin{column}{0.32\textwidth}
-    \videothumb{\textwidth}{Fig_oct_mch_video_midframe.png}{video_oct_mch_assay_v2_key_conditions.mp4}
+    \embeddedvideo{\textwidth}{1.05in}{Fig_oct_mch_video_midframe.png}{/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4}{oct_mch_assay_v2_key_conditions.mp4}
     \vspace{0.2em}
     \textbf{OCT/MCH 行为代理}\\
     展示气味杯、气味羽流、糖奖励/电击、轨迹和统计 inset。\\
-    \tiny\url{video_oct_mch_assay_v2_key_conditions.mp4}
+    \tiny 已内嵌：OCT/MCH behavior video
   \end{column}
   \begin{column}{0.32\textwidth}
-    \videothumb{\textwidth}{Fig_cyberfly_multimodal_video_frame.png}{video_eon_multimodal_reproduction_summary.mp4}
+    \embeddedvideo{\textwidth}{1.05in}{Fig_cyberfly_multimodal_video_frame.png}{/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4}{eon_multimodal_reproduction_summary.mp4}
     \vspace{0.2em}
     \textbf{多模态代理演示}\\
     视觉、食物、梳理等任务用于检查代理层是否能表达环境交互。\\
-    \tiny\url{video_eon_multimodal_reproduction_summary.mp4}
+    \tiny 已内嵌：multimodal proxy video
   \end{column}
 \end{columns}
 \vspace{0.4em}
 \begin{alertblock}{边界}
-点击截图可调用本地视频；PDF 阅读器需允许外部播放器。视频是仿真输出的可视化入口，统计结论仍以 n=100 trial 表格、连接组传播和显著性检验为准。
+点击截图可播放 PDF 内嵌视频；阅读器需支持 RichMedia/media9。视频是仿真输出的可视化入口，统计结论仍以 n=100 trial 表格、连接组传播和显著性检验为准。
 \end{alertblock}
 \end{frame}
 
