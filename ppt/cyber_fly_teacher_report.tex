@@ -55,9 +55,9 @@
 
 \title[赛博果蝇组会汇报]{从果蝇蘑菇体递质侧化到可验证的记忆行为假说}
 \subtitle{结构统计、连接组传播、DPM 光遗传预测与 OCT/MCH 行为验证}
-\author{bio\_fly 项目组会汇报}
+\author{陈胤达}
 \institute{\url{/unify/ydchen/unidit/bio_fly}}
-\date{}
+\date{2026年4月30日}
 
 \begin{document}
 
@@ -93,7 +93,6 @@
     \end{block}
   \end{column}
 \end{columns}
-\refs{Odor learning framework: Tully and Quinn, J. Comp. Physiol. A 1985; Keene and Waddell, Nat. Rev. Neurosci. 2007.}
 \end{frame}
 
 \begin{frame}{实验 1：结构层递质侧化统计}
@@ -148,28 +147,47 @@
 \begin{frame}{实验 2：连接组传播检验功能可达性}
 \small
 \begin{columns}[T,onlytextwidth]
-  \begin{column}{0.49\textwidth}
+  \begin{column}{0.46\textwidth}
     \begin{block}{实验设计}
       \begin{itemize}
-        \item Seed 1：右侧 5-HT-rich KC。
-        \item Seed 2：左侧 Glu-rich KC。
-        \item 对照：同侧、同规模随机 KC seed。
-        \item 传播：FlyWire signed graph，3-hop sparse propagation。
+        \item 把连接组看成一个有向加权图：节点是神经元，边是突触连接强度。
+        \item Seed 1：右侧 5-HT-rich KC，代表“右侧血清素富集输入”。
+        \item Seed 2：左侧 Glu-rich KC，代表“左侧谷氨酸富集输入”。
+        \item 对照：同侧、同数量随机 KC，判断结果是不是随便选一批 KC 都会出现。
+        \item 传播：最多走 3 个突触层级，近似“上游差异能否传到下游记忆环路”。
       \end{itemize}
     \end{block}
   \end{column}
-  \begin{column}{0.47\textwidth}
-    \begin{block}{读出指标}
+  \begin{column}{0.50\textwidth}
+    \begin{block}{为什么这个实验有用}
       \begin{itemize}
-        \item memory axis mass。
-        \item DAN、APL、DPM、MBON、MBIN abs mass。
-        \item response laterality。
-        \item 与 null distribution 比较，报告 empirical $p$ 和 FDR $q$。
+        \item 如果 seed 只影响 KC 自己，说明结构侧化可能只是局部统计现象。
+        \item 如果 seed 能传播到 DAN、APL、DPM、MBON/MBIN，说明它可能影响奖励、惩罚、记忆维持和行为输出。
+        \item 这里验证的是\orange{功能可达性}，不是证明真实行为已经发生。
       \end{itemize}
     \end{block}
   \end{column}
 \end{columns}
 \refs{Graph-based connectome analysis is consistent with large-scale connectomics practice: Scheffer et al., eLife 2020; Dorkenwald et al., Nature 2024. MB circuit readouts: Aso et al., eLife 2014; Li et al., eLife 2020.}
+\end{frame}
+
+\begin{frame}{实验 2 指标解读：给计算机背景老师的读法}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.0cm}p{4.2cm}X@{}}
+\toprule
+\textbf{指标} & \textbf{计算含义} & \textbf{生物解释和用途} \\
+\midrule
+memory axis mass & 传播信号落到预定义记忆相关神经元集合的总量 & 类似图神经网络里某个子模块的 activation mass；越大表示侧化输入越容易影响记忆轴。\\
+DAN 等 abs mass & 到达 DAN、APL、DPM、MBON 等神经元类别的信号强度，取绝对值，不区分正负 & DAN 像“教学信号”，APL/DPM 像“反馈和记忆维持”，MBON/MBIN 像“读出/调制接口”；用于判断影响到哪个功能模块。\\
+response laterality & $(R-L)/(R+L)$，正值偏右，负值偏左 & 判断传播后的影响是否仍保留左右脑偏向，而不只是整体变强。\\
+empirical $p$ & 和随机 seed 形成的 null distribution 比较 & 问题是“这个结果比随机挑 KC 更特殊吗”。\\
+FDR $q$ & 多个指标一起检验后的假阳性校正 & 避免在很多脑区/指标里挑一个偶然显著的结果。\\
+\bottomrule
+\end{tabularx}
+\vspace{0.4em}
+\begin{block}{一句话}
+这页的所有指标都在回答同一个问题：\blue{左右递质侧化是否能通过真实连接组传到记忆和行为相关模块，并且比随机对照更强。}
+\end{block}
 \end{frame}
 
 \begin{frame}{结果 2：侧化 seed 能传播到记忆相关 readout}
@@ -191,7 +209,6 @@
     \end{block}
   \end{column}
 \end{columns}
-\refs{Dopaminergic and MBON compartment logic: Aso et al., eLife 2014; Modi et al., Annu. Rev. Neurosci. 2020. DPM and memory: Keene et al., Cell 2006.}
 \end{frame}
 
 \begin{frame}{实验 3：MB readout 到 DN/motor bridge}
@@ -213,7 +230,6 @@
     \end{block}
   \end{column}
 \end{columns}
-\refs{Descending neuron organization and behavior interfaces motivate DN-level readout; see Namiki et al., eLife 2018. Embodied fly modeling context: Lobato-Rios et al., Nature Methods 2022; NeuroMechFly/FlyGym framework.}
 \end{frame}
 
 \begin{frame}{结果 3：MBON/memory axis 可到达 DN 出口}
@@ -240,7 +256,6 @@
     \end{block}
   \end{column}
 \end{columns}
-\refs{Adult fly connectome and DN access: Dorkenwald et al., Nature 2024; Schlegel et al., Nature 2024.}
 \end{frame}
 
 \begin{frame}{实验 4：DPM 光遗传仿真验证}
@@ -282,7 +297,6 @@
 \begin{block}{结论}
 推荐从 CsChrimson 617 nm 或 ReaChR 627 nm、40 Hz、20 ms pulse、5 s train 开始。模型预测 DPM 激活后脑侧注册的 5-HT/KC readout 保持右偏，top protocol 的 peak LI 约 0.80。
 \end{block}
-\refs{Optogenetic tools: Klapoetke et al., Nat. Methods 2014; Lin et al., Nat. Neurosci. 2013. Mushroom-body memory modulation: Yu et al., Cell 2005; Keene and Waddell, Nat. Rev. Neurosci. 2007.}
 \end{frame}
 
 \begin{frame}{实验 5：OCT/MCH 群体行为代理}
@@ -335,10 +349,40 @@
     \end{block}
   \end{column}
 \end{columns}
-\refs{Odor conditioning and T-maze logic: Tully and Quinn, J. Comp. Physiol. A 1985; Davis, Annu. Rev. Neurosci. 2005.}
 \end{frame}
 
-\begin{frame}{实验 6：视频渲染用于展示实验条件，不替代统计}
+\begin{frame}{赛博果蝇可视化结果：关键视频入口}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.32\textwidth}
+    \href{run:/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4}{\includegraphics[width=\textwidth]{Fig_dpm_release_video_frame.png}}
+    \vspace{0.2em}
+    \textbf{DPM 光遗传预测}\\
+    红光刺激后，模型输出左右 5-HT/KC readout 的时间过程。\\
+    \tiny\url{/unify/ydchen/unidit/bio_fly/paper/video/dpm_optogenetic_release_prediction.mp4}
+  \end{column}
+  \begin{column}{0.32\textwidth}
+    \href{run:/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4}{\includegraphics[width=\textwidth]{Fig_oct_mch_video_midframe.png}}
+    \vspace{0.2em}
+    \textbf{OCT/MCH 行为代理}\\
+    展示气味杯、气味羽流、糖奖励/电击、轨迹和统计 inset。\\
+    \tiny\url{/unify/ydchen/unidit/bio_fly/paper/video/oct_mch_assay_v2_key_conditions.mp4}
+  \end{column}
+  \begin{column}{0.32\textwidth}
+    \href{run:/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4}{\includegraphics[width=\textwidth]{Fig_cyberfly_multimodal_video_frame.png}}
+    \vspace{0.2em}
+    \textbf{多模态代理演示}\\
+    视觉、食物、梳理等任务用于检查代理层是否能表达环境交互。\\
+    \tiny\url{/unify/ydchen/unidit/bio_fly/paper/video/eon_multimodal_reproduction_summary.mp4}
+  \end{column}
+\end{columns}
+\vspace{0.4em}
+\begin{alertblock}{边界}
+这些视频是仿真输出的可视化和汇报入口；统计结论仍以 n=100 trial 表格、连接组传播和显著性检验为准。
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{实验 6：OCT/MCH 视频渲染展示了哪些实验要素}
 \small
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.63\textwidth}
@@ -358,7 +402,6 @@
     \end{alertblock}
   \end{column}
 \end{columns}
-\refs{Embodied simulation context: Lobato-Rios et al., Nat. Methods 2022; FlyGym ecosystem.}
 \end{frame}
 
 \begin{frame}{负结果：MB 扰动尚未产生显著行为差异}
@@ -377,7 +420,6 @@ MB swapped & 100 & 0.87 & -0.002 & 1.0 & 左右交换没有显著反转行为。
 \begin{alertblock}{解释}
 当前结果支持“结构侧化可传播到功能 readout”，但不能直接证明“MB 侧化已经改变真实果蝇行为”。这一定要作为边界条件写入论文。
 \end{alertblock}
-\refs{Transparent negative results strengthen falsifiability; biological causality still requires perturbation or imaging validation.}
 \end{frame}
 
 \begin{frame}{湿实验验证路径}
@@ -430,7 +472,6 @@ MB swapped & 100 & 0.87 & -0.002 & 1.0 & 左右交换没有显著反转行为。
     \end{block}
   \end{column}
 \end{columns}
-\refs{Modeling boundary follows from unavailable proprietary DN-to-body parameters; public results should be framed as falsifiable predictions.}
 \end{frame}
 
 \begin{frame}{核心结论}
